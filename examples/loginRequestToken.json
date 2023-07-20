@@ -1,0 +1,16 @@
+{
+    "aud": "",
+    "sub": "",
+    "pfsid": "",
+    "act": {
+      "pltfm": "steam",
+      "eaid": "",
+      "eat": "steam"
+    },
+    "pfdid": "",
+    "iss": "https://api.epicgames.dev/auth/v1/oauth",
+    "exp": 1689857558,
+    "tokenType": "idToken",
+    "iat": 1689853958,
+    "pfpid": ""
+  }

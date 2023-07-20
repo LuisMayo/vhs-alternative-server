@@ -1,0 +1,23 @@
+{
+  "name": "vhs-alternative-server",
+  "version": "1.0.0",
+  "description": " Reverse engineering notes of Video Horror Society and alternative server maybe",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc --sourceMap --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisMayo/vhs-alternative-server.git"
+  },
+  "author": "LuisMayo",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/LuisMayo/vhs-alternative-server/issues"
+  },
+  "homepage": "https://github.com/LuisMayo/vhs-alternative-server#readme",
+  "dependencies": {
+    "typescript": "^5.1.6"
+  }
+}

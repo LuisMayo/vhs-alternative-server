@@ -1,0 +1,122 @@
+{
+    "mAutomaticRegion": false,
+    "mMatchmakingRegion": "MR_EU_Central1",
+    "mLanguage": "LS_English",
+    "mSelectedGameMode": "GM_Matchmaking",
+    "mbShowReticle": true,
+    "mbShowScoreFeed": true,
+    "mbShowGameHUD": true,
+    "mbHintsToggle": 28,
+    "mDangerSenseType": 0,
+    "mDangerSenseSize": 0.5,
+    "mDangerSenseColor": 0,
+    "mGraphicsColorBlindMode": "NormalVision",
+    "mGraphicsColorBlindIntensity": 1,
+    "mbAudioGameAudioMuteOnUnfocused": true,
+    "mbVoiceChatEnabled": true,
+    "mVoiceChatMode": "VC_PUSHTOTALK",
+    "mVoiceChatChannel": "VCC_PARTY",
+    "mbVoiceChatMuteOnUnfocused": true,
+    "mbMouseInvertY": false,
+    "mbKbdSprintToggle": false,
+    "mbKbdCrouchToggle": false,
+    "mKeyToGameActions": {
+        "C": {
+            "mActions": [
+                "GAT_BTN_PUSH_TO_TALK"
+            ]
+        },
+        "MiddleMouseButton": {
+            "mActions": [
+                "GAT_BTN_PlaceSticker"
+            ]
+        },
+        "ThumbMouseButton2": {
+            "mActions": [
+                "GAT_BTN_Ping",
+                "GAT_BTN_Ping_Evil"
+            ]
+        },
+        "ThumbMouseButton": {
+            "mActions": [
+                "GAT_BTN_Ping_Self"
+            ]
+        },
+        "LeftControl": {
+            "mActions": [
+                "GAT_BTN_Crouch",
+                "GAT_BTN_DismissDollMinion"
+            ]
+        },
+        "None": {
+            "mActions": [
+                "GAT_BTN_Ping_Self_Evil"
+            ]
+        },
+        "Gamepad_DPad_Right": {
+            "mActions": [
+                "GAT_BTN_DiscardWeapon",
+                "GAT_BTN_WheelRight",
+                "GAT_BTN_DismissDollMinion"
+            ]
+        }
+    },
+    "mbControllerInvertY": false,
+    "mbControllerSprintToggle": true,
+    "mbControllerCrouchToggle": false,
+    "mbShowSocialNotifications": true,
+    "mbNotifyFriendsWhenPlaying": true,
+    "mbAutoMutePlayersNotInParty": false,
+    "mbHideDisplayName": false,
+    "mbHideOtherPlayerNames": false,
+    "mbMatchmakingDelay": false,
+    "mbAutoMutePrevMutedPlayers": false,
+    "mStoredMatchmakingType": "CMM_Survive",
+    "mLastStoredCharacterType": "CT_Punk",
+    "mStoredTeenCharacterType": "CT_Punk",
+    "mStoredEvilCharacterType": "CT_Anomaly",
+    "mStoredHintHistory": [],
+    "mStoredGuideHistory": [],
+    "mLastSeenHint": "Teen16",
+    "mTipsHistory": [
+        {
+            "tipText": "",
+            "tipType": "TT_Universal",
+            "triggerCount": 0,
+            "maxTriggerCount": 0,
+            "triggerFrequency": 0,
+            "requestCount": 0,
+            "timeToShow": 3,
+            "delay": 3,
+            "iconTexture": "None",
+            "tipVisiblityLevel": "TVF_Basic",
+            "tipCondition": ""
+        },
+        {
+            "tipText": "",
+            "tipType": "TT_Universal",
+            "triggerCount": 0,
+            "maxTriggerCount": 0,
+            "triggerFrequency": 0,
+            "requestCount": 0,
+            "timeToShow": 3,
+            "delay": 3,
+            "iconTexture": "None",
+            "tipVisiblityLevel": "TVF_Basic",
+            "tipCondition": ""
+        }
+    ],
+    "mNewsAnnouncements": [
+        "NT_Quickplay",
+        "NT_LimitedMovies",
+        "NT_Tips",
+        "NT_Valentines",
+        "NT_Easter",
+        "NT_SurvivalMode",
+        "NT_Bots"
+    ],
+    "mbShowBetaAnnouncement": true,
+    "mbShowAnnouncement1": false,
+    "mbShowAnnouncement2": false,
+    "mHighestSeasonAnnouncement": -1
+}

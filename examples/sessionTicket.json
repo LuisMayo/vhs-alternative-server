@@ -1,0 +1,20 @@
+{
+    "header": {
+        "typ": "JWT",
+        "alg": "RS256",
+        "kid": "2022-02-10T18:14:25Z",
+        "ver": "1"
+    },
+    "payload": {
+        "iss": "https://api.vhsgame.com",
+        "sub": "live_${playerAccountId}",
+        "aud": "unknown",
+        "exp": 1689940361,
+        "iat": 1689853961,
+        "jti": "",
+        "guid": "",
+        "msid": "",
+        "hip": "IP of the client",
+        "nickname": "User nickname"
+    }
+}
