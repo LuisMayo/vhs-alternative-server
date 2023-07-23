@@ -12,7 +12,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\build\\index.js",
-            "runtimeArgs": ["--inspect-brk"],
+            // "runtimeArgs": ["--inspect-brk"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

@@ -17,11 +17,11 @@ export interface LoginRequest {
  * This is used for code warnings apparently, not needed for us, so I'll detail only the JSON part
  */
 export interface LoginResponse {
-  data?: Data;
-  log?: Log;
+  data: LoginData;
+  log: Log;
 }
 
-export interface Data {
+export interface LoginData {
   /** RS256 JSON Web Token.
    * @example See docs/sessionTicket.json
    */
