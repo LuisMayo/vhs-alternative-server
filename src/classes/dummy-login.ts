@@ -5,7 +5,7 @@ import {
   LoginResponse,
 } from "../types/vhs-the-game-types";
 
-export class DummyLogin implements LoginResponse {
+export class LoginHandler implements LoginResponse {
   data: LoginData;
   log: Log;
   constructor(data: LoginRequest) {

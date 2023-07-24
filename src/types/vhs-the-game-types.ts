@@ -1,4 +1,6 @@
-/** Login Endpoint
+/** Login Endpoint.
+ * This endpoint is authenticated using a JWT token issued by Epic. Token structure is linked below
+ * @link https://dev.epicgames.com/docs/epic-account-services/auth/auth-interface
  * @link https?://api.vhsgame.com/metagame/THEEND_Game/Client/Login/?guid=59459062-35cb-4a8b-8b56-2b77ac286bfd
  */
 export interface LoginRequest {
