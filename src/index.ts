@@ -35,8 +35,8 @@ function initServer() {
   const port = 3000;
   const baseUrl = "/metagame/THEEND_GAME/Client/";
 
-  app.use(express.json());
   app.use(morgan('dev'));
+  app.use(express.json());
   app.post(
     baseUrl + "Login",
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {

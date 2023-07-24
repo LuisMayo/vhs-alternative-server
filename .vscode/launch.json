@@ -12,6 +12,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\build\\index.js",
+            "console": "integratedTerminal",
             // "runtimeArgs": ["--inspect-brk"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
