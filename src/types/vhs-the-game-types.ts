@@ -1,6 +1,5 @@
 /** Login Endpoint.
- * This endpoint is authenticated using a JWT token issued by Epic. Token structure is linked below
- * @link https://dev.epicgames.com/docs/epic-account-services/auth/auth-interface
+ * This endpoint is authenticated using a JWT token issued by Epic. Token structure is below
  * @link https?://api.vhsgame.com/metagame/THEEND_Game/Client/Login/?guid=59459062-35cb-4a8b-8b56-2b77ac286bfd
  */
 export interface LoginRequest {
@@ -13,6 +12,28 @@ export interface LoginRequest {
   platformToken?: string;
   /**Version ID @example 71 */
   version?: number;
+}
+
+/**Token structure for the Login Request
+ * @link https://dev.epicgames.com/docs/epic-account-services/auth/auth-interface
+ */
+export interface LoginRequestToken {
+  aud?: string;
+  sub?: string;
+  pfsid?: string;
+  act?: LoginRequestTokenAct;
+  pfdid?: string;
+  iss?: string;
+  exp?: number;
+  tokenType?: string;
+  iat?: number;
+  pfpid?: string;
+}
+
+export interface LoginRequestTokenAct {
+  pltfm?: string;
+  eaid?: string;
+  eat?: string;
 }
 
 /** The login response may embed html data in the body, it's not required to be a full JSON body.
@@ -70,7 +91,7 @@ export interface DiscoverRequest {
   /** 0? */
   weaponManifestNumber?: number;
   /** @example MR_EU_Central1 */
-  matchmakingRegion: string
+  matchmakingRegion: string;
 }
 
 export enum DiscoverTypes {

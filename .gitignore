@@ -127,3 +127,7 @@ dist
 .pnp.*
 
 build/
+
+*.crt
+*.pem
+*.db
