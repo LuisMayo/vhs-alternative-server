@@ -1,6 +1,14 @@
 # vhs-alternative-server
  Reverse engineering notes of Video Horror Society and alternative server maybe
 
+ ## Development
+ Install dependencies
+ `npm i`
+ Run the compiler in watch mode so it autocompiles
+ `npm run watch`
+
+ Either press F5 on VSCode to debug the app or run `npm start` to start the server
+
 ## Login flow
 VHSGame Login request. A request authenticated using a token issued by epicGames with loginRequestToken structure
 
