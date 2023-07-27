@@ -1,9 +1,12 @@
 export interface SaveGameResponse {
   data?: Data;
   log?: Log;
+  /**Own field, not returned by orginal API */
+  userId: string;
 }
 
 interface Data {
+  /** Information about the player general progression*/
   DDT_AllPlayerAccountPointsBit?: DDTAllPlayerAccountPointsBit;
   DDT_AllPlayerSlotsBit?: DDTAllPlayerSlotsBit;
   DDT_AllLoadoutsBit?: DDTAllLoadoutsBit;
@@ -470,8 +473,27 @@ interface CTWizard {
 }
 
 interface DDTAllPlayerAccountPointsBit {
-  playerAccountPoints?: { [key: string]: number };
-  masteryLevelCosts?: { [key: string]: number };
+  playerAccountPoints?: { [key in PlayerAccountPoints]: number };
+  masteryLevelCosts?: { [key: `${number}`]: number };
+}
+
+enum PlayerAccountPoints {
+  PNT_BurnStigmaExperience = "PNT_BurnStigmaExperience",
+  PNT_BurnStigmaLevel = "PNT_BurnStigmaLevel",
+  PNT_CurrentSeason = "PNT_CurrentSeason",
+  PNT_EvilPrizePoints = "PNT_EvilPrizePoints",
+  PNT_FanPoints = "PNT_FanPoints",
+  PNT_HardCurrency = "PNT_HardCurrency",
+  PNT_HolyStigmaExperience = "PNT_HolyStigmaExperience",
+  PNT_HolyStigmaLevel = "PNT_HolyStigmaLevel",
+  PNT_MasteryLevel = "PNT_MasteryLevel",
+  PNT_MasteryPoints = "PNT_MasteryPoints",
+  PNT_OccultStigmaExperience = "PNT_OccultStigmaExperience",
+  PNT_OccultStigmaLevel = "PNT_OccultStigmaLevel",
+  PNT_ShockStigmaExperience = "PNT_ShockStigmaExperience",
+  PNT_ShockStigmaLevel = "PNT_ShockStigmaLevel",
+  PNT_TeenGamesPlayedThisSeason = "PNT_TeenGamesPlayedThisSeason",
+  PNT_TeenPrizePoints = "PNT_TeenPrizePoints",
 }
 
 interface DDTAllPlayerSlotsBit {
@@ -480,7 +502,9 @@ interface DDTAllPlayerSlotsBit {
 
 interface PlayerAccountSlots {
   PS_PlayerAccountPortrait?: string;
+  /** Current selected prize for public monster matches */
   PS_PrizeEvil?: string;
+  /** Current selected prize for private monster matches */
   PS_PrizeTeen?: string;
 }
 
