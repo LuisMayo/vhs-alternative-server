@@ -9,6 +9,7 @@ interface Data {
   /** Information about the player general progression*/
   DDT_AllPlayerAccountPointsBit?: DDTAllPlayerAccountPointsBit;
   DDT_AllPlayerSlotsBit?: DDTAllPlayerSlotsBit;
+  /**Character-related info */
   DDT_AllLoadoutsBit?: DDTAllLoadoutsBit;
   DDT_AllWeaponsBit?: DDTAllWeaponsBit;
   DDT_AllInventoryItemsBit?: DDTAllInventoryItemsBit[];
@@ -330,34 +331,41 @@ enum Ctf {
 }
 
 interface DDTAllLoadoutsBit {
-  characterLoadouts?: CharacterLoadouts;
+  /**Experience, level, matchmaking info and equipment */
+  characterLoadouts?: { [key in Monsters]: CharacterLoadoutsCTEvil } & { [key in Teens]: CharacterLoadoutsCTTeen };
+  /**Unkown. But it seems to be constant across savegames? */
   teenAffinities?: TeenAffinities;
-  charXpLevelCosts?: { [key: string]: number };
+  /**For each level how much exp it costs to level UP */
+  charXpLevelCosts?: { [key: number]: number };
 }
 
-interface CharacterLoadouts {
-  CT_Cheerleader?: CharacterLoadoutsCTCheerleader;
-  CT_DollMaster?: CharacterLoadoutsCTAnomaly;
-  CT_Jock?: CharacterLoadoutsCTCheerleader;
-  CT_Outsider?: CharacterLoadoutsCTCheerleader;
-  CT_Punk?: CharacterLoadoutsCTCheerleader;
-  CT_Toad?: CharacterLoadoutsCTAnomaly;
-  CT_Virgin?: CharacterLoadoutsCTCheerleader;
-  CT_Werewolf?: CharacterLoadoutsCTAnomaly;
-  CT_Eradicator?: CharacterLoadoutsCTAnomaly;
-  CT_Nerd?: CharacterLoadoutsCTCheerleader;
-  CT_Anomaly?: CharacterLoadoutsCTAnomaly;
+enum Monsters {
+  DollMaster = "CT_DollMaster",
+  WART = "CT_Toad",
+  Werewolf = "CT_Werewolf",
+  Deathwire = "CT_Eradicator",
+  Anomlay = "CT_Anomaly"
 }
 
-interface CharacterLoadoutsCTAnomaly {
-  points?: Points;
-  uiSlots?: CTAnomalyUISlots;
+enum Teens {
+  Gloria = "CT_Cheerleader",
+  Brett = "CT_Jock",
+  Jess = "CT_Outsider",
+  Leo = "CT_Punk",
+  Faith = "CT_Virgin",
+  Reggie = "CT_Nerd",
 }
 
-interface Points {
+
+interface CharacterLoadoutsCTEvil {
+  /**Points, level, etc. And Mathmaking Rank */
+  points?: EvilPoints;
+  /**Equipment */
+  uiSlots?: CTEvilUISlots;
+}
+
+interface BasePoints {
   PNT_AuraPoints?: number;
-  PNT_EvilGamesPlayedThisSeason?: number;
-  PNT_EvilMatchMakingRating?: number;
   PNT_ExperiencePoints?: number;
   PNT_Level?: number;
   PNT_PerkPoints?: number;
@@ -366,7 +374,12 @@ interface Points {
   PNT_AffinitySlots?: number;
 }
 
-interface CTAnomalyUISlots {
+interface EvilPoints extends BasePoints {
+  PNT_EvilMatchMakingRating?: number;
+  PNT_EvilGamesPlayedThisSeason?: number;
+}
+
+interface CTEvilUISlots {
   UIS_EvilFeast?: string;
   UIS_EvilRage?: string;
   UIS_EvilScream?: string;
@@ -395,12 +408,14 @@ interface CTAnomalyUISlots {
   UIS_EvilPerk5?: string;
 }
 
-interface CharacterLoadoutsCTCheerleader {
-  points?: Points;
-  uiSlots?: CTCheerleaderUISlots;
+interface CharacterLoadoutsCTTeen {
+  /**Points, level, perk slots... */
+  points?: BasePoints;
+  /** Equipment */
+  uiSlots?: CTTeenUISlots;
 }
 
-interface CTCheerleaderUISlots {
+interface CTTeenUISlots {
   UIS_TeenClothingBottom?: string;
   UIS_TeenClothingFace?: string;
   UIS_TeenClothingFeet?: string;
@@ -1214,7 +1229,7 @@ interface DDMvLtdTwoFeetUnderStdS06 {
   rewards?: string[];
 }
 
-interface DDMVLTDTWOFEETUNDERSTDS06RequiredEvents {}
+interface DDMVLTDTWOFEETUNDERSTDS06RequiredEvents { }
 
 interface DDMVLTDTWOFEETUNDERSTDS07Class {
   sceneData?: SceneData;
