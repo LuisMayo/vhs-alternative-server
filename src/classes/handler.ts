@@ -63,9 +63,13 @@ export class Handler {
     request: Request<any, DiscoverResponse | string, DiscoverRequest>,
     response: Response<DiscoverResponse | string>
   ) {
-    const id = this.checkOwnTokenAndGetId(request) ?? 'Dummy';
+    const id = this.checkOwnTokenAndGetId(request) ?? "Dummy";
     switch (request.body.bitsToDiscover) {
       case DiscoverTypes.MATCHMAKING_INFO:
+        (response as Response<MathmakingInfoResponse>).send({
+          data: {DDT_DynamicBountyRewardsBit: {lastEarnedBounty: 10, MR_EU_Central1: {bountiesByCharType: {CT_Werewolf: 999}}}},
+          log: { logSuccessful: true },
+        });
         break;
       default:
         console.error("Unknown discover type", request.body.bitsToDiscover);
