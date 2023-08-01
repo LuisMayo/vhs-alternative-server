@@ -66,6 +66,13 @@ function initServer() {
       Handler.discover(req, res);
     }
   );
+  app.post(
+    baseUrl + "UseCustomLobby",
+    (req, res) => {
+      console.log("e");
+      Handler.lobby(req, res);
+    }
+  );
   app.get("/", (req, res) => res.send("HEY!"));
 
   app.listen(80);

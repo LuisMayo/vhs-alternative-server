@@ -1,3 +1,4 @@
+import { CreateLobbyRequest, CreateLobbyResponse, JoinLobbyResponse, UseCustomLobbyRequest, UseCustomLobbyResponse } from "../types/custom-lobby-types";
 import {
   DiscoverRequest,
   DiscoverTypes,
@@ -14,7 +15,6 @@ import { SaveGameResponse } from "../types/save-game";
 import { User } from "../database/database.interface";
 import { db } from "..";
 import jwt_decode from "jwt-decode";
-import { CreateLobbyRequest, CreateLobbyResponse, JoinLobbyResponse, UseCustomLobbyRequest, UseCustomLobbyResponse } from "../types/custom-lobby-types";
 import randomstring from 'randomstring';
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
@@ -108,7 +108,7 @@ export class Handler {
       case "createLobby":
         let code: string;
         do {
-          code = randomstring.generate({ capitalization: "uppercase", length: 4, readable: true });
+          code = randomstring.generate({ capitalization: "uppercase", length: 5, readable: true });
         } while (this.roomMap.has(code));
         // TODO timeout to remove from map
         // Todo what if connectionStirng is not provided
@@ -119,8 +119,10 @@ export class Handler {
       case "joinLobby":
         const connectionString = this.roomMap.get(request.body.lobbyCode!);
         if (connectionString) {
+          console.log("Room code found", request.body.lobbyCode);
           (response as Response<JoinLobbyResponse>).send({ log: { logSuccessful: true }, data: { connectionString, discoverKey: "dummy", lobbyFound: true } });
         } else {
+          console.log("Room code NOT found", request.body.lobbyCode);
           (response as Response<JoinLobbyResponse>).send({ log: { logSuccessful: true }, data: { connectionString: "dummy", discoverKey: "dummy", lobbyFound: false } });
         }
         break;
