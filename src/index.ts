@@ -46,7 +46,7 @@ function initServer() {
   const app = express();
   const port = 3000;
   // Base URL as it's going to be edited in the game
-  const baselineUrl = "/api000000000000000000000000";
+  const baselineUrl = "/api00000000000000000000";
   // Final URL as it's going to be called
   const baseUrl = baselineUrl + "/Client/";
 
