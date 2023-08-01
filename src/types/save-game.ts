@@ -10034,7 +10034,14 @@ interface PurchaseOptionsThirdParty {
 }
 
 interface DDTAllWeaponsBit {
-  weaponLoadoutsByCharacterType?: WeaponLoadoutsByCharacterType;
+/** TODO, currently here */
+  weaponLoadoutsByCharacterType?: { [key in Teens]: WeaponLoadoutsByCharacterTypeCTTeen } & {
+    CT_DollMaster?: WeaponLoadoutsByCharacterTypeCTDollMaster,
+    CT_Toad?: CTToad;
+    CT_Werewolf?: CTWerewolf;
+    CT_Eradicator?: WeaponLoadoutsByCharacterTypeCTEradicator;
+    CT_Anomaly?: WeaponLoadoutsByCharacterTypeCTAnomaly;
+  };
   pointsByWeaponType?: { [key: string]: PointsByWeaponType };
   teenWeaponUnlockLevels?: { [key: string]: { [key: string]: string[] } };
   weaponXpToNextLevel?: { [key: string]: number };
@@ -10047,19 +10054,6 @@ interface PointsByWeaponType {
   PNT_WeaponLevel?: number;
 }
 
-interface WeaponLoadoutsByCharacterType {
-  CT_Cheerleader?: WeaponLoadoutsByCharacterTypeCTCheerleader;
-  CT_DollMaster?: WeaponLoadoutsByCharacterTypeCTDollMaster;
-  CT_Jock?: WeaponLoadoutsByCharacterTypeCTCheerleader;
-  CT_Outsider?: WeaponLoadoutsByCharacterTypeCTCheerleader;
-  CT_Punk?: WeaponLoadoutsByCharacterTypeCTCheerleader;
-  CT_Toad?: CTToad;
-  CT_Virgin?: WeaponLoadoutsByCharacterTypeCTCheerleader;
-  CT_Werewolf?: CTWerewolf;
-  CT_Eradicator?: WeaponLoadoutsByCharacterTypeCTEradicator;
-  CT_Nerd?: WeaponLoadoutsByCharacterTypeCTCheerleader;
-  CT_Anomaly?: WeaponLoadoutsByCharacterTypeCTAnomaly;
-}
 
 interface WeaponLoadoutsByCharacterTypeCTAnomaly {
   EAT_AnomalyDisperse?: EATAnomalyDisperse;
@@ -10091,7 +10085,7 @@ interface EATAnomalyScourPerk {
   PS_EAPerkAnomalyScour?: string;
 }
 
-interface WeaponLoadoutsByCharacterTypeCTCheerleader {
+interface WeaponLoadoutsByCharacterTypeCTTeen {
   WT_Cross?: CTCheerleaderWTCross;
   WT_DemonSword?: WTDemonSword;
   WT_Flamethrower?: WTFlamethrower;

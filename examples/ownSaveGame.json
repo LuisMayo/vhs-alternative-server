@@ -648,6 +648,7 @@
             }
         },
         "DDT_AllWeaponsBit": {
+            "TODO": "TODO",
             "weaponLoadoutsByCharacterType": {
                 "CT_Cheerleader": {
                     "WT_Cross": {
