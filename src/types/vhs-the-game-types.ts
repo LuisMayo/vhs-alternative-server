@@ -1,3 +1,8 @@
+export interface VHSResponse<T> {
+  data: T;
+  log: LogResponse;
+}
+
 /** Login Endpoint.
  * This endpoint is authenticated using a JWT token issued by Epic. Token structure is below
  * @link https?://api.vhsgame.com/metagame/THEEND_Game/Client/Login/?guid=59459062-35cb-4a8b-8b56-2b77ac286bfd
@@ -39,10 +44,7 @@ export interface LoginRequestTokenAct {
 /** The login response may embed html data in the body, it's not required to be a full JSON body.
  * This is used for code warnings apparently, not needed for us, so I'll detail only the JSON part
  */
-export interface LoginResponse {
-  data: LoginData;
-  log: Log;
-}
+export type LoginResponse = VHSResponse<LoginData>;
 
 export interface LoginData {
   /** RS256 JSON Web Token.
@@ -62,9 +64,6 @@ export interface LoginData {
   warnDbTimestamp?: string;
 }
 
-export interface Log {
-  logSuccessful?: boolean;
-}
 
 export interface DiscoverRequest {
   /** Some kind of ID to know what information we're requesting */
@@ -99,12 +98,9 @@ export enum DiscoverTypes {
   MATCHMAKING_INFO = 524288,
 }
 
-export interface MathmakingInfo {
-  data?: Data;
-  log?: Log;
-}
+export type MathmakingInfoResponse = VHSResponse<MatchmakingData>;
 
-export interface Data {
+export interface MatchmakingData {
   DDT_DynamicBountyRewardsBit?: DDTDynamicBountyRewardsBit;
   playerSettingsData?: string;
   serverTime?: number;
@@ -128,6 +124,6 @@ export interface BountiesByCharType {
   CT_Werewolf?: number;
 }
 
-export interface Log {
+export interface LogResponse {
   logSuccessful?: boolean;
 }

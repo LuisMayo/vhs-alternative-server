@@ -4,20 +4,24 @@ import {
   LoginRequest,
   LoginRequestToken,
   LoginResponse,
+  MathmakingInfoResponse,
 } from "../types/vhs-the-game-types";
 import { Request, Response } from "express";
 
 import { DBConstants } from "./constants";
-import { MathmakingInfoResponse } from "../types/matchmaking-response";
 import { OptionalId } from "mongodb";
 import { SaveGameResponse } from "../types/save-game";
 import { User } from "../database/database.interface";
 import { db } from "..";
 import jwt_decode from "jwt-decode";
+import { CreateLobbyRequest, CreateLobbyResponse, JoinLobbyResponse, UseCustomLobbyRequest, UseCustomLobbyResponse } from "../types/custom-lobby-types";
+import randomstring from 'randomstring';
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
 export class Handler {
+  static roomMap = new Map<string, string>();
+
   static async login(
     request: Request<LoginRequest>,
     response: Response<LoginResponse | string>
@@ -67,7 +71,7 @@ export class Handler {
     switch (request.body.bitsToDiscover) {
       case DiscoverTypes.MATCHMAKING_INFO:
         (response as Response<MathmakingInfoResponse>).send({
-          data: {DDT_DynamicBountyRewardsBit: {lastEarnedBounty: 10, MR_EU_Central1: {bountiesByCharType: {CT_Werewolf: 999}}}},
+          data: { DDT_DynamicBountyRewardsBit: { lastEarnedBounty: 10, MR_EU_Central1: { bountiesByCharType: { CT_Werewolf: 999 } } } },
           log: { logSuccessful: true },
         });
         break;
@@ -96,8 +100,34 @@ export class Handler {
         break;
     }
   }
+  static async lobby(
+    request: Request<any, UseCustomLobbyResponse | string, UseCustomLobbyRequest>,
+    response: Response<UseCustomLobbyResponse | string>
+  ) {
+    switch (request.body.action) {
+      case "createLobby":
+        let code: string;
+        do {
+          code = randomstring.generate({ capitalization: "uppercase", length: 4, readable: true });
+        } while (this.roomMap.has(code));
+        // TODO timeout to remove from map
+        // Todo what if connectionStirng is not provided
+        this.roomMap.set(code, request.body.connectionString!);
+        console.log("Room code generated", code);
+        (response as Response<CreateLobbyResponse>).send({ data: { lobbyCode: code }, log: { logSuccessful: true } });
+        break;
+      case "joinLobby":
+        const connectionString = this.roomMap.get(request.body.lobbyCode!);
+        if (connectionString) {
+          (response as Response<JoinLobbyResponse>).send({ log: { logSuccessful: true }, data: { connectionString, discoverKey: "dummy", lobbyFound: true } });
+        } else {
+          (response as Response<JoinLobbyResponse>).send({ log: { logSuccessful: true }, data: { connectionString: "dummy", discoverKey: "dummy", lobbyFound: false } });
+        }
+        break;
+    }
+  }
 
   static checkOwnTokenAndGetId(req: Request<unknown>) {
-    return req.header("Authorization");
+    return req.header("Authorization")?.split(' ')[1];
   }
 }

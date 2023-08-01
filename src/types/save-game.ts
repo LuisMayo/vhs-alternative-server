@@ -1,11 +1,11 @@
-export interface SaveGameResponse {
-  data?: Data;
-  log?: Log;
+import { VHSResponse } from "./vhs-the-game-types";
+
+export interface SaveGameResponse extends VHSResponse<SaveData> {
   /**Own field, not returned by orginal API */
   userId: string;
 }
 
-interface Data {
+interface SaveData {
   /** Information about the player general progression*/
   DDT_AllPlayerAccountPointsBit?: DDTAllPlayerAccountPointsBit;
   DDT_AllPlayerSlotsBit?: DDTAllPlayerSlotsBit;
@@ -10435,8 +10435,4 @@ interface DDTServerNotificationBit {
 
 interface ServerNotificationData {
   serverNotifications?: any[];
-}
-
-interface Log {
-  logSuccessful?: boolean;
 }
