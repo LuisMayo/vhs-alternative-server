@@ -47,7 +47,6 @@ export class Handler {
     if (existingUser) {
       id = existingUser._id.toHexString();
     } else {
-      // TODO do we need to call EOS or Steam to get the Display Name? :(
       id = (
         await collection.insertOne({ displayName: name, epicId })
       ).insertedId.toHexString();
@@ -56,7 +55,7 @@ export class Handler {
       data: {
         displayName: name,
         playerAccountId: id,
-        sessionTicketId: "dummy",
+        sessionTicketId: id,
       },
       log: { logSuccessful: true },
     });
