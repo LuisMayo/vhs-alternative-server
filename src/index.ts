@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { LoginRequest, LoginResponse } from "./types/vhs-the-game-types";
-import express, { Request } from "express";
+import express, { NextFunction, Request, Response } from "express";
 
 import { DBConstants } from "./classes/constants";
 import { Handler } from "./classes/handler";
@@ -51,26 +51,45 @@ function initServer() {
   // const baselineUrl = "/api00000000000000000000";
   // // Final URL as it's going to be called
   // const baseUrl = baselineUrl + "/Client/";
-  const baseUrls = ['/metagame/THEEND_GAME/Client/', '/api00000000000000000000/'];
-
+  const baseUrls = [
+    "/metagame/THEEND_GAME/Client/",
+    "/api00000000000000000000/",
+  ];
 
   app.use(morgan("dev"));
   app.use(express.json());
+  app.use((err: any, req: Request, res: Response, _next: NextFunction): void => {
+    console.error(err.stack);
+    res.status(500).send("Something broke!");
+  });
   app.post(
-    baseUrls.map(route => route + "Login"),
+    baseUrls.map((route) => route + "Login"),
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
       console.log("a");
       Handler.login(req, res);
     }
   );
-  app.post(baseUrls.map(route => route + "Discover"), (req, res) => {
-    console.log("e");
-    Handler.discover(req, res);
-  });
-  app.post(baseUrls.map(route => route + "UseCustomLobby"), (req, res) => {
-    console.log("e");
-    Handler.lobby(req, res);
-  });
+  app.post(
+    baseUrls.map((route) => route + "Discover"),
+    (req, res) => {
+      console.log("e");
+      Handler.discover(req, res);
+    }
+  );
+  app.post(
+    baseUrls.map((route) => route + "UseCustomLobby"),
+    (req, res) => {
+      console.log("e");
+      Handler.lobby(req, res);
+    }
+  );
+  app.post(
+    baseUrls.map((route) => route + "SetCharacterLoadout"),
+    (req, res) => {
+      console.log("e");
+      Handler.setCharacterLoadout(req, res);
+    }
+  );
   app.get("/", (req, res) => res.send("HEY!"));
   // https
   //   .createServer(

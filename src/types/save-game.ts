@@ -332,14 +332,14 @@ enum Ctf {
 
 interface DDTAllLoadoutsBit {
   /**Experience, level, matchmaking info and equipment */
-  characterLoadouts?: { [key in Monsters]: CharacterLoadoutsCTEvil } & { [key in Teens]: CharacterLoadoutsCTTeen };
+  characterLoadouts: { [key in Monsters]: CharacterLoadoutsCTEvil } & { [key in Teens]: CharacterLoadoutsCTTeen };
   /**Unkown. But it seems to be constant across savegames? */
-  teenAffinities?: TeenAffinities;
+  teenAffinities: TeenAffinities;
   /**For each level how much exp it costs to level UP */
-  charXpLevelCosts?: { [key: number]: number };
+  charXpLevelCosts: { [key: number]: number };
 }
 
-enum Monsters {
+export enum Monsters {
   DollMaster = "CT_DollMaster",
   WART = "CT_Toad",
   Werewolf = "CT_Werewolf",
@@ -347,7 +347,7 @@ enum Monsters {
   Anomlay = "CT_Anomaly"
 }
 
-enum Teens {
+export enum Teens {
   Gloria = "CT_Cheerleader",
   Brett = "CT_Jock",
   Jess = "CT_Outsider",
@@ -357,11 +357,11 @@ enum Teens {
 }
 
 
-interface CharacterLoadoutsCTEvil {
+export interface CharacterLoadoutsCTEvil {
   /**Points, level, etc. And Mathmaking Rank */
-  points?: EvilPoints;
+  points: EvilPoints;
   /**Equipment */
-  uiSlots?: CTEvilUISlots;
+  uiSlots: CTEvilUISlots;
 }
 
 interface BasePoints {
@@ -379,7 +379,7 @@ interface EvilPoints extends BasePoints {
   PNT_EvilGamesPlayedThisSeason?: number;
 }
 
-interface CTEvilUISlots {
+export interface CTEvilUISlots {
   UIS_EvilFeast?: string;
   UIS_EvilRage?: string;
   UIS_EvilScream?: string;
@@ -408,14 +408,14 @@ interface CTEvilUISlots {
   UIS_EvilPerk5?: string;
 }
 
-interface CharacterLoadoutsCTTeen {
+export interface CharacterLoadoutsCTTeen {
   /**Points, level, perk slots... */
-  points?: BasePoints;
+  points: BasePoints;
   /** Equipment */
-  uiSlots?: CTTeenUISlots;
+  uiSlots: CTTeenUISlots;
 }
 
-interface CTTeenUISlots {
+export interface CTTeenUISlots {
   UIS_TeenClothingBottom?: string;
   UIS_TeenClothingFace?: string;
   UIS_TeenClothingFeet?: string;

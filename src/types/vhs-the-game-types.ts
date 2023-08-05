@@ -1,3 +1,5 @@
+import { CTEvilUISlots, CharacterLoadoutsCTEvil, CharacterLoadoutsCTTeen } from "./save-game";
+
 export interface VHSResponse<T> {
   data: T;
   log: LogResponse;
@@ -64,7 +66,6 @@ export interface LoginData {
   warnDbTimestamp?: string;
 }
 
-
 export interface DiscoverRequest {
   /** Some kind of ID to know what information we're requesting */
   bitsToDiscover?: DiscoverTypes;
@@ -126,4 +127,21 @@ export interface BountiesByCharType {
 
 export interface LogResponse {
   logSuccessful?: boolean;
+}
+
+export interface SetCharacterLoadoutRequest {
+  characterType: string;
+  idpk: string;
+  loadoutChanges: { [x: string]: string };
+  returnChangesOnly: boolean;
+  sessionTicketId: string;
+  version: number;
+}
+
+export type SetCharacterLoadoutResponse =
+  VHSResponse<SetCharacterLoadoutResponseData>;
+
+export interface SetCharacterLoadoutResponseData {
+  changedSlotNames: string[];
+  characterLoadout: CharacterLoadoutsCTEvil | CharacterLoadoutsCTTeen;
 }
