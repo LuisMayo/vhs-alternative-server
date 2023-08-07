@@ -17,6 +17,8 @@ import {
   SetCharacterLoadoutResponse,
   SetWeaponLoadoutsForCharacterRequest,
   SetWeaponLoadoutsForCharacterResponse,
+  UploadPlayerSettingsRequest,
+  UploadPlayerSettingsResponse,
 } from "../types/vhs-the-game-types";
 import {
   CreateLobbyRequest,
@@ -185,6 +187,32 @@ export class Handler {
       },
     });
   }
+
+  static async setCharacterSettings(
+    request: Request<
+      any,
+      UploadPlayerSettingsResponse | string,
+      UploadPlayerSettingsRequest
+    >,
+    response: Response<UploadPlayerSettingsResponse | string>
+  ) {
+    const id = this.checkOwnTokenAndGetId(request);
+    let success: boolean;
+    try {
+      await db
+        .collection(DBConstants.saveGameCollection)
+        .updateOne({ [DBConstants.userIdField]: id }, {$set: {"data.playerSettingsData": request.body.playerSettingsData}});
+        success = true;
+    } catch (e) {
+      success = false;
+    }
+    return response.send({
+      log: { logSuccessful: true },
+      data: {
+        uploadSuccessful: success
+      },
+    });
+    }
 
   static async lobby(
     request: Request<

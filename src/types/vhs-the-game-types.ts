@@ -161,7 +161,8 @@ export interface SetWeaponLoadoutsForCharacterRequest {
   weaponChanges: { [x: string]: { [x: string]: string } };
 }
 
-export type SetWeaponLoadoutsForCharacterResponse = VHSResponse<SetWeaponLoadoutsForCharacterResponseData>;
+export type SetWeaponLoadoutsForCharacterResponse =
+  VHSResponse<SetWeaponLoadoutsForCharacterResponseData>;
 
 export type CharacterWeaponLoadout = {
   // TODO, extract weapons into enum in savegame typings
@@ -177,5 +178,18 @@ export type CharacterWeaponLoadout = {
 };
 
 export type SetWeaponLoadoutsForCharacterResponseData = {
-  [x in Teens | Monsters]?: CharacterWeaponLoadout
+  [x in Teens | Monsters]?: CharacterWeaponLoadout;
+};
+
+export type UploadPlayerSettingsRequest = {
+  idpk: string;
+  playerSettingsData: string;
+  sessionTicketId: string;
+  version: number;
+};
+
+export type UploadPlayerSettingsResponse = VHSResponse<UploadPlayerSettingsResponseData>;
+
+export type UploadPlayerSettingsResponseData = {
+  uploadSuccessful: boolean;
 }

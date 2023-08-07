@@ -97,6 +97,13 @@ function initServer() {
       Handler.setCharacterWeapon(req, res);
     }
   );
+  app.post(
+    baseUrls.map((route) => route + "UploadPlayerSettings"),
+    (req, res) => {
+      console.log("e");
+      Handler.setCharacterSettings(req, res);
+    }
+  );
   app.get("/", (req, res) => res.send("HEY!"));
   // https
   //   .createServer(
