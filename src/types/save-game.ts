@@ -1,12 +1,12 @@
 import { VHSResponse } from "./vhs-the-game-types";
 
 export interface SaveGameResponse extends VHSResponse<SaveData> {
-  /**Own field, not returned by orginal API */
+  /**Own field, not returned by original API */
   userId: string;
 }
 
 interface SaveData {
-  /** Information about the player general progression*/
+  /** Information about the player's general progression*/
   DDT_AllPlayerAccountPointsBit?: DDTAllPlayerAccountPointsBit;
   DDT_AllPlayerSlotsBit?: DDTAllPlayerSlotsBit;
   /**Character-related info */
@@ -90,6 +90,7 @@ export interface C {
   mActions?: string[];
 }
 
+/**Tips for navigating the main menu as a new player (not sure if this is functional)*/
 export interface MTipsHistory {
   tipText?: string;
   tipType?: string;
@@ -104,6 +105,7 @@ export interface MTipsHistory {
   tipCondition?: string;
 }
 
+/**Collects Statistics for each character, monsters collect data per various teens, etc.*/
 interface DDTAccountStatsBit {
   CT_Punk?: DDTAccountStatsBitTeen;
   CT_Cheerleader?: DDTAccountStatsBitTeen;
@@ -310,12 +312,14 @@ enum State {
   Disconnected = "disconnected",
 }
 
+
 interface DDTAllInventoryItemsBit {
   item?: string;
   ctf?: Ctf;
   count?: number;
 }
 
+/** Meaning unknown at the moment, but likely an indicator of progress when midway through something like a movie or journey */
 enum Ctf {
   Empty = "",
   The000000000000000000000000001000000 = "000000000000000000000000001000000",
@@ -333,7 +337,7 @@ enum Ctf {
 interface DDTAllLoadoutsBit {
   /**Experience, level, matchmaking info and equipment */
   characterLoadouts: { [key in Monsters]: CharacterLoadoutsCTEvil } & { [key in Teens]: CharacterLoadoutsCTTeen };
-  /**Unkown. But it seems to be constant across savegames? */
+  /**Teen Perk Affinities for point discounts */
   teenAffinities: TeenAffinities;
   /**For each level how much exp it costs to level UP */
   charXpLevelCosts: { [key: number]: number };
@@ -358,23 +362,28 @@ export enum Teens {
 
 
 export interface CharacterLoadoutsCTEvil {
-  /**Points, level, etc. And Mathmaking Rank */
+  /**Points, level, etc. And Matchmaking Rank */
   points: EvilPoints;
   /**Equipment */
   uiSlots: CTEvilUISlots;
 }
-
+/**Data regarding player level and progress. Also tracks Affinities and Perk Slots */
 interface BasePoints {
+  /**Amount of aura to progress journey */
   PNT_AuraPoints?: number;
+  /**LVL EXP */
   PNT_ExperiencePoints?: number;
   PNT_Level?: number;
   PNT_PerkPoints?: number;
   PNT_PerkSlots?: number;
+  /** Discount for each Affinity */
   PNT_StarPower?: number;
+  /**Number of Affinities unlocked */
   PNT_AffinitySlots?: number;
 }
 
 interface EvilPoints extends BasePoints {
+  /**Only noted for monster for some reason... default is 200 */
   PNT_EvilMatchMakingRating?: number;
   PNT_EvilGamesPlayedThisSeason?: number;
 }
@@ -497,7 +506,9 @@ enum PlayerAccountPoints {
   PNT_BurnStigmaLevel = "PNT_BurnStigmaLevel",
   PNT_CurrentSeason = "PNT_CurrentSeason",
   PNT_EvilPrizePoints = "PNT_EvilPrizePoints",
+  /**Flux */
   PNT_FanPoints = "PNT_FanPoints",
+  /**Fan Bux */
   PNT_HardCurrency = "PNT_HardCurrency",
   PNT_HolyStigmaExperience = "PNT_HolyStigmaExperience",
   PNT_HolyStigmaLevel = "PNT_HolyStigmaLevel",
@@ -532,11 +543,13 @@ interface DDTAllSceneEnactmentStatesBit {
   movieTranscriptNumber?: number;
 }
 
+/**Current Movie across a Role (Limited time usually) */
 interface ActiveNonClassicSetIDSByFactionType {
   teen?: string;
   evil?: string;
 }
 
+/**Current Movie on each Character */
 interface ActiveSetIDSByCharacterType {
   CT_Cheerleader?: string;
   CT_DollMaster?: string;
@@ -666,6 +679,7 @@ interface DDMVLTD2023_VALENTINESMYFUREVERLOVESTDS01RequiredEvents {
   MET_PlayingAsVirgin?: number;
 }
 
+/**Details for a particular scene in a movie */
 interface SceneData {
   displayName?: string;
   description?: string;
@@ -675,6 +689,7 @@ interface SceneData {
   currentStarLevel?: number;
 }
 
+/** Related to SceneData */
 enum ItemIcon {
   PlaceholderNoicon = "placeholder_noicon",
 }
@@ -9820,10 +9835,15 @@ interface DDMVTNVIRGIN03_STDS11ProgressionEvents {
   MET_CNT_MsecsHealingSelf?: METCNTVanquishedEvilClass;
 }
 
+/**Data for the current store */
 interface DDTAllStoreItemsBit {
+  /**Buy Slots */
   Slots?: Slots;
+  /**ID used by HB to track the version of the store */
   StoreDataGuid?: string;
+  /**Slot on far right for Daily Login Reward */
   RewardDrops?: RewardDrops;
+  /**Item pack identifiers, or Stock Keeping Units */
   Skus?: Skus;
 }
 
@@ -10042,7 +10062,9 @@ interface DDTAllWeaponsBit {
     CT_Eradicator?: WeaponLoadoutsByCharacterTypeCTEradicator;
     CT_Anomaly?: WeaponLoadoutsByCharacterTypeCTAnomaly;
   };
+  /**Obtains levels and XP for each weapon */
   pointsByWeaponType?: { [key: string]: PointsByWeaponType };
+  /**Obtains levels required to unlock weapon skins and mods */
   teenWeaponUnlockLevels?: { [key: string]: { [key: string]: string[] } };
   weaponXpToNextLevel?: { [key: string]: number };
   stigmaXpToNextLevel?: { [key: string]: number };
@@ -10053,7 +10075,6 @@ interface PointsByWeaponType {
   PNT_WeaponExperience?: number;
   PNT_WeaponLevel?: number;
 }
-
 
 interface WeaponLoadoutsByCharacterTypeCTAnomaly {
   EAT_AnomalyDisperse?: EATAnomalyDisperse;
@@ -10392,7 +10413,7 @@ interface DDTJourneyDataBit {
   journeysByJourneyKey?: JourneysByJourneyKey;
   journeyGuid?: string;
 }
-
+/**Collects Journey Data for each character. Each number refers to the Journey number (1-3), and each node is marked by a completion boolean value */
 interface JourneysByJourneyKey {
   CT_Cheerleader?: JourneysByJourneyKeyCTCheerleader;
   CT_DollMaster?: JourneysByJourneyKeyCTCheerleader;
@@ -10425,6 +10446,7 @@ interface JourneysByJourneyKeyCTCheerleader {
   "1": { [key: string]: { [key: string]: boolean } };
 }
 
+/**Server Details about current seasonal event */
 interface DDTSeasonalEventBit {
   activeSeasonalEventTypes?: string[];
 }
