@@ -1,4 +1,10 @@
-import { CTEvilUISlots, CharacterLoadoutsCTEvil, CharacterLoadoutsCTTeen } from "./save-game";
+import {
+  CTEvilUISlots,
+  CharacterLoadoutsCTEvil,
+  CharacterLoadoutsCTTeen,
+  Monsters,
+  Teens,
+} from "./save-game";
 
 export interface VHSResponse<T> {
   data: T;
@@ -144,4 +150,32 @@ export type SetCharacterLoadoutResponse =
 export interface SetCharacterLoadoutResponseData {
   changedSlotNames: string[];
   characterLoadout: CharacterLoadoutsCTEvil | CharacterLoadoutsCTTeen;
+}
+
+export interface SetWeaponLoadoutsForCharacterRequest {
+  characterType: Teens | Monsters;
+  idpk: string;
+  sessionTicketId: string;
+  version: number;
+  // TODO, extract weapons into enum in savegame typings
+  weaponChanges: { [x: string]: { [x: string]: string } };
+}
+
+export type SetWeaponLoadoutsForCharacterResponse = VHSResponse<SetWeaponLoadoutsForCharacterResponseData>;
+
+export type CharacterWeaponLoadout = {
+  // TODO, extract weapons into enum in savegame typings
+  [x: string]: {
+    perk?: {
+      [x: string]: string;
+    };
+    skin?: {
+      [x: string]: string;
+    };
+    unlockLevel: number;
+  };
+};
+
+export type SetWeaponLoadoutsForCharacterResponseData = {
+  [x in Teens | Monsters]?: CharacterWeaponLoadout
 }

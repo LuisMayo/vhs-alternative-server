@@ -6,13 +6,7 @@ import {
   Teens,
 } from "../types/save-game";
 import {
-  CreateLobbyRequest,
-  CreateLobbyResponse,
-  JoinLobbyResponse,
-  UseCustomLobbyRequest,
-  UseCustomLobbyResponse,
-} from "../types/custom-lobby-types";
-import {
+  CharacterWeaponLoadout,
   DiscoverRequest,
   DiscoverTypes,
   LoginRequest,
@@ -21,7 +15,16 @@ import {
   MathmakingInfoResponse,
   SetCharacterLoadoutRequest,
   SetCharacterLoadoutResponse,
+  SetWeaponLoadoutsForCharacterRequest,
+  SetWeaponLoadoutsForCharacterResponse,
 } from "../types/vhs-the-game-types";
+import {
+  CreateLobbyRequest,
+  CreateLobbyResponse,
+  JoinLobbyResponse,
+  UseCustomLobbyRequest,
+  UseCustomLobbyResponse,
+} from "../types/custom-lobby-types";
 import { Request, Response } from "express";
 
 import { DBConstants } from "./constants";
@@ -133,6 +136,52 @@ export class Handler {
       data: {
         changedSlotNames: Object.keys(request.body.loadoutChanges),
         characterLoadout: loadout,
+      },
+    });
+  }
+
+  static async setCharacterWeapon(
+    request: Request<
+      any,
+      SetWeaponLoadoutsForCharacterResponse | string,
+      SetWeaponLoadoutsForCharacterRequest
+    >,
+    response: Response<SetWeaponLoadoutsForCharacterResponse | string>
+  ) {
+    const id = this.checkOwnTokenAndGetId(request);
+    const saveData = await this.getUserSaveGame(id);
+    ///@ts-ignore incomplete typings
+    const loadout:
+      | {
+          [x: string]: {
+            skin?: { [x: string]: string };
+            perk?: { [x: string]: string };
+            unlockLevel?: number;
+          };
+        }
+      | undefined =
+      saveData.data.DDT_AllWeaponsBit?.weaponLoadoutsByCharacterType?.[
+        request.body.characterType as Teens | Monsters
+      ];
+    if (!loadout) {
+      throw new Error("Unknown character");
+    }
+    for (const weapon of Object.entries(request.body.weaponChanges)) {
+      for (const property of Object.entries(weapon[1])) {
+        if (loadout[weapon[0]].perk?.[property[0]] != null) {
+          loadout[weapon[0]]!.perk![property[0]] = property[1];
+        } else if (loadout[weapon[0]].skin?.[property[0]] != null) {
+          loadout[weapon[0]]!.skin![property[0]] = property[1];
+        }
+      }
+    }
+    await db
+      .collection(DBConstants.saveGameCollection)
+      .replaceOne({ [DBConstants.userIdField]: id }, saveData);
+    return response.send({
+      log: { logSuccessful: true },
+      data: {
+        [request.body.characterType]: loadout
       },
     });
   }

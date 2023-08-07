@@ -90,6 +90,13 @@ function initServer() {
       Handler.setCharacterLoadout(req, res);
     }
   );
+  app.post(
+    baseUrls.map((route) => route + "SetWeaponLoadoutsForCharacter"),
+    (req, res) => {
+      console.log("e");
+      Handler.setCharacterWeapon(req, res);
+    }
+  );
   app.get("/", (req, res) => res.send("HEY!"));
   // https
   //   .createServer(
