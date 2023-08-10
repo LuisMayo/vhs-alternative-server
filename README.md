@@ -1,4 +1,4 @@
-# vhs-alternative-server
+# VHS Alternative Server
 A Video Horror Society server emulator. Allowing users to enjoy Hellbent's developed game after its sunset on September 8th, 2023.
 
 ## How to Install
