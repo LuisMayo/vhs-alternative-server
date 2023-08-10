@@ -21,6 +21,7 @@ This file serves to redirect certain domains to certain IPs. In this case we nee
 173.249.51.206     mms.api.vhsgame.com
 ```
 (In case you want to self-host change the IP to 127.0.0.1. If you're going to use another server use the IP provided by your server provider)
+
 You also need to install [my CA certificate](https://github.com/LuisMayo/vhs-alternative-server/raw/main/LuigiDevGoodCA.crt) (or the other server's one). [Instructions](https://community.spiceworks.com/how_to/1839-installing-self-signed-ca-certificate-in-windows)
 Then launch the game as usual
 
