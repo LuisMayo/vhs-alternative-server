@@ -22,7 +22,7 @@ Currently, we have two known methods of patching the game:
 In order to patch the game through hosts redirection you need to edit `C:\Windows\system32\drivers\etc\hosts`.
 This file serves to redirect certain domains to certain IPs. In this case, we need to redirect all VHS domains to our own. This would need to add the following
 ```
-173.249.51.206    api.vhsgame.com
+173.249.51.206     api.vhsgame.com
 173.249.51.206     ns.api.vhsgame.com
 173.249.51.206     cdn.vhsgame.com
 173.249.51.206     mms.api.vhsgame.com
