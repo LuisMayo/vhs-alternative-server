@@ -9,7 +9,7 @@ Currently we have two known methods of patching the game:
 |       Method      | Play With Bots | Multiplayer game |      Supported OSs      | Requires Admin |
 |:-----------------:|----------------|------------------|:-----------------------:|----------------|
 | Hosts Redirection |        ✅       |         ✅        |         Windows         |        ✅       |
-| Exe Patching      |        ✅       |         ❌        | Windows; Linux (Proton) |        ❌       |
+| Executable Patching      |        ✅       |         ❌        | Windows; Linux (Proton) |        ❌       |
 
 #### Hosts Redirection
 In order to patch the game through hosts redirection you need to edit `C:\Windows\system32\drivers\etc\hosts`.
@@ -25,8 +25,8 @@ This file serves to redirect certain domains to certain IPs. In this case we nee
 You also need to install [my CA certificate](https://github.com/LuisMayo/vhs-alternative-server/raw/main/LuigiDevGoodCA.crt) (or the other server's one). [Instructions](https://community.spiceworks.com/how_to/1839-installing-self-signed-ca-certificate-in-windows)
 Then launch the game as usual
 
-#### Exe Patching
-Exe patching consists on modifying the executable to point to a new domain. You need to modify starting on 0x5382CA0 up to 0x5382D1F. The text should be encoded using UTF-16(LE). The string must include the protocol and 4 string replacement cues (%s). This cues are later replace by `api`, `client`, the endpoint in particular and a randomly generated GUID. Any HTTP URL should be fine. TLS is not required so plain HTTP URLs would suffice.
+#### Executable Patching
+Executable patching consists on modifying the executable to point to a new domain. You need to modify starting on 0x5382CA0 up to 0x5382D1F. The text should be encoded using UTF-16(LE). The string must include the protocol and 4 string replacement cues (%s). This cues are later replace by `api`, `client`, the endpoint in particular and a randomly generated GUID. Any HTTP URL should be fine. TLS is not required so plain HTTP URLs would suffice.
 Currently the "official" server does not support this method of connecting (selfhosting should do). It will be supported soon
 
 ### Running the server (User)
