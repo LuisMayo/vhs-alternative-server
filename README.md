@@ -13,8 +13,14 @@ Currently we have two known methods of patching the game:
 
 #### Hosts Redirection
 In order to patch the game through hosts redirection you need to edit `C:\Windows\system32\drivers\etc\hosts`.
-This file serves to redirect certain domains to certain IPs. In this case we need to redirect all VHS domains to our own. This would be
+This file serves to redirect certain domains to certain IPs. In this case we need to redirect all VHS domains to our own. This would need to add the following
 ```TBD```
+(In case you want to self-host change the IP to 127.0.0.1. If you're going to use another server use the IP provided by your server provider)
+You also need to install [my CA certificate](https://github.com/LuisMayo/vhs-alternative-server/raw/main/LuigiDevGoodCA.crt) (or the other server's one). [Instructions](https://community.spiceworks.com/how_to/1839-installing-self-signed-ca-certificate-in-windows)
+Then launch the game as usual
+
+#### Exe Patching
+Exe patching consists on modifying the executable fail to point to a new domain
 
 ### Running the server
  Install dependencies
