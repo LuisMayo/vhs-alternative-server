@@ -3,9 +3,13 @@ A Video Horror Society server emulator. Allowing users to enjoy Hellbent's devel
 
 ## How to Install
 _The following steps will allow you to seamlessly set up the server structure for clients or hosts._
+
+_Hosts Redirection:_
 1. Go to this link and install the latest tools: [Link to scripts](https://github.com/SkelXton/VHS-Redirector-Scripts/releases/latest)
 2. Run the installation script with Administrator Privileges.
 3. Open the VHS Server Coordinator and use the GUI to select your given server and details or set it up to host a game.
+
+_Executable Patching is TBD_
 
 If you ever decide to remove the game and patches, you can use the uninstall script to clean up our patches.
 
