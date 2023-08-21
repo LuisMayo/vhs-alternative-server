@@ -17,6 +17,8 @@ import {
   SetCharacterLoadoutResponse,
   SetWeaponLoadoutsForCharacterRequest,
   SetWeaponLoadoutsForCharacterResponse,
+  SlotChangesRequest,
+  SlotChangesResponse,
   UploadPlayerSettingsRequest,
   UploadPlayerSettingsResponse,
 } from "../types/vhs-the-game-types";
@@ -142,6 +144,36 @@ export class Handler {
     });
   }
 
+  static async setCharacterSlots(
+    request: Request<any, SlotChangesResponse | string, SlotChangesRequest>,
+    response: Response<SlotChangesResponse | string>
+  ) {
+    const id = this.checkOwnTokenAndGetId(request);
+    const saveData = await this.getUserSaveGame(id);
+    const loadout = saveData.data.DDT_AllPlayerSlotsBit?.playerAccountSlots;
+    if (!loadout) {
+      throw new Error("Unknown character");
+    }
+    for (const change of Object.entries(request.body.slotChanges)) {
+      if (change[1] && typeof (loadout as any)[change[0]] === 'string') {
+        ((loadout as any)[change[0]] as string) = change[1];
+      }
+    }
+    await db
+      .collection(DBConstants.saveGameCollection)
+      .replaceOne({ [DBConstants.userIdField]: id }, saveData);
+    return response.send({
+      log: { logSuccessful: true },
+      data: {
+        // TODO return the truth instead of this
+        changedSlotNames: Object.keys(request.body.slotChanges).map((item) => {
+          return { [item]: true };
+        }),
+        playerSlots: loadout,
+      },
+    });
+  }
+
   static async setCharacterWeapon(
     request: Request<
       any,
@@ -183,7 +215,7 @@ export class Handler {
     return response.send({
       log: { logSuccessful: true },
       data: {
-        [request.body.characterType]: loadout
+        [request.body.characterType]: loadout,
       },
     });
   }
@@ -201,18 +233,25 @@ export class Handler {
     try {
       await db
         .collection(DBConstants.saveGameCollection)
-        .updateOne({ [DBConstants.userIdField]: id }, {$set: {"data.playerSettingsData": request.body.playerSettingsData}});
-        success = true;
+        .updateOne(
+          { [DBConstants.userIdField]: id },
+          {
+            $set: {
+              "data.playerSettingsData": request.body.playerSettingsData,
+            },
+          }
+        );
+      success = true;
     } catch (e) {
       success = false;
     }
     return response.send({
       log: { logSuccessful: true },
       data: {
-        uploadSuccessful: success
+        uploadSuccessful: success,
       },
     });
-    }
+  }
 
   static async lobby(
     request: Request<

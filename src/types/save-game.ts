@@ -526,7 +526,7 @@ interface DDTAllPlayerSlotsBit {
   playerAccountSlots?: PlayerAccountSlots;
 }
 
-interface PlayerAccountSlots {
+export interface PlayerAccountSlots {
   PS_PlayerAccountPortrait?: string;
   /** Current selected prize for public monster matches */
   PS_PrizeEvil?: string;

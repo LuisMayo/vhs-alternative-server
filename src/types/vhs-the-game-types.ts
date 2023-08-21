@@ -3,6 +3,7 @@ import {
   CharacterLoadoutsCTEvil,
   CharacterLoadoutsCTTeen,
   Monsters,
+  PlayerAccountSlots,
   Teens,
 } from "./save-game";
 
@@ -188,8 +189,23 @@ export type UploadPlayerSettingsRequest = {
   version: number;
 };
 
-export type UploadPlayerSettingsResponse = VHSResponse<UploadPlayerSettingsResponseData>;
+export type UploadPlayerSettingsResponse =
+  VHSResponse<UploadPlayerSettingsResponseData>;
 
 export type UploadPlayerSettingsResponseData = {
   uploadSuccessful: boolean;
-}
+};
+
+export type SlotChangesRequest = {
+  sessionTicketId: string;
+  slotChanges: PlayerAccountSlots;
+  version: number;
+  idpk: string;
+};
+
+export type SlotChangesResponseData = {
+  playerSlots: PlayerAccountSlots;
+  changedSlotNames: { [x: string]: boolean }[];
+};
+
+export type SlotChangesResponse = VHSResponse<SlotChangesResponseData>;

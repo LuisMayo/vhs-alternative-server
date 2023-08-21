@@ -58,10 +58,12 @@ function initServer() {
 
   app.use(morgan("dev"));
   app.use(express.json());
-  app.use((err: any, req: Request, res: Response, _next: NextFunction): void => {
-    console.error(err.stack);
-    res.status(500).send("Something broke!");
-  });
+  app.use(
+    (err: any, req: Request, res: Response, _next: NextFunction): void => {
+      console.error(err.stack);
+      res.status(500).send("Something broke!");
+    }
+  );
   app.post(
     baseUrls.map((route) => route + "Login"),
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
@@ -104,6 +106,18 @@ function initServer() {
       Handler.setCharacterSettings(req, res);
     }
   );
+  app.post(
+    baseUrls.map((route) => route + "SetPlayerSlots"),
+    (req, res) => {
+      Handler.setCharacterSlots(req, res);
+    }
+  );
+
+  app.post("*", (req, res) => {
+    console.log('UNKOWN REQUEST');
+    console.log(req.body);
+    res.send({ log: { logSuccessful: true } });
+  });
   app.get("/", (req, res) => res.send("HEY!"));
   // https
   //   .createServer(
