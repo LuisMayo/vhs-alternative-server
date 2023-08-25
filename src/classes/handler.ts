@@ -9,6 +9,7 @@ import {
   CharacterWeaponLoadout,
   DiscoverRequest,
   DiscoverTypes,
+  EMPTY_SUCCESFUL_RESPONSE,
   LoginRequest,
   LoginRequestToken,
   LoginResponse,
@@ -300,6 +301,9 @@ export class Handler {
           });
         }
         break;
+        default:
+          console.log('Unkown custom lobby action', request.body.action);
+          response.send(EMPTY_SUCCESFUL_RESPONSE as CreateLobbyResponse);
     }
   }
 

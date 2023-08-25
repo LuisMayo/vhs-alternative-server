@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { LoginRequest, LoginResponse } from "./types/vhs-the-game-types";
+import { EMPTY_SUCCESFUL_RESPONSE, LoginRequest, LoginResponse } from "./types/vhs-the-game-types";
 import express, { NextFunction, Request, Response } from "express";
 
 import { DBConstants } from "./classes/constants";
@@ -65,9 +65,9 @@ function initServer() {
     }
   );
   app.post(
-    baseUrls.map((route) => route + "Login"),
+    [...baseUrls.map((route) => route + "Login"), ...baseUrls.map((route) => route + "ReplaceExistingSessionToken")],
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
-      console.log("a");
+      console.log(req.body);
       Handler.login(req, res);
     }
   );
@@ -116,7 +116,7 @@ function initServer() {
   app.post("*", (req, res) => {
     console.log('UNKOWN REQUEST');
     console.log(req.body);
-    res.send({ log: { logSuccessful: true } });
+    res.send(EMPTY_SUCCESFUL_RESPONSE);
   });
   app.get("/", (req, res) => res.send("HEY!"));
   // https

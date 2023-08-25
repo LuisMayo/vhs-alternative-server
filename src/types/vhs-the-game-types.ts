@@ -7,6 +7,8 @@ import {
   Teens,
 } from "./save-game";
 
+export const EMPTY_SUCCESFUL_RESPONSE = { log: { logSuccessful: true } };
+
 export interface VHSResponse<T> {
   data: T;
   log: LogResponse;
