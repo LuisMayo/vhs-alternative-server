@@ -30,6 +30,7 @@ import {
   UseCustomLobbyRequest,
   UseCustomLobbyResponse,
   P2pMatch_OnClientLeaveLobby,
+  P2P_MATCH_ON_CLIENT_LEAVE_RESPONSE,
 } from "../types/custom-lobby-types";
 import { Request, Response } from "express";
 
