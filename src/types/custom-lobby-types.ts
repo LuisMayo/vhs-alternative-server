@@ -32,3 +32,11 @@ export interface JoinLobbyData {
     discoverKey?: string;
 }
 export type UseCustomLobbyResponse = CreateLobbyResponse | JoinLobbyResponse;
+
+export interface P2pMatch_OnClientLeaveLobby {
+    action?: 'leaveLobby';
+    connectionString?: string;
+    sessionTicketId?: string;
+    version?: number;
+    idpk?: string;
+}
