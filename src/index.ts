@@ -112,6 +112,12 @@ function initServer() {
       Handler.setCharacterSlots(req, res);
     }
   );
+  app.post(
+    baseUrls.map((route) => route + "P2pMatch_OnClientLeaveLobby"),
+    (req, res) => {
+      Handler.onClientLeaveLobby(req, res);
+    }
+  );
 
   app.post("*", (req, res) => {
     console.log('UNKOWN REQUEST');
