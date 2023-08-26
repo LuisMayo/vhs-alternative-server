@@ -40,3 +40,4 @@ export interface P2pMatch_OnClientLeaveLobby {
     version?: number;
     idpk?: string;
 }
+export const P2P_MATCH_ON_CLIENT_LEAVE_RESPONSE = { error: 1102, log: { logSuccessful: true } };
