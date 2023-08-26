@@ -29,6 +29,7 @@ import {
   JoinLobbyResponse,
   UseCustomLobbyRequest,
   UseCustomLobbyResponse,
+  P2pMatch_OnClientLeaveLobby,
 } from "../types/custom-lobby-types";
 import { Request, Response } from "express";
 
