@@ -48,7 +48,6 @@ export class Handler {
     request: Request<LoginRequest>,
     response: Response<LoginResponse | string>
   ) {
-    const collection = db.collection<User>("users");
     const token = request.header("Authorization")?.split(" ")[1];
     if (!token) {
       return response.status(401).send("Token not found");
