@@ -70,7 +70,6 @@ export class Handler {
     let id: string;
     let name = "Dummy";
     if (existingUser) {
-      // If it comes from database it always is going to have an ID
       id = existingUser._id;
     } else {
       id = (await collection.insertAsync({ displayName: name, epicId }))._id;
