@@ -1,83 +1,67 @@
-import { Collection, Db, MongoClient } from "mongodb";
-
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
+import { readFile } from "fs/promises";
 
+export enum Collections {
+  USERS = "users",
+  SAVE_GAME = "save-games",
+}
+
+export type WithOptionalId<T> = T & {_id?: string};
 export class Database {
-  currentDbInfo!:
-    | {
-        type: "mongodb";
-        db: Db;
-      }
-    | {
-        type: "nedb";
-        db: {[x: string]: Datastore};
-      };
+  db!: Record<Collections, Datastore>;
 
   constructor() {}
 
   async init() {
-    console.log("Initialiting mongodb database connection");
-    const dbConnection = new MongoClient("mongodb://127.0.0.1");
+    console.log("Initialiting NeDB database connection");
+    let db: Partial<typeof this.db> = {};
     try {
-      dbConnection.connect();
-
-      this.currentDbInfo = {
-        type: "mongodb",
-        db: dbConnection.db(DBConstants.databaseName),
-      };
-      console.log("MongoDB loaded");
-    } catch (e) {
-      console.log("MongoDB could not be loaded, trying nedb");
-      let db = {
-        users:  new Datastore('./db/users.db')
-      };
-      try {
-        await Promise.all([db.users.loadDatabaseAsync()]);
-        console.log("NeDB loaded");
-      } catch (error) {
-        console.log(
-          "Persistende NeDB has failed. Server will work but progress will be lost at restart"
-        );
-        db = {
-            users:  new Datastore()
-          };
+      const promises: Promise<unknown>[] = [];  
+      for (const collection of this.getAllDataStores()) {
+        const datastore =  new Datastore({ filename: "./db/" + collection + '.db' });
+        db[collection] = datastore;
+        promises.push(datastore.loadDatabaseAsync());
       }
-      this.currentDbInfo = {
-        type: "nedb",
-        db,
-      };
+      await Promise.all(promises);
+      console.log("NeDB loaded");
+    } catch (error) {
+      console.log(error);
+      console.log(
+        "Persistent NeDB has failed. Server will work but progress will be lost at restart"
+      );
+      db = {};
+      for (const collection of this.getAllDataStores()) {
+        db[collection] = new Datastore();
+      }
     }
+    this.db = db as typeof this.db;
+    this.postInitHook().then();
   }
 
-  async getUserByEpicId(epicId: string) {
-    const collection = this.getCollectionByName('users')
-    this.getFindOneFromCollectionMethod(collection)({epicId});
+  getAllDataStores() {
+    return Object.values(Collections);
   }
 
-  private getCollectionByName(str: string) {
-    switch(this.currentDbInfo.type) {
-        case "mongodb":
-            return this.currentDbInfo.db.collection(str);
-            break;
-        case "nedb":
-            return this.currentDbInfo.db[str];
-            break;
+  collection<T>(name: Collections) {
+    return this.db[name] as Datastore<WithOptionalId<T>>;
+  }
+
+  private async postInitHook() {
+    const baseJson = await this.db[Collections.SAVE_GAME].findOneAsync(
+      {
+        [DBConstants.userIdField]: DBConstants.baseSaveGameId,
+      }
+    );
+    if (baseJson == null) {
+      const base = JSON.parse(
+        await readFile("./data/base.json", { encoding: "utf-8" })
+      );
+      base[DBConstants.userIdField] = DBConstants.baseSaveGameId;
+      await this.db[Collections.SAVE_GAME].insertAsync(base);
+      await this.db[Collections.SAVE_GAME].ensureIndexAsync({
+        fieldName: DBConstants.userIdField,
+      });
     }
-  }
-
-  private getFindOneFromCollectionMethod(collection: Collection | Datastore) {
-    switch(this.currentDbInfo.type) {
-        case "mongodb":
-            return (collection as Collection).findOne;
-            break;
-        case "nedb":
-            return (collection as Datastore).findOneAsync;
-            break;
-    }
-  }
-
-  private getUserCollection() {
-    return this.currentDbInfo.db.
   }
 }

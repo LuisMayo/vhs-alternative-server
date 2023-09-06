@@ -32,8 +32,9 @@ import {
 } from "../types/custom-lobby-types";
 import { Request, Response } from "express";
 
+import { Collections } from "./database";
 import { DBConstants } from "./constants";
-import { OptionalId } from "mongodb";
+import { Document } from "@seald-io/nedb";
 import { User } from "../database/database.interface";
 import { db } from "..";
 import jwt_decode from "jwt-decode";
@@ -48,6 +49,7 @@ export class Handler {
     request: Request<LoginRequest>,
     response: Response<LoginResponse | string>
   ) {
+    const collection = db.collection<User>(Collections.USERS);
     const token = request.header("Authorization")?.split(" ")[1];
     if (!token) {
       return response.status(401).send("Token not found");
@@ -62,15 +64,16 @@ export class Handler {
     if (!epicId) {
       return response.status(401).send("Token malformed");
     }
-    let existingUser = await collection.findOne({ epicId });
+    let existingUser = await collection.findOneAsync<Document<User>>({
+      epicId,
+    });
     let id: string;
     let name = "Dummy";
     if (existingUser) {
-      id = existingUser._id.toHexString();
+      // If it comes from database it always is going to have an ID
+      id = existingUser._id;
     } else {
-      id = (
-        await collection.insertOne({ displayName: name, epicId })
-      ).insertedId.toHexString();
+      id = (await collection.insertAsync({ displayName: name, epicId }))._id;
     }
     response.send({
       data: {
@@ -133,8 +136,8 @@ export class Handler {
     }
     Object.assign(loadout.uiSlots, request.body.loadoutChanges);
     await db
-      .collection(DBConstants.saveGameCollection)
-      .replaceOne({ [DBConstants.userIdField]: id }, saveData);
+      .collection(Collections.SAVE_GAME)
+      .updateAsync({ [DBConstants.userIdField]: id }, saveData);
     return response.send({
       log: { logSuccessful: true },
       data: {
@@ -155,13 +158,13 @@ export class Handler {
       throw new Error("Unknown character");
     }
     for (const change of Object.entries(request.body.slotChanges)) {
-      if (change[1] && typeof (loadout as any)[change[0]] === 'string') {
+      if (change[1] && typeof (loadout as any)[change[0]] === "string") {
         ((loadout as any)[change[0]] as string) = change[1];
       }
     }
     await db
-      .collection(DBConstants.saveGameCollection)
-      .replaceOne({ [DBConstants.userIdField]: id }, saveData);
+      .collection(Collections.SAVE_GAME)
+      .updateAsync({ [DBConstants.userIdField]: id }, saveData);
     return response.send({
       log: { logSuccessful: true },
       data: {
@@ -210,8 +213,8 @@ export class Handler {
       }
     }
     await db
-      .collection(DBConstants.saveGameCollection)
-      .replaceOne({ [DBConstants.userIdField]: id }, saveData);
+      .collection(Collections.SAVE_GAME)
+      .updateAsync({ [DBConstants.userIdField]: id }, saveData);
     return response.send({
       log: { logSuccessful: true },
       data: {
@@ -231,16 +234,14 @@ export class Handler {
     const id = this.checkOwnTokenAndGetId(request);
     let success: boolean;
     try {
-      await db
-        .collection(DBConstants.saveGameCollection)
-        .updateOne(
-          { [DBConstants.userIdField]: id },
-          {
-            $set: {
-              "data.playerSettingsData": request.body.playerSettingsData,
-            },
-          }
-        );
+      await db.collection(Collections.SAVE_GAME).updateAsync(
+        { [DBConstants.userIdField]: id },
+        {
+          $set: {
+            "data.playerSettingsData": request.body.playerSettingsData,
+          },
+        }
+      );
       success = true;
     } catch (e) {
       success = false;
@@ -300,9 +301,9 @@ export class Handler {
           });
         }
         break;
-        default:
-          console.log('Unkown custom lobby action', request.body.action);
-          response.send(EMPTY_SUCCESFUL_RESPONSE as CreateLobbyResponse);
+      default:
+        console.log("Unkown custom lobby action", request.body.action);
+        response.send(EMPTY_SUCCESFUL_RESPONSE as CreateLobbyResponse);
     }
   }
 
@@ -311,15 +312,13 @@ export class Handler {
   }
 
   static async getUserSaveGame(userId: string) {
-    const collection = db.collection<SaveGameResponse>(
-      DBConstants.saveGameCollection
-    );
-    let userSaveGame: OptionalId<SaveGameResponse> | null =
-      await collection.findOne({
+    const collection = db.collection<SaveGameResponse>(Collections.SAVE_GAME);
+    let userSaveGame =
+      await collection.findOneAsync({
         [DBConstants.userIdField]: userId,
       });
     if (!userSaveGame) {
-      userSaveGame = await collection.findOne({
+      userSaveGame = await collection.findOneAsync({
         [DBConstants.userIdField]: DBConstants.baseSaveGameId,
       });
       if (!userSaveGame) {
@@ -327,7 +326,7 @@ export class Handler {
       }
       delete userSaveGame._id;
       userSaveGame[DBConstants.userIdField] = userId;
-      collection.insertOne(userSaveGame);
+      collection.insertAsync(userSaveGame);
     }
     return userSaveGame;
   }

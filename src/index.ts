@@ -1,47 +1,32 @@
 import "reflect-metadata";
 
-import { EMPTY_SUCCESFUL_RESPONSE, LoginRequest, LoginResponse } from "./types/vhs-the-game-types";
+import {
+  EMPTY_SUCCESFUL_RESPONSE,
+  LoginRequest,
+  LoginResponse,
+} from "./types/vhs-the-game-types";
 import express, { NextFunction, Request, Response } from "express";
 
 import { DBConstants } from "./classes/constants";
+import { Database } from "./classes/database";
 import { Handler } from "./classes/handler";
-import { MongoClient } from "mongodb";
 import fs from "fs";
 import https from "https";
 import morgan from "morgan";
 import { readFile } from "fs/promises";
 
-const dbConnection = new MongoClient("mongodb://127.0.0.1");
-export const db = dbConnection.db(DBConstants.databaseName);
+export let db: Database;
 
 function initApp() {
   // to initialize initial connection with the database, register all entities
   // and "synchronize" database schema, call "initialize()" method of a newly created database
   // once in your application bootstrap
-  dbConnection
-    .connect()
-    .then(() => {
-      initMongoDB().then();
+  db = new Database();
+  db.init()
+    .then((initDb) => {
       initServer();
     })
     .catch((error) => console.log(error));
-}
-
-async function initMongoDB() {
-  const baseJson = await db
-    .collection(DBConstants.saveGameCollection)
-    .findOne({ [DBConstants.userIdField]: DBConstants.baseSaveGameId });
-  if (baseJson == null) {
-    const base = JSON.parse(
-      await readFile("./data/base.json", { encoding: "utf-8" })
-    );
-    base[DBConstants.userIdField] = DBConstants.baseSaveGameId;
-    await db.collection(DBConstants.saveGameCollection).insertOne(base);
-    await db.createIndex(
-      DBConstants.saveGameCollection,
-      DBConstants.userIdField
-    );
-  }
 }
 
 function initServer() {
@@ -65,7 +50,10 @@ function initServer() {
     }
   );
   app.post(
-    [...baseUrls.map((route) => route + "Login"), ...baseUrls.map((route) => route + "ReplaceExistingSessionToken")],
+    [
+      ...baseUrls.map((route) => route + "Login"),
+      ...baseUrls.map((route) => route + "ReplaceExistingSessionToken"),
+    ],
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
       console.log(req.body);
       Handler.login(req, res);
@@ -114,7 +102,7 @@ function initServer() {
   );
 
   app.post("*", (req, res) => {
-    console.log('UNKOWN REQUEST');
+    console.log("UNKOWN REQUEST");
     console.log(req.body);
     res.send(EMPTY_SUCCESFUL_RESPONSE);
   });
