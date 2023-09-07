@@ -5,9 +5,8 @@ A Video Horror Society server emulator. Allowing users to enjoy Hellbent's devel
 _The following steps will allow you to seamlessly set up the server structure for clients or hosts._
 
 _Hosts Redirection:_
-1. Go to this link and install the latest tools: [Link to scripts](https://github.com/SkelXton/VHS-Redirector-Scripts/releases/latest)
-2. Run the installation script with Administrator Privileges.
-3. Open the VHS Server Coordinator and use the GUI to select your given server and details or set it up to host a game.
+1. Go to this link and download the latest GUI Coordinator: [Link to script](https://github.com/SkelXton/VHS-Redirector-Scripts/releases/latest)
+2. Open VHS Server Coordinator and use the GUI to select your given server and details or set it up to host a game.
 
 _Executable Patching is TBD_
 
@@ -21,6 +20,8 @@ Currently, we have two known methods of patching the game:
 |:-----------------:|----------------|------------------|:-----------------------:|----------------|
 | Hosts Redirection |        ✅       |         ✅        |         Windows         |        ✅       |
 | Executable Patching      |        ✅       |         ❌        | Windows; Linux (Proton) |        ❌       |
+
+## Manual Installation
 
 #### Hosts Redirection
 In order to patch the game through hosts redirection you need to edit `C:\Windows\system32\drivers\etc\hosts`.
