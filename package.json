@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./build && rimraf ./dist && tsc && pkg -t node18-windows-x64,node18-linux-x64 --output ./dist/vhs-server ./build/index.js && cp -r ./data ./dist && cd dist && zip -r ./win-x64.zip ./vhs-server-win.exe ./data && zip -r ./linux-x64.zip ./vhs-server-linux ./data",
     "start": "node build/index.js",
     "watch": "tsc --sourceMap --watch"
   },

@@ -3,6 +3,7 @@ A Video Horror Society server emulator. Allowing users to enjoy Hellbent's devel
 
 ## How to Install
 _The following steps will allow you to seamlessly set up the server structure for clients or hosts._
+Manual instructions/developer mode in _Development/Usage_
 
 _Hosts Redirection:_
 1. Go to this link and download the latest GUI Coordinator: [Link to script](https://github.com/SkelXton/VHS-Redirector-Scripts/releases/latest)
@@ -38,12 +39,18 @@ You also need to install [my CA certificate](https://github.com/LuisMayo/vhs-alt
 Then launch the game as usual
 
 #### Executable Patching
-Executable patching consists of modifying the executable to point to a new domain. You need to modify starting on 0x5382CA0 up to 0x5382D1F. The text should be encoded using UTF-16(LE). The string must include the protocol and 4 string replacement cues (%s). These cues are later replaced by `api`, `client`, the endpoint in particular, and a randomly generated GUID. Any HTTP URL should be fine. TLS is not required so plain HTTP URLs would suffice.
-Currently, the "official" server does not support this method of connecting (self-hosting should do). It will be supported soon
+Executable patching consists of modifying the executable to point to a new domain. You need to modify starting on 0x5382CA0 up to 0x5382D1F (Steam) or 0x5381C80 to 0x5381D00(Epic). The text should be encoded using UTF-16(LE). The string must include the protocol and may include 4 string replacement cues (%s). These cues are later replaced by `api`, `client`, the endpoint in particular, and a randomly generated GUID. Any HTTP URL should be fine. TLS is not required so plain HTTP URLs would suffice.
+
+For the official server use this
+```
+68 00 74 00 74 00 70 00 73 00 3A 00 2F 00 2F 00 61 00 70 00 70 00 73 00 2E 00 6C 00 75 00 69 00 73 00 6D 00 61 00 79 00 6F 00 2E 00 63 00 6F 00 6D 00 2F 00 76 00 68 00 73 00 2D 00 25 00 73 00 2F 00 25 00 73 00 2F 00 25 00 73 00 2F 00 3F 00 67 00 75 00 69 00 64 00 3D 00 25 00 73
+```
 
 ### Running the server (User)
-1. Download a binary from the [Releases section](https://github.com/LuisMayo/vhs-alternative-server/releases) according to your OS/Architecture
-2. Double-click on it
+1. Download a binary from the [Releases section](https://github.com/LuisMayo/vhs-alternative-server/releases) according to your OS/Architecture (check below if there isn't)
+2. If using Hosts redirection/TLS you must place an appropiate certificate and key named `vhsgame.com.crt` adn `vhsgame.com.pem`
+3. Else you have to launch the app with --disableRealPort which will launch on HTTP/TCP/12478
+4. The server will respond to /metagame/THEEND_GAME/Client/<EP> and /vhs-api/Client/<EP> routes
 
 If there are no binaries available for your platform:
 1. [Download Node](https://nodejs.org/)
@@ -51,25 +58,13 @@ If there are no binaries available for your platform:
  `git clone https://github.com/LuisMayo/vhs-alternative-server`
 3. Install dependencies
  `npm i`
-4. Run the compiler in watch mode so it auto compiles
+4. Run the compiler
  `cd vhs-alternative-server; npx tsc`
+ Or
+ `npm run watch if you want to compile changes automatically`
 5. Launch the server
  `npm start`
 
-
-### Running the server (development)
-(If you're only interested in using the server rather than developing it, ignore this section)
- Clone the repo
- `git clone https://github.com/LuisMayo/vhs-alternative-server`
- Install dependencies
- `npm i`
- Run the compiler in watch mode so it auto compiles
- `npm run watch`
-
- Either press F5 on VSCode to debug the app or run `npm start` to start the server
-
- 
- 
 
 ## Login flow
 VHSGame Login request. A request is authenticated using a token issued by Epic Games with loginRequestToken structure

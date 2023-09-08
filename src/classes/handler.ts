@@ -45,6 +45,16 @@ type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 export class Handler {
   static roomMap = new Map<string, string>();
 
+  static async wrapper(
+    request: Request,
+    response: Response,
+    fn: (request: Request, response: Response) => Promise<unknown>
+  ) {
+    fn(request, response).catch(e => {
+      response.send(EMPTY_SUCCESFUL_RESPONSE);
+    });
+  }
+
   static async login(
     request: Request<LoginRequest>,
     response: Response<LoginResponse | string>
@@ -89,7 +99,7 @@ export class Handler {
     request: Request<any, DiscoverResponse | string, DiscoverRequest>,
     response: Response<DiscoverResponse | string>
   ) {
-    const id = this.checkOwnTokenAndGetId(request);
+    const id = Handler.checkOwnTokenAndGetId(request);
     switch (request.body.bitsToDiscover) {
       case DiscoverTypes.MATCHMAKING_INFO:
         (response as Response<MathmakingInfoResponse>).send({
@@ -106,7 +116,7 @@ export class Handler {
         console.error("Unknown discover type", request.body.bitsToDiscover);
       case DiscoverTypes.INITIAL_LOAD:
         try {
-          const userSaveGame = await this.getUserSaveGame(id);
+          const userSaveGame = await Handler.getUserSaveGame(id);
           return response.send(userSaveGame);
         } catch (e) {
           const str = String(e);
@@ -124,8 +134,8 @@ export class Handler {
     >,
     response: Response<SetCharacterLoadoutResponse | string>
   ) {
-    const id = this.checkOwnTokenAndGetId(request);
-    const saveData = await this.getUserSaveGame(id);
+    const id = Handler.checkOwnTokenAndGetId(request);
+    const saveData = await Handler.getUserSaveGame(id);
     const loadout =
       saveData.data.DDT_AllLoadoutsBit?.characterLoadouts[
         request.body.characterType as Teens | Monsters
@@ -150,8 +160,8 @@ export class Handler {
     request: Request<any, SlotChangesResponse | string, SlotChangesRequest>,
     response: Response<SlotChangesResponse | string>
   ) {
-    const id = this.checkOwnTokenAndGetId(request);
-    const saveData = await this.getUserSaveGame(id);
+    const id = Handler.checkOwnTokenAndGetId(request);
+    const saveData = await Handler.getUserSaveGame(id);
     const loadout = saveData.data.DDT_AllPlayerSlotsBit?.playerAccountSlots;
     if (!loadout) {
       throw new Error("Unknown character");
@@ -184,8 +194,8 @@ export class Handler {
     >,
     response: Response<SetWeaponLoadoutsForCharacterResponse | string>
   ) {
-    const id = this.checkOwnTokenAndGetId(request);
-    const saveData = await this.getUserSaveGame(id);
+    const id = Handler.checkOwnTokenAndGetId(request);
+    const saveData = await Handler.getUserSaveGame(id);
     ///@ts-ignore incomplete typings
     const loadout:
       | {
@@ -230,7 +240,7 @@ export class Handler {
     >,
     response: Response<UploadPlayerSettingsResponse | string>
   ) {
-    const id = this.checkOwnTokenAndGetId(request);
+    const id = Handler.checkOwnTokenAndGetId(request);
     let success: boolean;
     try {
       await db.collection(Collections.SAVE_GAME).updateAsync(
@@ -270,10 +280,10 @@ export class Handler {
             length: 5,
             readable: true,
           });
-        } while (this.roomMap.has(code));
+        } while (Handler.roomMap.has(code));
         // TODO timeout to remove from map
         // Todo what if connectionStirng is not provided
-        this.roomMap.set(code, request.body.connectionString!);
+        Handler.roomMap.set(code, request.body.connectionString!);
         console.log("Room code generated", code);
         (response as Response<CreateLobbyResponse>).send({
           data: { lobbyCode: code },
@@ -281,7 +291,7 @@ export class Handler {
         });
         break;
       case "joinLobby":
-        const connectionString = this.roomMap.get(request.body.lobbyCode!);
+        const connectionString = Handler.roomMap.get(request.body.lobbyCode!);
         if (connectionString) {
           console.log("Room code found", request.body.lobbyCode);
           (response as Response<JoinLobbyResponse>).send({

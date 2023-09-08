@@ -17735,13 +17735,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1659045319657"
+                            "\\$date": {
+                                "\\$numberLong": "1659045319657"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1659045319657"
+                            "\\$date": {
+                                "\\$numberLong": "1659045319657"
                             }
                         },
                         "currentStarLevel": 0
@@ -18000,13 +18000,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1659737924551"
+                            "\\$date": {
+                                "\\$numberLong": "1659737924551"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1659737924551"
+                            "\\$date": {
+                                "\\$numberLong": "1659737924551"
                             }
                         },
                         "currentStarLevel": 0
@@ -18265,13 +18265,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1659890702618"
+                            "\\$date": {
+                                "\\$numberLong": "1659890702618"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1659890702618"
+                            "\\$date": {
+                                "\\$numberLong": "1659890702618"
                             }
                         },
                         "currentStarLevel": 0
@@ -18530,13 +18530,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1660168837437"
+                            "\\$date": {
+                                "\\$numberLong": "1660168837437"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1660168837437"
+                            "\\$date": {
+                                "\\$numberLong": "1660168837437"
                             }
                         },
                         "currentStarLevel": 0
@@ -18798,13 +18798,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1664133108941"
+                            "\\$date": {
+                                "\\$numberLong": "1664133108941"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1664133108941"
+                            "\\$date": {
+                                "\\$numberLong": "1664133108941"
                             }
                         },
                         "currentStarLevel": 0
@@ -19066,13 +19066,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1664143793860"
+                            "\\$date": {
+                                "\\$numberLong": "1664143793860"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1664143793860"
+                            "\\$date": {
+                                "\\$numberLong": "1664143793860"
                             }
                         },
                         "currentStarLevel": 0
@@ -19334,13 +19334,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1664618245812"
+                            "\\$date": {
+                                "\\$numberLong": "1664618245812"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1664618245812"
+                            "\\$date": {
+                                "\\$numberLong": "1664618245812"
                             }
                         },
                         "currentStarLevel": 0
@@ -19603,13 +19603,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CHAR_ERADICATOR",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1664708972703"
+                            "\\$date": {
+                                "\\$numberLong": "1664708972703"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1664708972703"
+                            "\\$date": {
+                                "\\$numberLong": "1664708972703"
                             }
                         },
                         "currentStarLevel": 0
@@ -19868,13 +19868,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CHAR_ERADICATOR",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1665133157958"
+                            "\\$date": {
+                                "\\$numberLong": "1665133157958"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1665133157958"
+                            "\\$date": {
+                                "\\$numberLong": "1665133157958"
                             }
                         },
                         "currentStarLevel": 0
@@ -20136,13 +20136,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1665513142763"
+                            "\\$date": {
+                                "\\$numberLong": "1665513142763"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1665513142763"
+                            "\\$date": {
+                                "\\$numberLong": "1665513142763"
                             }
                         },
                         "currentStarLevel": 0
@@ -20405,13 +20405,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1665787032593"
+                            "\\$date": {
+                                "\\$numberLong": "1665787032593"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1665787032593"
+                            "\\$date": {
+                                "\\$numberLong": "1665787032593"
                             }
                         },
                         "currentStarLevel": 0
@@ -20674,13 +20674,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1666108218594"
+                            "\\$date": {
+                                "\\$numberLong": "1666108218594"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1666108218594"
+                            "\\$date": {
+                                "\\$numberLong": "1666108218594"
                             }
                         },
                         "currentStarLevel": 0
@@ -20938,13 +20938,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1666565698528"
+                            "\\$date": {
+                                "\\$numberLong": "1666565698528"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1666565698528"
+                            "\\$date": {
+                                "\\$numberLong": "1666565698528"
                             }
                         },
                         "currentStarLevel": 0
@@ -21085,13 +21085,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1666728151568"
+                            "\\$date": {
+                                "\\$numberLong": "1666728151568"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1666728151568"
+                            "\\$date": {
+                                "\\$numberLong": "1666728151568"
                             }
                         },
                         "currentStarLevel": 0
@@ -21349,13 +21349,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1667326165351"
+                            "\\$date": {
+                                "\\$numberLong": "1667326165351"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1667326165351"
+                            "\\$date": {
+                                "\\$numberLong": "1667326165351"
                             }
                         },
                         "currentStarLevel": 0
@@ -21617,13 +21617,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CAT_2022_FALL",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1667344477423"
+                            "\\$date": {
+                                "\\$numberLong": "1667344477423"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1667344477423"
+                            "\\$date": {
+                                "\\$numberLong": "1667344477423"
                             }
                         },
                         "currentStarLevel": 0
@@ -21883,13 +21883,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1667428827866"
+                            "\\$date": {
+                                "\\$numberLong": "1667428827866"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1667428827866"
+                            "\\$date": {
+                                "\\$numberLong": "1667428827866"
                             }
                         },
                         "currentStarLevel": 0
@@ -22227,13 +22227,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CHAR_ERADICATOR",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1667671367582"
+                            "\\$date": {
+                                "\\$numberLong": "1667671367582"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1667671367582"
+                            "\\$date": {
+                                "\\$numberLong": "1667671367582"
                             }
                         },
                         "currentStarLevel": 0
@@ -22496,13 +22496,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CHAR_ERADICATOR",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1669485334438"
+                            "\\$date": {
+                                "\\$numberLong": "1669485334438"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1669485334438"
+                            "\\$date": {
+                                "\\$numberLong": "1669485334438"
                             }
                         },
                         "currentStarLevel": 0
@@ -22643,13 +22643,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1670958524970"
+                            "\\$date": {
+                                "\\$numberLong": "1670958524970"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1670958524970"
+                            "\\$date": {
+                                "\\$numberLong": "1670958524970"
                             }
                         },
                         "currentStarLevel": 0
@@ -22907,13 +22907,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1672169885902"
+                            "\\$date": {
+                                "\\$numberLong": "1672169885902"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1672169885902"
+                            "\\$date": {
+                                "\\$numberLong": "1672169885902"
                             }
                         },
                         "currentStarLevel": 0
@@ -23171,13 +23171,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CHAR_ERADICATOR",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1672492049410"
+                            "\\$date": {
+                                "\\$numberLong": "1672492049410"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1672492049410"
+                            "\\$date": {
+                                "\\$numberLong": "1672492049410"
                             }
                         },
                         "currentStarLevel": 0
@@ -23319,13 +23319,13 @@
                         "becomePermanentPrerequisites": "PTK:FoundersPack1",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1673377607538"
+                            "\\$date": {
+                                "\\$numberLong": "1673377607538"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1673377607538"
+                            "\\$date": {
+                                "\\$numberLong": "1673377607538"
                             }
                         },
                         "currentStarLevel": 0
@@ -23683,13 +23683,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC_CHAR_NERD",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1673983823880"
+                            "\\$date": {
+                                "\\$numberLong": "1673983823880"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1673983823880"
+                            "\\$date": {
+                                "\\$numberLong": "1673983823880"
                             }
                         },
                         "currentStarLevel": 0
@@ -23947,13 +23947,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1676728920063"
+                            "\\$date": {
+                                "\\$numberLong": "1676728920063"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1676728920063"
+                            "\\$date": {
+                                "\\$numberLong": "1676728920063"
                             }
                         },
                         "currentStarLevel": 0
@@ -24098,13 +24098,13 @@
                         "becomePermanentPrerequisites": "PTK:PERM_MOVIE_PREREQ_DD_MV_LTD_2023_VALENTINES_MY_FUREVER_LOVE_STD",
                         "hbct_Collection": "HBC_2023_VALENTINES",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1676730893715"
+                            "\\$date": {
+                                "\\$numberLong": "1676730893715"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1676730893715"
+                            "\\$date": {
+                                "\\$numberLong": "1676730893715"
                             }
                         },
                         "currentStarLevel": 0
@@ -24349,13 +24349,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1676730893703"
+                            "\\$date": {
+                                "\\$numberLong": "1676730893703"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1676730893703"
+                            "\\$date": {
+                                "\\$numberLong": "1676730893703"
                             }
                         },
                         "currentStarLevel": 0
@@ -24638,13 +24638,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1679342705147"
+                            "\\$date": {
+                                "\\$numberLong": "1679342705147"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1679342705147"
+                            "\\$date": {
+                                "\\$numberLong": "1679342705147"
                             }
                         },
                         "currentStarLevel": 0
@@ -24904,13 +24904,13 @@
                         "becomePermanentPrerequisites": "",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1683136235751"
+                            "\\$date": {
+                                "\\$numberLong": "1683136235751"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1683136235751"
+                            "\\$date": {
+                                "\\$numberLong": "1683136235751"
                             }
                         },
                         "currentStarLevel": 0
@@ -25170,13 +25170,13 @@
                         "becomePermanentPrerequisites": "PTK:FoundersPack1",
                         "hbct_Collection": "HBC01",
                         "timeWatched": {
-                            "$date": {
-                                "$numberLong": "1685558756019"
+                            "\\$date": {
+                                "\\$numberLong": "1685558756019"
                             }
                         },
                         "timeCompleted": {
-                            "$date": {
-                                "$numberLong": "1685558756019"
+                            "\\$date": {
+                                "\\$numberLong": "1685558756019"
                             }
                         },
                         "currentStarLevel": 0

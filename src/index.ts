@@ -7,15 +7,17 @@ import {
 } from "./types/vhs-the-game-types";
 import express, { NextFunction, Request, Response } from "express";
 
-import { DBConstants } from "./classes/constants";
 import { Database } from "./classes/database";
 import { Handler } from "./classes/handler";
 import fs from "fs";
 import https from "https";
 import morgan from "morgan";
-import { readFile } from "fs/promises";
 
 export let db: Database;
+
+process.on('unhandledRejection', (reason: string, p: Promise<unknown>) => {
+  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+});
 
 function initApp() {
   // to initialize initial connection with the database, register all entities
@@ -36,10 +38,7 @@ function initServer() {
   // const baselineUrl = "/api00000000000000000000";
   // // Final URL as it's going to be called
   // const baseUrl = baselineUrl + "/Client/";
-  const baseUrls = [
-    "/metagame/THEEND_GAME/Client/",
-    "/api00000000000000000000/",
-  ];
+  const baseUrls = ["/metagame/THEEND_GAME/Client/", "/vhs-api/Client/"];
 
   app.use(morgan("dev"));
   app.use(express.json());
@@ -56,48 +55,48 @@ function initServer() {
     ],
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
       console.log(req.body);
-      Handler.login(req, res);
+      Handler.wrapper(req, res, Handler.login);
     }
   );
   app.post(
     baseUrls.map((route) => route + "Discover"),
     (req, res) => {
-      console.log("e");
-      Handler.discover(req, res);
+      Handler.wrapper(req, res, Handler.discover);
+
     }
   );
   app.post(
     baseUrls.map((route) => route + "UseCustomLobby"),
     (req, res) => {
-      console.log("e");
-      Handler.lobby(req, res);
+      Handler.wrapper(req, res, Handler.lobby);
+
     }
   );
   app.post(
     baseUrls.map((route) => route + "SetCharacterLoadout"),
     (req, res) => {
-      console.log("e");
-      Handler.setCharacterLoadout(req, res);
+      Handler.wrapper(req, res, Handler.setCharacterLoadout);
+
     }
   );
   app.post(
     baseUrls.map((route) => route + "SetWeaponLoadoutsForCharacter"),
     (req, res) => {
-      console.log("e");
-      Handler.setCharacterWeapon(req, res);
+      Handler.wrapper(req, res, Handler.setCharacterWeapon);
+
     }
   );
   app.post(
     baseUrls.map((route) => route + "UploadPlayerSettings"),
     (req, res) => {
-      console.log("e");
-      Handler.setCharacterSettings(req, res);
+      Handler.wrapper(req, res, Handler.setCharacterSettings);
+
     }
   );
   app.post(
     baseUrls.map((route) => route + "SetPlayerSlots"),
     (req, res) => {
-      Handler.setCharacterSlots(req, res);
+      Handler.wrapper(req, res, Handler.setCharacterSlots);
     }
   );
 
@@ -107,18 +106,18 @@ function initServer() {
     res.send(EMPTY_SUCCESFUL_RESPONSE);
   });
   app.get("/", (req, res) => res.send("HEY!"));
-  // https
-  //   .createServer(
-  //     {
-  //       cert: fs.readFileSync("vhsgame.com.crt"),
-  //       key: fs.readFileSync("vhsgame.com.pem"),
-  //       // cert: fs.readFileSync("api.vhsgame.com.crt"),
-  //       // key: fs.readFileSync("api.vhsgame.com.pem"),
-  //     },
-  //     app
-  //   )
-  //   .listen(443, "0.0.0.0", () => {});
-  app.listen(12478);
+  if (!process.argv.some((arg) => arg === "--disableRealPort")) {
+    https
+      .createServer(
+        {
+          cert: fs.readFileSync("vhsgame.com.crt"),
+          key: fs.readFileSync("vhsgame.com.pem"),
+        },
+        app
+      )
+      .listen(443, "0.0.0.0", () => {});
+  }
+app.listen(12478);
 }
 
 initApp();
