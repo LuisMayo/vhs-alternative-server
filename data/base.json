@@ -1249,56 +1249,200 @@
                             "PS_EAPerkWerewolfSense": ""
                         }
                     }
+                },
+                "CT_Nerd": {
+                    "WT_Cross": {
+                        "skin": {
+                            "PS_WSkinCross": "ID_WS_CROS_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkCross": ""
+                        },
+                        "unlockLevel": 1
+                    },
+                    "WT_DemonSword": {
+                        "skin": {
+                            "PS_WSkinDemonSword": "ID_WS_DMSW_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkDemonSword": ""
+                        },
+                        "unlockLevel": 1
+                    },
+                    "WT_Flamethrower": {
+                        "skin": {
+                            "PS_WSkinFlamethrower": "ID_WS_FLTR_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkFlamethrower": ""
+                        },
+                        "unlockLevel": 1
+                    },
+                    "WT_RayGun": {
+                        "skin": {
+                            "PS_WSkinRayGun": "ID_WS_RYGN_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkRayGun": ""
+                        },
+                        "unlockLevel": 1
+                    },
+                    "WT_HolySlingshot": {
+                        "skin": {
+                            "PS_WSkinHolySlingshot": "ID_WS_SLIN_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkHolySlingshot": ""
+                        },
+                        "unlockLevel": 2
+                    },
+                    "WT_HolyStaff": {
+                        "skin": {
+                            "PS_WSkinHolyStaff": "ID_WS_STAF_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkHolyStaff": ""
+                        },
+                        "unlockLevel": 3
+                    },
+                    "WT_Parchment": {
+                        "skin": {
+                            "PS_WSkinParchment": "ID_WS_PRCH_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkParchment": ""
+                        },
+                        "unlockLevel": 2
+                    },
+                    "WT_Talisman": {
+                        "skin": {
+                            "PS_WSkinTalisman": "ID_WS_TALI_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkTalisman": ""
+                        },
+                        "unlockLevel": 3
+                    },
+                    "WT_Molotov": {
+                        "skin": {
+                            "PS_WSkinMolotov": "ID_WS_MOLO_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkMolotov": ""
+                        },
+                        "unlockLevel": 2
+                    },
+                    "WT_RCCopter": {
+                        "skin": {
+                            "PS_WSkinRCCopter": "ID_WS_RCTR_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkRCCopter": ""
+                        },
+                        "unlockLevel": 2
+                    },
+                    "WT_StaticShield": {
+                        "skin": {
+                            "PS_WSkinStaticShield": "ID_WS_STAT_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkStaticShield": ""
+                        },
+                        "unlockLevel": 3
+                    },
+                    "WT_FlameMine": {
+                        "skin": {
+                            "PS_WSkinFlameMine": "ID_WS_FMIN_Base_AA"
+                        },
+                        "perk": {
+                            "PS_WPerkFlameMine": ""
+                        },
+                        "unlockLevel": 3
+                    }
+                }, 
+                "CT_Eradicator": {
+                    "EAT_EradicatorElectricSurge": {
+                        "perk": {
+                            "PS_EAPerkEradicatorElectricSurge": ""
+                        }
+                    },
+                    "EAT_EradicatorModeSwap": {
+                        "perk": {
+                            "PS_EAPerkEradicatorModeSwap": ""
+                        }
+                    },
+                    "EAT_EradicatorScannerBeam": {
+                        "perk": {
+                            "PS_EAPerkEradicatorScannerBeam": ""
+                        }
+                    }
+                },
+                "CT_Anomaly": {
+                    "EAT_AnomalyDisperse": {
+                        "perk": {
+                            "PS_EAPerkAnomalyDisperse": ""
+                        }
+                    },
+                    "EAT_AnomalyMimicry": {
+                        "perk": {
+                            "PS_EAPerkAnomalyMimicry": ""
+                        }
+                    },
+                    "EAT_AnomalyScour": {
+                        "perk": {
+                            "PS_EAPerkAnomalyScour": ""
+                        }
+                    }
                 }
             },
             "pointsByWeaponType": {
                 "WT_Cross": {
-                    "PNT_WeaponExperience": 1094,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_DemonSword": {
-                    "PNT_WeaponExperience": 55,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_Flamethrower": {
-                    "PNT_WeaponExperience": 4709,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_RayGun": {
-                    "PNT_WeaponExperience": 1374,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_Molotov": {
-                    "PNT_WeaponExperience": 5195,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_RCCopter": {
-                    "PNT_WeaponExperience": 5722,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_Parchment": {
-                    "PNT_WeaponExperience": 1262,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_HolySlingshot": {
-                    "PNT_WeaponExperience": 2708,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_FlameMine": {
-                    "PNT_WeaponExperience": 2705,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_StaticShield": {
-                    "PNT_WeaponExperience": 973,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_Talisman": {
-                    "PNT_WeaponExperience": 1725,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 },
                 "WT_HolyStaff": {
-                    "PNT_WeaponExperience": 1056,
-                    "PNT_WeaponLevel": 21
+                    "PNT_WeaponExperience": 0,
+                    "PNT_WeaponLevel": 20
                 }
             },
             "teenWeaponUnlockLevels": {
@@ -32398,6 +32542,27 @@
                     }
                 },
                 "CT_Werewolf": {
+                    "1": {
+                        "1": {
+                            "Start": true
+                        }
+                    }
+                },
+                "CT_Nerd": {
+                    "1": {
+                        "1": {
+                            "Start": true
+                        }
+                    }
+                },
+                "CT_Eradicator": {
+                    "1": {
+                        "1": {
+                            "Start": true
+                        }
+                    }
+                },
+                "CT_Anomaly": {
                     "1": {
                         "1": {
                             "Start": true
