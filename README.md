@@ -1,6 +1,14 @@
 # VHS Alternative Server
 A Video Horror Society server emulator. Allowing users to enjoy Hellbent's developed game after its sunset on September 8th, 2023.
 
+## What's working?
+- ✅ Login
+- ❌ Matchmaking
+- ❌ Progression (journey, chests)
+- ❌ Store
+- ✅ Custom Matches
+- ✅ Saving game
+
 ## How to Install
 _The following steps will allow you to seamlessly set up the server structure for clients or hosts._
 Manual instructions/developer mode in _Development/Usage_
