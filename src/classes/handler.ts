@@ -291,15 +291,16 @@ export class Handler {
         });
         break;
       case "joinLobby":
-        const connectionString = Handler.roomMap.get(request.body.lobbyCode!);
+        const lobbyCode = request.body.lobbyCode!;
+        const connectionString = Handler.roomMap.get(lobbyCode.toUpperCase());
         if (connectionString) {
-          console.log("Room code found", request.body.lobbyCode);
+          console.log("Room code found", lobbyCode);
           (response as Response<JoinLobbyResponse>).send({
             log: { logSuccessful: true },
             data: { connectionString, discoverKey: "dummy", lobbyFound: true },
           });
         } else {
-          console.log("Room code NOT found", request.body.lobbyCode);
+          console.log("Room code NOT found", lobbyCode);
           (response as Response<JoinLobbyResponse>).send({
             log: { logSuccessful: true },
             data: {

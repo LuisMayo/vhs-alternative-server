@@ -10054,7 +10054,6 @@ interface PurchaseOptionsThirdParty {
 }
 
 interface DDTAllWeaponsBit {
-/** TODO, currently here */
   weaponLoadoutsByCharacterType?: { [key in Teens]: WeaponLoadoutsByCharacterTypeCTTeen } & {
     CT_DollMaster?: WeaponLoadoutsByCharacterTypeCTDollMaster,
     CT_Toad?: CTToad;

@@ -3,19 +3,19 @@
         "DDT_AllPlayerAccountPointsBit": {
             "playerAccountPoints": {
                 "PNT_BurnStigmaExperience": 0,
-                "PNT_BurnStigmaLevel": 1,
+                "PNT_BurnStigmaLevel": 4,
                 "PNT_CurrentSeason": 1,
                 "PNT_EvilPrizePoints": 0,
                 "PNT_FanPoints": 0,
                 "PNT_HardCurrency": 0,
                 "PNT_HolyStigmaExperience": 0,
-                "PNT_HolyStigmaLevel": 1,
-                "PNT_MasteryLevel": 1,
+                "PNT_HolyStigmaLevel": 4,
+                "PNT_MasteryLevel": 32,
                 "PNT_MasteryPoints": 0,
                 "PNT_OccultStigmaExperience": 0,
-                "PNT_OccultStigmaLevel": 1,
+                "PNT_OccultStigmaLevel": 4,
                 "PNT_ShockStigmaExperience": 0,
-                "PNT_ShockStigmaLevel": 1,
+                "PNT_ShockStigmaLevel": 4,
                 "PNT_TeenGamesPlayedThisSeason": 0,
                 "PNT_TeenPrizePoints": 0
             },
@@ -64,13 +64,13 @@
             "characterLoadouts": {
                 "CT_Cheerleader": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots": 5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_TeenClothingBottom": "ID_CL_FEML_BTM_SkirtNutu_AA",
@@ -99,23 +99,23 @@
                         "UIS_TeenSticker5": "",
                         "UIS_TeenSticker6": "",
                         "UIS_TeenPerk1": "",
-                        "UIS_TeenPerk2": "LOCK,CPV:CT_Cheerleader:PNT_PerkSlots:2",
-                        "UIS_TeenPerk3": "LOCK,CPV:CT_Cheerleader:PNT_PerkSlots:3",
-                        "UIS_TeenPerk4": "LOCK,CPV:CT_Cheerleader:PNT_PerkSlots:4",
-                        "UIS_TeenPerk5": "LOCK,CPV:CT_Cheerleader:PNT_PerkSlots:5"
+                        "UIS_TeenPerk2": "",
+                        "UIS_TeenPerk3": "",
+                        "UIS_TeenPerk4": "",
+                        "UIS_TeenPerk5": ""
                     }
                 },
                 "CT_DollMaster": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_EvilGamesPlayedThisSeason": 0,
                         "PNT_EvilMatchMakingRating": 200,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots":5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_EvilFeast": "ID_EF_Feast_Base",
@@ -140,21 +140,21 @@
                         "UIS_EvilSticker5": "",
                         "UIS_EvilSticker6": "",
                         "UIS_EvilPerk1": "",
-                        "UIS_EvilPerk2": "LOCK,CPV:CT_DollMaster:PNT_PerkSlots:2",
-                        "UIS_EvilPerk3": "LOCK,CPV:CT_DollMaster:PNT_PerkSlots:3",
-                        "UIS_EvilPerk4": "LOCK,CPV:CT_DollMaster:PNT_PerkSlots:4",
-                        "UIS_EvilPerk5": "LOCK,CPV:CT_DollMaster:PNT_PerkSlots:5"
+                        "UIS_EvilPerk2": "",
+                        "UIS_EvilPerk3": "",
+                        "UIS_EvilPerk4": "",
+                        "UIS_EvilPerk5": ""
                     }
                 },
                 "CT_Jock": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots": 5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_TeenClothingBottom": "ID_CL_MALE_BTM_JeansTight_AA",
@@ -183,21 +183,21 @@
                         "UIS_TeenSticker5": "",
                         "UIS_TeenSticker6": "",
                         "UIS_TeenPerk1": "",
-                        "UIS_TeenPerk2": "LOCK,CPV:CT_Jock:PNT_PerkSlots:2",
-                        "UIS_TeenPerk3": "LOCK,CPV:CT_Jock:PNT_PerkSlots:3",
-                        "UIS_TeenPerk4": "LOCK,CPV:CT_Jock:PNT_PerkSlots:4",
-                        "UIS_TeenPerk5": "LOCK,CPV:CT_Jock:PNT_PerkSlots:5"
+                        "UIS_TeenPerk2": "",
+                        "UIS_TeenPerk3": "",
+                        "UIS_TeenPerk4": "",
+                        "UIS_TeenPerk5": ""
                     }
                 },
                 "CT_Outsider": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots": 5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_TeenClothingBottom": "ID_CL_FEML_BTM_ShortsFrayed_AA",
@@ -226,21 +226,21 @@
                         "UIS_TeenSticker5": "",
                         "UIS_TeenSticker6": "",
                         "UIS_TeenPerk1": "",
-                        "UIS_TeenPerk2": "LOCK,CPV:CT_Outsider:PNT_PerkSlots:2",
-                        "UIS_TeenPerk3": "LOCK,CPV:CT_Outsider:PNT_PerkSlots:3",
-                        "UIS_TeenPerk4": "LOCK,CPV:CT_Outsider:PNT_PerkSlots:4",
-                        "UIS_TeenPerk5": "LOCK,CPV:CT_Outsider:PNT_PerkSlots:5"
+                        "UIS_TeenPerk2": "",
+                        "UIS_TeenPerk3": "",
+                        "UIS_TeenPerk4": "",
+                        "UIS_TeenPerk5": ""
                     }
                 },
                 "CT_Punk": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots": 5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_TeenClothingBottom": "ID_CL_MALE_BTM_PatchJeans_AA",
@@ -269,23 +269,23 @@
                         "UIS_TeenSticker5": "",
                         "UIS_TeenSticker6": "",
                         "UIS_TeenPerk1": "",
-                        "UIS_TeenPerk2": "LOCK,CPV:CT_Punk:PNT_PerkSlots:2",
-                        "UIS_TeenPerk3": "LOCK,CPV:CT_Punk:PNT_PerkSlots:3",
-                        "UIS_TeenPerk4": "LOCK,CPV:CT_Punk:PNT_PerkSlots:4",
-                        "UIS_TeenPerk5": "LOCK,CPV:CT_Punk:PNT_PerkSlots:5"
+                        "UIS_TeenPerk2": "",
+                        "UIS_TeenPerk3": "",
+                        "UIS_TeenPerk4": "",
+                        "UIS_TeenPerk5": ""
                     }
                 },
                 "CT_Toad": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_EvilGamesPlayedThisSeason": 0,
                         "PNT_EvilMatchMakingRating": 200,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots":5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_EvilFeast": "ID_EF_Feast_Base",
@@ -310,21 +310,21 @@
                         "UIS_EvilSticker5": "",
                         "UIS_EvilSticker6": "",
                         "UIS_EvilPerk1": "",
-                        "UIS_EvilPerk2": "LOCK,CPV:CT_Toad:PNT_PerkSlots:2",
-                        "UIS_EvilPerk3": "LOCK,CPV:CT_Toad:PNT_PerkSlots:3",
-                        "UIS_EvilPerk4": "LOCK,CPV:CT_Toad:PNT_PerkSlots:4",
-                        "UIS_EvilPerk5": "LOCK,CPV:CT_Toad:PNT_PerkSlots:5"
+                        "UIS_EvilPerk2": "",
+                        "UIS_EvilPerk3": "",
+                        "UIS_EvilPerk4": "",
+                        "UIS_EvilPerk5": ""
                     }
                 },
                 "CT_Virgin": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots": 5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_TeenClothingBottom": "ID_CL_FEML_BTM_PlaidSkirt_AA",
@@ -353,23 +353,23 @@
                         "UIS_TeenSticker5": "",
                         "UIS_TeenSticker6": "",
                         "UIS_TeenPerk1": "",
-                        "UIS_TeenPerk2": "LOCK,CPV:CT_Virgin:PNT_PerkSlots:2",
-                        "UIS_TeenPerk3": "LOCK,CPV:CT_Virgin:PNT_PerkSlots:3",
-                        "UIS_TeenPerk4": "LOCK,CPV:CT_Virgin:PNT_PerkSlots:4",
-                        "UIS_TeenPerk5": "LOCK,CPV:CT_Virgin:PNT_PerkSlots:5"
+                        "UIS_TeenPerk2": "",
+                        "UIS_TeenPerk3": "",
+                        "UIS_TeenPerk4": "",
+                        "UIS_TeenPerk5": ""
                     }
                 },
                 "CT_Werewolf": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
                         "PNT_EvilGamesPlayedThisSeason": 0,
                         "PNT_EvilMatchMakingRating": 200,
                         "PNT_ExperiencePoints": 0,
-                        "PNT_Level": 1,
-                        "PNT_PerkPoints": 4,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots":5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_EvilFeast": "ID_EF_Feast_Base",
@@ -394,23 +394,23 @@
                         "UIS_EvilSticker5": "",
                         "UIS_EvilSticker6": "",
                         "UIS_EvilPerk1": "",
-                        "UIS_EvilPerk2": "LOCK,CPV:CT_Werewolf:PNT_PerkSlots:2",
-                        "UIS_EvilPerk3": "LOCK,CPV:CT_Werewolf:PNT_PerkSlots:3",
-                        "UIS_EvilPerk4": "LOCK,CPV:CT_Werewolf:PNT_PerkSlots:4",
-                        "UIS_EvilPerk5": "LOCK,CPV:CT_Werewolf:PNT_PerkSlots:5"
+                        "UIS_EvilPerk2": "",
+                        "UIS_EvilPerk3": "",
+                        "UIS_EvilPerk4": "",
+                        "UIS_EvilPerk5": ""
                     }
                 },
                 "CT_Eradicator": {
                     "points": {
+                        "PNT_AffinitySlots": 3,
                         "PNT_AuraPoints": 0,
-                        "PNT_EvilGamesPlayedThisSeason": 63,
-                        "PNT_EvilMatchMakingRating": 211,
-                        "PNT_ExperiencePoints": 7753,
-                        "PNT_Level": 54,
-                        "PNT_PerkPoints": 21,
-                        "PNT_PerkSlots": 4,
-                        "PNT_StarPower": 1,
-                        "PNT_AffinitySlots": 1
+                        "PNT_EvilGamesPlayedThisSeason": 0,
+                        "PNT_EvilMatchMakingRating": 200,
+                        "PNT_ExperiencePoints": 0,
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots":5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_EvilFeast": "ID_EF_Feast_Base",
@@ -424,9 +424,9 @@
                         "UIS_EvilSticker4": "ID_ST_EvilSticker_25",
                         "UIS_EvilPerk1": "ID_PK_ScreamRange_02",
                         "UIS_EvilAccessoryRoot": "ID_EA_ERAD_COM_Base_BA",
-                        "UIS_EvilPerk2": "ID_PK_CrowdReveal_01",
-                        "UIS_EvilPerk3": "ID_PK_Lethality_01",
-                        "UIS_EvilPerk4": "ID_PK_ExtendSubdued_01",
+                        "UIS_EvilPerk2": "",
+                        "UIS_EvilPerk3": "",
+                        "UIS_EvilPerk4": "",
                         "UIS_EvilAccessoryUpper": "",
                         "UIS_EvilAccessoryMid": "",
                         "UIS_EvilAccessoryLower": "",
@@ -438,18 +438,18 @@
                         "UIS_EvilEmote6": "",
                         "UIS_EvilSticker5": "",
                         "UIS_EvilSticker6": "",
-                        "UIS_EvilPerk5": "LOCK,CPV:CT_Eradicator:PNT_PerkSlots:5"
+                        "UIS_EvilPerk5": ""
                     }
                 },
                 "CT_Nerd": {
                     "points": {
-                        "PNT_AffinitySlots": 1,
-                        "PNT_AuraPoints": 3,
-                        "PNT_ExperiencePoints": 7549,
-                        "PNT_Level": 29,
-                        "PNT_PerkPoints": 12,
-                        "PNT_PerkSlots": 2,
-                        "PNT_StarPower": 1
+                        "PNT_AffinitySlots": 3,
+                        "PNT_AuraPoints": 0,
+                        "PNT_ExperiencePoints": 0,
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots": 5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_TeenClothingBottom": "ID_CL_MALE_BTM_BasicJeans_AB",
@@ -473,28 +473,28 @@
                         "UIS_TeenSticker3": "ID_ST_Priderainbow_01",
                         "UIS_TeenSticker4": "ID_ST_Pride_01",
                         "UIS_TeenSticker6": "ID_ST_JOCK_06",
-                        "UIS_TeenPerk2": "ID_PK_PickupVision_01",
+                        "UIS_TeenPerk2": "",
                         "UIS_TeenSticker5": "ID_ST_JOCK_03",
                         "UIS_TeenClothingHair": "",
                         "UIS_TeenClothingFace": "",
                         "UIS_TeenCostume": "",
                         "UIS_TeenEmote6": "",
-                        "UIS_TeenPerk3": "LOCK,CPV:CT_Nerd:PNT_PerkSlots:3",
-                        "UIS_TeenPerk4": "LOCK,CPV:CT_Nerd:PNT_PerkSlots:4",
-                        "UIS_TeenPerk5": "LOCK,CPV:CT_Nerd:PNT_PerkSlots:5"
+                        "UIS_TeenPerk3": "",
+                        "UIS_TeenPerk4": "",
+                        "UIS_TeenPerk5": ""
                     }
                 },
                 "CT_Anomaly": {
                     "points": {
-                        "PNT_AffinitySlots": 0,
-                        "PNT_AuraPoints": 1,
-                        "PNT_EvilGamesPlayedThisSeason": 2,
-                        "PNT_EvilMatchMakingRating": 202,
-                        "PNT_ExperiencePoints": 3389,
-                        "PNT_Level": 4,
-                        "PNT_PerkPoints": 5,
-                        "PNT_PerkSlots": 1,
-                        "PNT_StarPower": 0
+                        "PNT_AffinitySlots": 3,
+                        "PNT_AuraPoints": 0,
+                        "PNT_EvilGamesPlayedThisSeason": 0,
+                        "PNT_EvilMatchMakingRating": 200,
+                        "PNT_ExperiencePoints": 0,
+                        "PNT_Level": 95,
+                        "PNT_PerkPoints": 30,
+                        "PNT_PerkSlots":5,
+                        "PNT_StarPower": 3
                     },
                     "uiSlots": {
                         "UIS_EvilFeast": "ID_EF_Feast_Base",
@@ -519,10 +519,10 @@
                         "UIS_EvilEmote6": "",
                         "UIS_EvilSticker5": "",
                         "UIS_EvilSticker6": "",
-                        "UIS_EvilPerk2": "LOCK,CPV:CT_Anomaly:PNT_PerkSlots:2",
-                        "UIS_EvilPerk3": "LOCK,CPV:CT_Anomaly:PNT_PerkSlots:3",
-                        "UIS_EvilPerk4": "LOCK,CPV:CT_Anomaly:PNT_PerkSlots:4",
-                        "UIS_EvilPerk5": "LOCK,CPV:CT_Anomaly:PNT_PerkSlots:5"
+                        "UIS_EvilPerk2": "",
+                        "UIS_EvilPerk3": "",
+                        "UIS_EvilPerk4": "",
+                        "UIS_EvilPerk5": ""
                     }
                 }
             },
@@ -1253,20 +1253,52 @@
             },
             "pointsByWeaponType": {
                 "WT_Cross": {
-                    "PNT_WeaponExperience": 0,
-                    "PNT_WeaponLevel": 1
+                    "PNT_WeaponExperience": 1094,
+                    "PNT_WeaponLevel": 21
                 },
                 "WT_DemonSword": {
-                    "PNT_WeaponExperience": 0,
-                    "PNT_WeaponLevel": 1
+                    "PNT_WeaponExperience": 55,
+                    "PNT_WeaponLevel": 21
                 },
                 "WT_Flamethrower": {
-                    "PNT_WeaponExperience": 0,
-                    "PNT_WeaponLevel": 1
+                    "PNT_WeaponExperience": 4709,
+                    "PNT_WeaponLevel": 21
                 },
                 "WT_RayGun": {
-                    "PNT_WeaponExperience": 0,
-                    "PNT_WeaponLevel": 1
+                    "PNT_WeaponExperience": 1374,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_Molotov": {
+                    "PNT_WeaponExperience": 5195,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_RCCopter": {
+                    "PNT_WeaponExperience": 5722,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_Parchment": {
+                    "PNT_WeaponExperience": 1262,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_HolySlingshot": {
+                    "PNT_WeaponExperience": 2708,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_FlameMine": {
+                    "PNT_WeaponExperience": 2705,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_StaticShield": {
+                    "PNT_WeaponExperience": 973,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_Talisman": {
+                    "PNT_WeaponExperience": 1725,
+                    "PNT_WeaponLevel": 21
+                },
+                "WT_HolyStaff": {
+                    "PNT_WeaponExperience": 1056,
+                    "PNT_WeaponLevel": 21
                 }
             },
             "teenWeaponUnlockLevels": {
