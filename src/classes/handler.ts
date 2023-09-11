@@ -82,7 +82,7 @@ export class Handler {
     for (let i = 0; i < Handler.epicKeys.length && !parsedToken; i++) {
       try {
         parsedToken = jwt.verify(token, Handler.epicKeys[i], {}) as JwtPayload;
-      } catch (e) { 
+      } catch (e) {
       }
     }
     if (!parsedToken) {
@@ -104,7 +104,7 @@ export class Handler {
     } else {
       id = (await collection.insertAsync({ displayName: name, epicId }))._id;
     }
-    const sign = jwt.sign(id, db.token);
+    const sign = jwt.sign(id, db.token, {expiresIn: '24h'});
     response.send({
       data: {
         displayName: name,
