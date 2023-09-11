@@ -51,7 +51,7 @@ function initServer() {
   app.post(
     [
       ...baseUrls.map((route) => route + "Login"),
-      ...baseUrls.map((route) => route + "ReplaceExistingSessionToken"),
+      // ...baseUrls.map((route) => route + "ReplaceExistingSessionToken"),
     ],
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
       console.log(req.body);
