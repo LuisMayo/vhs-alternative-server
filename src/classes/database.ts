@@ -1,15 +1,19 @@
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
 import { readFile } from "fs/promises";
+import { ServerInfo } from "../types/server-info";
+import crypto from 'crypto';
 
 export enum Collections {
   USERS = "users",
   SAVE_GAME = "save-games",
+  SERVER_INFO = "server-info" // Meta info about the server itself
 }
 
 export type WithOptionalId<T> = T & {_id?: string};
 export class Database {
   db!: Record<Collections, Datastore>;
+  token!: string;
 
   constructor() {}
 
@@ -48,6 +52,11 @@ export class Database {
   }
 
   private async postInitHook() {
+    this.initBaseSavegame().then();
+    this.initJWTSecurity().then();
+  }
+
+  private async initBaseSavegame() {
     const baseJson = await this.db[Collections.SAVE_GAME].findOneAsync(
       {
         [DBConstants.userIdField]: DBConstants.baseSaveGameId,
@@ -63,5 +72,18 @@ export class Database {
         fieldName: DBConstants.userIdField,
       });
     }
+  }
+
+  private async initJWTSecurity() {
+    const collection = this.collection<ServerInfo>(Collections.SERVER_INFO);
+    let settings = await collection.findOneAsync({});
+    if (settings == null) {
+      console.log('Generating new JWT secret');
+      settings = {
+        JWT_SECRET: crypto.randomBytes(64).toString('hex')
+      }
+      collection.insertAsync(settings).catch(console.log);
+    }
+    this.token = settings.JWT_SECRET;
   }
 }

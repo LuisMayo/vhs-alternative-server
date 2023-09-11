@@ -37,13 +37,15 @@ import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
 import { User } from "../database/database.interface";
 import { db } from "..";
-import jwt_decode from "jwt-decode";
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt_to_pem from 'jwk-to-pem';
 import randomstring from "randomstring";
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
 export class Handler {
   static roomMap = new Map<string, string>();
+  static epicKeys: any[] = [];
 
   static async wrapper(
     request: Request,
@@ -51,7 +53,11 @@ export class Handler {
     fn: (request: Request, response: Response) => Promise<unknown>
   ) {
     fn(request, response).catch(e => {
-      response.send(EMPTY_SUCCESFUL_RESPONSE);
+      if (e?.toString() === '401') {
+        response.status(401).send();
+      } else {
+        response.send(EMPTY_SUCCESFUL_RESPONSE);
+      }
     });
   }
 
@@ -64,14 +70,28 @@ export class Handler {
     if (!token) {
       return response.status(401).send("Token not found");
     }
-    let parsedToken: LoginRequestToken;
     try {
-      parsedToken = jwt_decode(token);
+      if (!Handler.epicKeys || Handler.epicKeys.length === 0){
+        const epicResponse = await (await fetch('https://api.epicgames.dev/auth/v1/oauth/jwks')).json();
+        Handler.epicKeys = epicResponse.keys.map((key: any) => jwt_to_pem(key));
+      }
     } catch (e) {
       return response.status(401).send("Token malformed");
     }
+    let parsedToken: JwtPayload | undefined;
+    for (let i = 0; i < Handler.epicKeys.length && !parsedToken; i++) {
+      try {
+        parsedToken = jwt.verify(token, Handler.epicKeys[i], {}) as JwtPayload;
+      } catch (e) { 
+      }
+    }
+    if (!parsedToken) {
+      return response.status(401).send("Token not signed by Epic");
+    }
     const epicId = parsedToken.sub;
-    if (!epicId) {
+    const currentTime = Date.now() / 1000;
+    if (!epicId || !parsedToken.exp || parsedToken.exp < currentTime || !parsedToken.iat || parsedToken.iat > currentTime) {
+      console.log('Ilegal token');
       return response.status(401).send("Token malformed");
     }
     let existingUser = await collection.findOneAsync<Document<User>>({
@@ -84,11 +104,12 @@ export class Handler {
     } else {
       id = (await collection.insertAsync({ displayName: name, epicId }))._id;
     }
+    const sign = jwt.sign(id, db.token);
     response.send({
       data: {
         displayName: name,
         playerAccountId: id,
-        sessionTicketId: id,
+        sessionTicketId: sign,
       },
       log: { logSuccessful: true },
     });
@@ -194,7 +215,7 @@ export class Handler {
     >,
     response: Response<SetWeaponLoadoutsForCharacterResponse | string>
   ) {
-    const id = Handler.checkOwnTokenAndGetId(request);
+    const id = Handler.checkOwnTokenAndGetId(request,);
     const saveData = await Handler.getUserSaveGame(id);
     ///@ts-ignore incomplete typings
     const loadout:
@@ -318,7 +339,15 @@ export class Handler {
   }
 
   static checkOwnTokenAndGetId(req: Request<unknown>) {
-    return req.header("Authorization")?.split(" ")[1] ?? "Dummy";
+    const token =  req.header("Authorization")?.split(" ")[1];
+    let id = 'Dummy';
+    try {
+      id = jwt.verify(token!, db.token) as string;
+      console.log(id);
+    } catch (e) {
+      throw new Error("401");
+    }
+    return id;
   }
 
   static async getUserSaveGame(userId: string) {
