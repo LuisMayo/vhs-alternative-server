@@ -31,13 +31,13 @@ import {
   UseCustomLobbyResponse,
 } from "../types/custom-lobby-types";
 import { Request, Response } from "express";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { Collections } from "./database";
 import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
 import { User } from "../database/database.interface";
 import { db } from "..";
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwt_to_pem from 'jwk-to-pem';
 import randomstring from "randomstring";
 
@@ -104,7 +104,7 @@ export class Handler {
     } else {
       id = (await collection.insertAsync({ displayName: name, epicId }))._id;
     }
-    const sign = jwt.sign(id, db.token, {expiresIn: '24h'});
+    const sign = jwt.sign(id, db.token);
     response.send({
       data: {
         displayName: name,
@@ -345,6 +345,7 @@ export class Handler {
       id = jwt.verify(token!, db.token) as string;
       console.log(id);
     } catch (e) {
+      console.log("INVALID USER TOKEN", token)
       throw new Error("401");
     }
     return id;
