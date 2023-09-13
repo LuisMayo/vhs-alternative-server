@@ -34,6 +34,8 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/jwk-to-pem": "^2.0.1",
     "@types/morgan": "^1.9.4",
-    "@types/randomstring": "^1.1.8"
+    "@types/randomstring": "^1.1.8",
+    "pkg": "^5.8.1",
+    "rimraf": "^5.0.1"
   }
 }
