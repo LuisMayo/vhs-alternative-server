@@ -86,6 +86,16 @@ Information provided can be:
 3. Store items
 4. Progression info (points required for mastery for instance)
 
+**Disclaimer and Legal Notice:**
+-------------------------------
+This project, *VHS: Evil Never Dies*, is a dedicated media preservation effort for the now-sunset multiplayer game *Video Horror Society*, hereafter referred to as *VHS*. The primary objective of this project is to safeguard and preserve the legacy of *VHS* by archiving its gameplay, media, and related content for the benefit of the game's community.
+
+*VHS: Evil Never Dies* and its contributors are entirely unaffiliated with Hellbent Games Inc., the original developers of *Video Horror Society.* Our project operates independently, with the sole intention of preserving and celebrating the memories associated with *VHS*.
+
+Any references to *Video Horror Society* or related intellectual property are made for historical and archival purposes only. We acknowledge the copyrights and trademarks held by Hellbent Games Inc. and respect their creative work.
+
+No Endorsement Implied
+
 ## Contributing
 This project welcomes contributions! But in order not to lose focus they need to comply with some rules:
 1. This server intends to mimic the original experience to an extent. Quality-of-life improvements or tiny mods may be welcome. But deep modifications that deeply change how the game works are not welcomed (not like the Server has that power anyway since the game is P2P)
