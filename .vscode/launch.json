@@ -14,7 +14,7 @@
             "program": "${workspaceFolder}/build/index.js",
             "console": "integratedTerminal",
             // "runtimeArgs": ["--inspect-brk"],
-            "args": ["--disableRealPort"],
+            // "args": ["--disableRealPort"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
