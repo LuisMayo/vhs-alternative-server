@@ -1,8 +1,9 @@
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
-import { readFile } from "fs/promises";
+import { Logger } from "./logger";
 import { ServerInfo } from "../types/server-info";
 import crypto from 'crypto';
+import { readFile } from "fs/promises";
 
 export enum Collections {
   USERS = "users",
@@ -18,7 +19,7 @@ export class Database {
   constructor() {}
 
   async init() {
-    console.log("Initialiting NeDB database connection");
+    Logger.log("Initialiting NeDB database connection");
     let db: Partial<typeof this.db> = {};
     try {
       const promises: Promise<unknown>[] = [];  
@@ -28,10 +29,10 @@ export class Database {
         promises.push(datastore.loadDatabaseAsync());
       }
       await Promise.all(promises);
-      console.log("NeDB loaded");
+      Logger.log("NeDB loaded");
     } catch (error) {
-      console.log(error);
-      console.log(
+      Logger.log(String(error));
+      Logger.log(
         "Persistent NeDB has failed. Server will work but progress will be lost at restart"
       );
       db = {};
@@ -78,11 +79,11 @@ export class Database {
     const collection = this.collection<ServerInfo>(Collections.SERVER_INFO);
     let settings = await collection.findOneAsync({});
     if (settings == null) {
-      console.log('Generating new JWT secret');
+      Logger.log('Generating new JWT secret');
       settings = {
         JWT_SECRET: crypto.randomBytes(64).toString('hex')
       }
-      collection.insertAsync(settings).catch(console.log);
+      collection.insertAsync(settings).catch(Logger.log);
     }
     this.token = settings.JWT_SECRET;
   }

@@ -7,16 +7,19 @@ import {
 } from "./types/vhs-the-game-types";
 import express, { NextFunction, Request, Response } from "express";
 
+import { AdminHandler } from "./classes/admin-handler";
 import { Database } from "./classes/database";
 import { Handler } from "./classes/handler";
+import { Logger } from "./classes/logger";
+import basicAuth from "express-basic-auth";
 import fs from "fs";
 import https from "https";
 import morgan from "morgan";
 
 export let db: Database;
 
-process.on('unhandledRejection', (reason: string, p: Promise<unknown>) => {
-  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+process.on("unhandledRejection", (reason: string, p: Promise<unknown>) => {
+  Logger.log("Unhandled Rejection at: " + p, "reason: " + reason);
 });
 
 function initApp() {
@@ -28,7 +31,7 @@ function initApp() {
     .then((initDb) => {
       initServer();
     })
-    .catch((error) => console.log(error));
+    .catch((error) => Logger.log(error));
 }
 
 function initServer() {
@@ -38,74 +41,58 @@ function initServer() {
   // const baselineUrl = "/api00000000000000000000";
   // // Final URL as it's going to be called
   // const baseUrl = baselineUrl + "/Client/";
-  const baseUrls = ["/metagame/THEEND_GAME/Client/", "/vhs-api/Client/"];
+  const baseUrls = ["/metagame/THEEND_GAME/Client", "/vhs-api/Client"];
 
-  app.use(morgan("dev"));
-  app.use(express.json());
-  app.use(
-    (err: any, req: Request, res: Response, _next: NextFunction): void => {
-      console.error(err.stack);
-      res.status(500).send("Something broke!");
-    }
-  );
-  app.post(
-    [
-      ...baseUrls.map((route) => route + "Login"),
-      // ...baseUrls.map((route) => route + "ReplaceExistingSessionToken"),
-    ],
+  app.use(morgan("dev", {}));
+  const vhsRouter = express.Router();
+  vhsRouter.use(express.json());
+  vhsRouter.post(
+    "/Login",
     (req: Request<any, LoginResponse | string, LoginRequest>, res) => {
-      console.log(req.body);
       Handler.wrapper(req, res, Handler.login);
     }
   );
-  app.post(
-    baseUrls.map((route) => route + "Discover"),
-    (req, res) => {
-      Handler.wrapper(req, res, Handler.discover);
+  vhsRouter.post("/Discover", (req, res) => {
+    Handler.wrapper(req, res, Handler.discover);
+  });
+  vhsRouter.post("/UseCustomLobby", (req, res) => {
+    Handler.wrapper(req, res, Handler.lobby);
+  });
+  vhsRouter.post("/SetCharacterLoadout", (req, res) => {
+    Handler.wrapper(req, res, Handler.setCharacterLoadout);
+  });
+  vhsRouter.post("/SetWeaponLoadoutsForCharacter", (req, res) => {
+    Handler.wrapper(req, res, Handler.setCharacterWeapon);
+  });
+  vhsRouter.post("/UploadPlayerSettings", (req, res) => {
+    Handler.wrapper(req, res, Handler.setCharacterSettings);
+  });
+  vhsRouter.post("/SetPlayerSlots", (req, res) => {
+    Handler.wrapper(req, res, Handler.setCharacterSlots);
+  });
 
-    }
-  );
-  app.post(
-    baseUrls.map((route) => route + "UseCustomLobby"),
-    (req, res) => {
-      Handler.wrapper(req, res, Handler.lobby);
-
-    }
-  );
-  app.post(
-    baseUrls.map((route) => route + "SetCharacterLoadout"),
-    (req, res) => {
-      Handler.wrapper(req, res, Handler.setCharacterLoadout);
-
-    }
-  );
-  app.post(
-    baseUrls.map((route) => route + "SetWeaponLoadoutsForCharacter"),
-    (req, res) => {
-      Handler.wrapper(req, res, Handler.setCharacterWeapon);
-
-    }
-  );
-  app.post(
-    baseUrls.map((route) => route + "UploadPlayerSettings"),
-    (req, res) => {
-      Handler.wrapper(req, res, Handler.setCharacterSettings);
-
-    }
-  );
-  app.post(
-    baseUrls.map((route) => route + "SetPlayerSlots"),
-    (req, res) => {
-      Handler.wrapper(req, res, Handler.setCharacterSlots);
-    }
-  );
-
-  app.post("*", (req, res) => {
-    console.log("UNKOWN REQUEST");
-    console.log(req.body);
+  vhsRouter.post("*", (req, res) => {
+    Logger.log("UNKOWN REQUEST");
+    Logger.log(req.body);
     res.send(EMPTY_SUCCESFUL_RESPONSE);
   });
-  app.get("/", (req, res) => res.send("HEY!"));
+  app.use(baseUrls, vhsRouter);
+  const adminRouter = express.Router();
+  adminRouter.use(express.urlencoded({ extended: false }));
+  adminRouter.get("/", (req, res) =>
+    Handler.wrapper(req, res, AdminHandler.adminDashboard)
+  );
+  adminRouter.post("/remove-user", (req, res) =>
+    Handler.wrapper(req, res, AdminHandler.removeUserSaveGame)
+  );
+  app.use(
+   "/vhs-admin",
+    basicAuth({
+      users: { user: process.env["VHS-PASSWORD"] ?? "password" },
+      challenge: true,
+    }),
+    adminRouter
+  );
   if (!process.argv.some((arg) => arg === "--disableRealPort")) {
     https
       .createServer(
@@ -117,7 +104,7 @@ function initServer() {
       )
       .listen(443, "0.0.0.0", () => {});
   }
-app.listen(12478);
+  app.listen(12478);
 }
 
 initApp();

@@ -1,5 +1,5 @@
 export class Logger {
-    private static readonly maxLogLines = 1000;
+    private static readonly maxLogLines = 1001;
     private static nextLogIndex = 0;
     private static logs: {msg: string, msgEnd?: string, timestamp: number}[] = [];
     static log(msg: string, msgEnd?: string) {
@@ -9,20 +9,20 @@ export class Logger {
     }
 
     static getLogListHtml() {
-        let html = '<div>\n';
+        let html = '';
         let startIndex: number;
         let endIndex: number;
         if (Logger.isLogFull()) {
-            startIndex = endIndex = Logger.nextLogIndex;
+            startIndex = Logger.nextLogIndex;
+            endIndex = this.maxLogLines;
         } else {
             startIndex = 0;
             endIndex = Logger.nextLogIndex;
         }
-        for (let i = startIndex; i < endIndex; i = (i + 1) % Logger.maxLogLines) {
-            const element = Logger.logs[i];
-            html += `<span>${new Date(element.timestamp).toLocaleString('es-ES')} - ${element.msg}<span style="color: orange"> ${element.msgEnd}</span></span>\n`;
+        for (let i = 0; i < endIndex; i++) {
+            const element = Logger.logs[(i + startIndex) % this.maxLogLines];
+            html += `<div>${new Date(element.timestamp).toLocaleString('es-ES')} - ${element.msg}<span style="color: orange"> ${element.msgEnd}</span></div>\n`;
         }
-        html += '</div>';
         return html;
     }
 

@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+    <head><title>VHS Alternative Server Admin Dashboard</title></head>
+    <body>
+        <div>${lastMessage}</div>
+        <div>
+            <h3>Remove user savegame</h3>
+            <form action="/vhs-admin/remove-user" method="post">
+                <label for="userId">User:</label>
+                <input id="userId" name="userId"/>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div style="overflow-y: auto;">
+            ${log}
+        </div>
+    </body>
+</html>
