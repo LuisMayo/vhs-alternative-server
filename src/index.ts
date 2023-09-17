@@ -85,6 +85,9 @@ function initServer() {
   adminRouter.post("/remove-user", (req, res) =>
     Handler.wrapper(req, res, AdminHandler.removeUserSaveGame)
   );
+  adminRouter.post("/impersonate-user", (req, res) =>
+    Handler.wrapper(req, res, AdminHandler.impersonateUser)
+  );
   app.use(
    "/vhs-admin",
     basicAuth({

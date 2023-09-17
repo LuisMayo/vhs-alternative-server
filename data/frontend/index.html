@@ -11,6 +11,16 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
+        <div>
+            <h3>Impersonate user</h3>
+            <form action="/vhs-admin/impersonate-user" method="post">
+                <label for="admin">Admin:</label>
+                <input id="admin" name="admin"/>
+                <label for="userId">User:</label>
+                <input id="userId" name="userId"/>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
         <div style="overflow-y: auto;">
             ${log}
         </div>

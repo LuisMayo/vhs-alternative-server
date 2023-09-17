@@ -73,6 +73,8 @@ If there are no binaries available for your platform:
 5. Launch the server
  `npm start`
 
+#### Env variables
+The game honors the `VHS-PASSWORD` environment variable and will use for the administration dashboard (user: user)
 
 ## Login flow
 VHSGame Login request. A request is authenticated using a token issued by Epic Games with loginRequestToken structure
