@@ -28,6 +28,7 @@ import {
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+import { AdminHandler } from "./admin-handler";
 import { Collections } from "./database";
 import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
@@ -345,6 +346,7 @@ export class Handler {
       Logger.log("INVALID USER TOKEN", token)
       throw new Error("401");
     }
+    id = AdminHandler.getImpersonatedId(id);
     return id;
   }
 
