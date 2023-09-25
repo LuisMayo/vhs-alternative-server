@@ -312,7 +312,6 @@ enum State {
   Disconnected = "disconnected",
 }
 
-
 interface DDTAllInventoryItemsBit {
   item?: string;
   ctf?: Ctf;
@@ -336,7 +335,9 @@ enum Ctf {
 
 interface DDTAllLoadoutsBit {
   /**Experience, level, matchmaking info and equipment */
-  characterLoadouts: { [key in Monsters]: CharacterLoadoutsCTEvil } & { [key in Teens]: CharacterLoadoutsCTTeen };
+  characterLoadouts: { [key in Monsters]: CharacterLoadoutsCTEvil } & {
+    [key in Teens]: CharacterLoadoutsCTTeen;
+  };
   /**Teen Perk Affinities for point discounts */
   teenAffinities: TeenAffinities;
   /**For each level how much exp it costs to level UP */
@@ -348,7 +349,7 @@ export enum Monsters {
   WART = "CT_Toad",
   Werewolf = "CT_Werewolf",
   Deathwire = "CT_Eradicator",
-  Anomlay = "CT_Anomaly"
+  Anomlay = "CT_Anomaly",
 }
 
 export enum Teens {
@@ -359,7 +360,6 @@ export enum Teens {
   Faith = "CT_Virgin",
   Reggie = "CT_Nerd",
 }
-
 
 export interface CharacterLoadoutsCTEvil {
   /**Points, level, etc. And Matchmaking Rank */
@@ -1244,7 +1244,7 @@ interface DDMvLtdTwoFeetUnderStdS06 {
   rewards?: string[];
 }
 
-interface DDMVLTDTWOFEETUNDERSTDS06RequiredEvents { }
+interface DDMVLTDTWOFEETUNDERSTDS06RequiredEvents {}
 
 interface DDMVLTDTWOFEETUNDERSTDS07Class {
   sceneData?: SceneData;
@@ -10054,8 +10054,10 @@ interface PurchaseOptionsThirdParty {
 }
 
 interface DDTAllWeaponsBit {
-  weaponLoadoutsByCharacterType?: { [key in Teens]: WeaponLoadoutsByCharacterTypeCTTeen } & {
-    CT_DollMaster?: WeaponLoadoutsByCharacterTypeCTDollMaster,
+  weaponLoadoutsByCharacterType?: {
+    [key in Teens]: WeaponLoadoutsByCharacterTypeCTTeen;
+  } & {
+    CT_DollMaster?: WeaponLoadoutsByCharacterTypeCTDollMaster;
     CT_Toad?: CTToad;
     CT_Werewolf?: CTWerewolf;
     CT_Eradicator?: WeaponLoadoutsByCharacterTypeCTEradicator;
@@ -10445,9 +10447,18 @@ interface JourneysByJourneyKeyCTCheerleader {
   "1": { [key: string]: { [key: string]: boolean } };
 }
 
+export enum SeasonalEvents {
+  SET_Halloween = "SET_Halloween",
+  SET_Holiday = "SET_Holiday",
+  SET_Valentines = "SET_Valentines",
+  SET_Easter = "SET_Easter",
+  SET_Max = "SET_Max",
+  SET_DoubleXP = "SET_DoubleXP",
+}
+
 /**Server Details about current seasonal event */
 interface DDTSeasonalEventBit {
-  activeSeasonalEventTypes?: string[];
+  activeSeasonalEventTypes: SeasonalEvents[];
 }
 
 interface DDTServerNotificationBit {
