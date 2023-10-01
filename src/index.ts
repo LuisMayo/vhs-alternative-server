@@ -88,6 +88,9 @@ function initServer() {
   adminRouter.post("/impersonate-user", (req, res) =>
     Handler.wrapper(req, res, AdminHandler.impersonateUser)
   );
+  adminRouter.post("/change-event", (req, res) =>
+    Handler.wrapper(req, res, AdminHandler.updateEvent)
+  );
   app.use(
    "/vhs-admin",
     basicAuth({

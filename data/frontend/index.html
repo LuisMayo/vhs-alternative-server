@@ -21,6 +21,16 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
+        <div>
+            <h3></h3>
+            <form action="/vhs-admin/change-event" method="post">
+                <label for="event">Event:</label>
+                <select id="event" name="event">
+                    ${events}
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
         <div style="overflow-y: auto;">
             ${log}
         </div>

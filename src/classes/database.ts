@@ -1,6 +1,7 @@
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
 import { Logger } from "./logger";
+import { SeasonalEvents } from "../types/save-game";
 import { ServerInfo } from "../types/server-info";
 import crypto from 'crypto';
 import { readFile } from "fs/promises";
@@ -54,7 +55,7 @@ export class Database {
 
   private async postInitHook() {
     this.initBaseSavegame().then();
-    this.initJWTSecurity().then();
+    this.initSettings().then();
   }
 
   private async initBaseSavegame() {
@@ -75,16 +76,21 @@ export class Database {
     }
   }
 
-  private async initJWTSecurity() {
+  private async initSettings() {
     const collection = this.collection<ServerInfo>(Collections.SERVER_INFO);
     let settings = await collection.findOneAsync({});
     if (settings == null) {
       Logger.log('Generating new JWT secret');
       settings = {
-        JWT_SECRET: crypto.randomBytes(64).toString('hex')
+        JWT_SECRET: crypto.randomBytes(64).toString('hex'),
+        currentEvent: SeasonalEvents.SET_NoSeasonalEvent,
       }
       collection.insertAsync(settings).catch(Logger.log);
     }
     this.token = settings.JWT_SECRET;
+
+    if (!settings.currentEvent) {
+      await collection.updateAsync({}, {$set: {currentEvent: SeasonalEvents.SET_NoSeasonalEvent}});
+    }
   }
 }

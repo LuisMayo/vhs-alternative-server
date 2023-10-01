@@ -10448,6 +10448,7 @@ interface JourneysByJourneyKeyCTCheerleader {
 }
 
 export enum SeasonalEvents {
+  SET_NoSeasonalEvent = "SET_NoSeasonalEvent",
   SET_Halloween = "SET_Halloween",
   SET_Holiday = "SET_Holiday",
   SET_Valentines = "SET_Valentines",
