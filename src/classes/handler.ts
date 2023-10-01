@@ -33,11 +33,12 @@ import { Collections } from "./database";
 import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
 import { Logger } from "./logger";
-import { User } from "../database/database.interface";
+import { ServerInfo } from "../types/server-info";
+import { User } from "../types/user";
 import { db } from "..";
+import deepmerge from 'deepmerge';
 import jwt_to_pem from 'jwk-to-pem';
 import randomstring from "randomstring";
-import { readFile } from 'fs/promises';
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
@@ -89,7 +90,7 @@ export class Handler {
     }
     const epicId = parsedToken.sub;
     const currentTime = Date.now() / 1000;
-    if (!epicId || !parsedToken.exp || parsedToken.exp < currentTime || !parsedToken.iat || parsedToken.iat > currentTime) {
+    if (!epicId || !parsedToken.exp || parsedToken.exp < currentTime) {
       Logger.log('Ilegal token');
       return response.status(401).send("Token malformed");
     }
@@ -135,8 +136,8 @@ export class Handler {
         console.error("Unknown discover type", request.body.bitsToDiscover);
       case DiscoverTypes.INITIAL_LOAD:
         try {
-          const userSaveGame = await Handler.getUserSaveGame(id);
-          return response.send(userSaveGame);
+          const [userSaveGame, serverInfo] = await Promise.all([Handler.getUserSaveGame(id), Handler.getGeneralServerInfo()]);
+          return response.send(deepmerge(userSaveGame, serverInfo));
         } catch (e) {
           const str = String(e);
           response.status(500).send(str);
@@ -368,5 +369,14 @@ export class Handler {
       collection.insertAsync(userSaveGame);
     }
     return userSaveGame;
+  }
+
+  /**
+   * Get info that's general for the whole server, not of an specific user
+   *  */ 
+  static async getGeneralServerInfo(): Promise<Partial<SaveGameResponse>> {
+    const collection = db.collection<ServerInfo>(Collections.SERVER_INFO);
+    const event = (await collection.findOneAsync({})).currentEvent;
+    return {data: {DDT_SeasonalEventBit: {activeSeasonalEventTypes: [event]}}}
   }
 }
