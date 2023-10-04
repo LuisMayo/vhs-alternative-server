@@ -1,31 +1,32 @@
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
 import { Logger } from "./logger";
-import { SeasonalEvents } from "../types/save-game";
+import { SaveGameResponse, SeasonalEvents } from "../types/save-game";
 import { ServerInfo } from "../types/server-info";
 import crypto from 'crypto';
 import { readFile } from "fs/promises";
 
+const CURRENT_VERSION = 0;
 export enum Collections {
   USERS = "users",
   SAVE_GAME = "save-games",
   SERVER_INFO = "server-info" // Meta info about the server itself
 }
 
-export type WithOptionalId<T> = T & {_id?: string};
+export type WithOptionalId<T> = T & { _id?: string };
 export class Database {
   db!: Record<Collections, Datastore>;
   token!: string;
 
-  constructor() {}
+  constructor() { }
 
   async init() {
     Logger.log("Initialiting NeDB database connection");
     let db: Partial<typeof this.db> = {};
     try {
-      const promises: Promise<unknown>[] = [];  
+      const promises: Promise<unknown>[] = [];
       for (const collection of this.getAllDataStores()) {
-        const datastore =  new Datastore({ filename: "./db/" + collection + '.db' });
+        const datastore = new Datastore({ filename: "./db/" + collection + '.db' });
         db[collection] = datastore;
         promises.push(datastore.loadDatabaseAsync());
       }
@@ -42,7 +43,7 @@ export class Database {
       }
     }
     this.db = db as typeof this.db;
-    this.postInitHook().then();
+    return this.postInitHook();
   }
 
   getAllDataStores() {
@@ -54,8 +55,8 @@ export class Database {
   }
 
   private async postInitHook() {
-    this.initBaseSavegame().then();
-    this.initSettings().then();
+    await this.initBaseSavegame();
+    await this.initSettings();
   }
 
   private async initBaseSavegame() {
@@ -83,6 +84,7 @@ export class Database {
       Logger.log('Generating new JWT secret');
       settings = {
         JWT_SECRET: crypto.randomBytes(64).toString('hex'),
+        version: CURRENT_VERSION,
         currentEvent: SeasonalEvents.SET_NoSeasonalEvent,
       }
       collection.insertAsync(settings).catch(Logger.log);
@@ -90,7 +92,39 @@ export class Database {
     this.token = settings.JWT_SECRET;
 
     if (!settings.currentEvent) {
-      await collection.updateAsync({}, {$set: {currentEvent: SeasonalEvents.SET_NoSeasonalEvent}});
+      await collection.updateAsync({}, { $set: { currentEvent: SeasonalEvents.SET_NoSeasonalEvent } });
+    }
+    await this.checkVersionAndMigrations(settings.version);
+  }
+
+  private async checkVersionAndMigrations(version: number) {
+    // Switch without breaks because migrations should be secuencial and cummulative
+    switch (version) {
+      default: // If version was pre-0
+        await this.DLCCharactersFix();
+      case 0: // if version was pre-1 (you get the idea)
+    }
+    await this.collection<ServerInfo>(Collections.SERVER_INFO).updateAsync({}, {$set: {version: CURRENT_VERSION}});
+  }
+
+  private async DLCCharactersFix() {
+    Logger.log("Running DLC Characters migration");
+    const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
+    const base: SaveGameResponse = JSON.parse(
+      await readFile("./data/base.json", { encoding: "utf-8" })
+    );
+    const {numAffected} = await saveGames.updateAsync({}, { $set: {
+      'data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Nerd': base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Nerd,
+      'data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Anomaly': base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Anomaly,
+      'data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Eradicator': base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Eradicator,
+      'base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Nerd': base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Nerd,
+      'base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Anomaly': base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Anomaly,
+      'base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Eradicator': base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Eradicator,
+    } },
+    {multi: true})
+    if (numAffected === 0) {
+      Logger.log("Error while migrating DLC characters");
+      throw new Error();
     }
   }
 }
