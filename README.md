@@ -28,7 +28,7 @@ Currently, we have two known methods of patching the game:
 |       Method      | Play With Bots | Multiplayer game |      Supported OSs      | Requires Admin |
 |:-----------------:|----------------|------------------|:-----------------------:|----------------|
 | Hosts Redirection |        ✅       |         ✅        |         Windows         |        ✅       |
-| Executable Patching      |        ✅       |         ❌        | Windows; Linux (Proton) |        ❌       |
+| Executable Patching      |        ✅       | 🟡 (Only in Linux/Proton) | Windows; Linux (Proton) |        ❌       |
 
 ## Manual Installation
 
