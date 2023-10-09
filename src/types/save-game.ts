@@ -11,6 +11,7 @@ interface SaveData {
   DDT_AllPlayerSlotsBit?: DDTAllPlayerSlotsBit;
   /**Character-related info */
   DDT_AllLoadoutsBit?: DDTAllLoadoutsBit;
+  DDT_SpecificLoadoutsBit?: Partial<DDTAllLoadoutsBit>;
   DDT_AllWeaponsBit?: DDTAllWeaponsBit;
   DDT_AllInventoryItemsBit?: DDTAllInventoryItemsBit[];
   DDT_AllUnclaimedChestsBit?: any[];

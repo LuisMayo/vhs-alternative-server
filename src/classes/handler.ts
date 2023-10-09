@@ -136,7 +136,13 @@ export class Handler {
         console.error("Unknown discover type", request.body.bitsToDiscover);
       case DiscoverTypes.INITIAL_LOAD:
         try {
-          const [userSaveGame, serverInfo] = await Promise.all([Handler.getUserSaveGame(id), Handler.getGeneralServerInfo()]);
+          const [userSaveGame, serverInfo] = await Promise.all([Handler.getUserSaveGame(request.body.accountIdToDiscover ?? id), Handler.getGeneralServerInfo()]);
+          // TODO when we actually implement the bitsToDiscoverFlag PROPERLY we should remove this
+          if (request.body.accountIdToDiscover != null) {
+            delete userSaveGame.data.playerSettingsData;
+          }
+          userSaveGame.data.DDT_SpecificLoadoutsBit = userSaveGame.data.DDT_AllLoadoutsBit;
+          // End of the TODO remove in the future block
           return response.send(deepmerge(userSaveGame, serverInfo));
         } catch (e) {
           const str = String(e);
@@ -373,7 +379,7 @@ export class Handler {
 
   /**
    * Get info that's general for the whole server, not of an specific user
-   *  */ 
+   *  */
   static async getGeneralServerInfo(): Promise<Partial<SaveGameResponse>> {
     const collection = db.collection<ServerInfo>(Collections.SERVER_INFO);
     const event = (await collection.findOneAsync({})).currentEvent;
