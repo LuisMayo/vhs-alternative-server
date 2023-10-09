@@ -76,8 +76,10 @@ export interface LoginData {
 }
 
 export interface DiscoverRequest {
+  /** Account ID we need to get info from. Empty if the logged user one */
+  accountIdToDiscover?: string;
   /** Some kind of ID to know what information we're requesting */
-  bitsToDiscover?: DiscoverTypes;
+  bitsToDiscover: DiscoverTypes;
   /** ID-like, not the same as the LoginRequest, not the same across requests (nonce?) */
   idpk?: string;
   journeyGuid?: string;
