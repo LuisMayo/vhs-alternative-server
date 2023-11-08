@@ -30,6 +30,12 @@ export interface LoginRequest {
   version?: number;
 }
 
+export interface RefreshRequest {
+    sessionTicketId: string,
+    version: 71,
+    idpk: string
+}
+
 /**Token structure for the Login Request
  * @link https://dev.epicgames.com/docs/epic-account-services/auth/auth-interface
  */

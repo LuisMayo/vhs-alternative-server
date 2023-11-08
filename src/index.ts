@@ -36,7 +36,6 @@ function initApp() {
 
 function initServer() {
   const app = express();
-  const port = 3000;
   // Base URL as it's going to be edited in the game
   // const baselineUrl = "/api00000000000000000000";
   // // Final URL as it's going to be called
@@ -52,6 +51,9 @@ function initServer() {
       Handler.wrapper(req, res, Handler.login);
     }
   );
+  vhsRouter.post("/ReplaceExistingSessionToken", (req, res) => {
+    Handler.wrapper(req, res, Handler.refreshToken);
+  });
   vhsRouter.post("/Discover", (req, res) => {
     Handler.wrapper(req, res, Handler.discover);
   });
@@ -72,7 +74,7 @@ function initServer() {
   });
 
   vhsRouter.post("*", (req, res) => {
-    Logger.log("UNKOWN REQUEST");
+    Logger.log("UNKOWN REQUEST", req.url);
     Logger.log(req.body);
     res.send(EMPTY_SUCCESFUL_RESPONSE);
   });

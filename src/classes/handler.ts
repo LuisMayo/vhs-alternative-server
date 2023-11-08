@@ -11,6 +11,7 @@ import {
   LoginRequest,
   LoginResponse,
   MathmakingInfoResponse,
+  RefreshRequest,
   SetCharacterLoadoutRequest,
   SetCharacterLoadoutResponse,
   SetWeaponLoadoutsForCharacterRequest,
@@ -104,7 +105,7 @@ export class Handler {
     } else {
       id = (await collection.insertAsync({ displayName: name, epicId }))._id;
     }
-    const sign = jwt.sign(id, db.token);
+    const sign = Handler.generateToken(id);
     response.send({
       data: {
         displayName: name,
@@ -113,6 +114,24 @@ export class Handler {
       },
       log: { logSuccessful: true },
     });
+  }
+
+  static async refreshToken(request: Request<any, LoginResponse, RefreshRequest>, response: Response<LoginResponse>) {
+    const id = Handler.checkOwnTokenAndGetId(request);
+    const token = Handler.generateToken(id);
+    Logger.log("Refreshed token for user", id);
+    Logger.log("Request", JSON.stringify(request.body));
+    
+    const responseObj = {
+      data: {
+        displayName: 'dummy',
+        sessionTicketId: token,
+        playerAccountId: id
+      },
+      log: { logSuccessful: true }
+    };
+    Logger.log("Response", JSON.stringify(responseObj));
+    response.send(responseObj);
   }
 
   static async discover(
@@ -344,7 +363,7 @@ export class Handler {
     }
   }
 
-  static checkOwnTokenAndGetId(req: Request<unknown>) {
+  private static checkOwnTokenAndGetId(req: Request<unknown>) {
     const token =  req.header("Authorization")?.split(" ")[1];
     let id = 'Dummy';
     try {
@@ -357,7 +376,7 @@ export class Handler {
     return id;
   }
 
-  static async getUserSaveGame(userId: string) {
+  private static async getUserSaveGame(userId: string) {
     const collection = db.collection<SaveGameResponse>(Collections.SAVE_GAME);
     let userSaveGame =
       await collection.findOneAsync({
@@ -380,9 +399,14 @@ export class Handler {
   /**
    * Get info that's general for the whole server, not of an specific user
    *  */
-  static async getGeneralServerInfo(): Promise<Partial<SaveGameResponse>> {
+  private static async getGeneralServerInfo(): Promise<Partial<SaveGameResponse>> {
     const collection = db.collection<ServerInfo>(Collections.SERVER_INFO);
     const event = (await collection.findOneAsync({})).currentEvent;
     return {data: {DDT_SeasonalEventBit: {activeSeasonalEventTypes: [event]}}}
+  }
+
+  
+  private static generateToken(id: string) {
+    return jwt.sign(id, db.token);
   }
 }
