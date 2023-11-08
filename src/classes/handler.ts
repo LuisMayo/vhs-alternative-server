@@ -67,34 +67,11 @@ export class Handler {
     response: Response<LoginResponse | string>
   ) {
     const collection = db.collection<User>(Collections.USERS);
-    const token = request.header("Authorization")?.split(" ")[1];
-    if (!token) {
-      return response.status(401).send("Token not found");
+    const epicId = process.argv.includes('--bypassEpicValidation') ? Handler.getUnAuthenticatedEpicId(request) : (await Handler.getAuthenticatedEpicUserId(request));
+    if (!epicId) {
+      return response.sendStatus(401);
     }
-    try {
-      if (!Handler.epicKeys || Handler.epicKeys.length === 0){
-        const epicResponse = await (await fetch('https://api.epicgames.dev/auth/v1/oauth/jwks')).json();
-        Handler.epicKeys = epicResponse.keys.map((key: any) => jwt_to_pem(key));
-      }
-    } catch (e) {
-      return response.status(401).send("Token malformed");
-    }
-    let parsedToken: JwtPayload | undefined;
-    for (let i = 0; i < Handler.epicKeys.length && !parsedToken; i++) {
-      try {
-        parsedToken = jwt.verify(token, Handler.epicKeys[i], {}) as JwtPayload;
-      } catch (e) {
-      }
-    }
-    if (!parsedToken) {
-      return response.status(401).send("Token not signed by Epic");
-    }
-    const epicId = parsedToken.sub;
-    const currentTime = Date.now() / 1000;
-    if (!epicId || !parsedToken.exp || parsedToken.exp < currentTime) {
-      Logger.log('Ilegal token');
-      return response.status(401).send("Token malformed");
-    }
+  
     let existingUser = await collection.findOneAsync<Document<User>>({
       epicId,
     });
@@ -394,6 +371,58 @@ export class Handler {
       collection.insertAsync(userSaveGame);
     }
     return userSaveGame;
+  }
+
+  private static async getAuthenticatedEpicUserId(request: Request<LoginRequest>) {
+    const token = request.header("Authorization")?.split(" ")[1];
+    if (!token) {
+      return null;
+    }
+    try {
+      if (!Handler.epicKeys || Handler.epicKeys.length === 0){
+        const epicResponse = await (await fetch('https://api.epicgames.dev/auth/v1/oauth/jwks')).json();
+        Handler.epicKeys = epicResponse.keys.map((key: any) => jwt_to_pem(key));
+      }
+    } catch (e) {
+      return null;
+    }
+    let parsedToken: JwtPayload | undefined;
+    for (let i = 0; i < Handler.epicKeys.length && !parsedToken; i++) {
+      try {
+        parsedToken = jwt.verify(token, Handler.epicKeys[i], {}) as JwtPayload;
+      } catch (e) {
+      }
+    }
+    if (!parsedToken) {
+      return process.argv.includes('--allowNonEpicUsers') ? Handler.getUnAuthenticatedEpicId(request) : null;
+    }
+    const epicId = parsedToken.sub;
+    const currentTime = Date.now() / 1000;
+    if (!epicId || !parsedToken.exp || parsedToken.exp < currentTime) {
+      Logger.log('Ilegal token');
+      return null;
+    }
+    return epicId;
+  }
+
+  private static getUnAuthenticatedEpicId(request: Request<LoginRequest>) {
+    const token = request.header("Authorization")?.split(" ")[1];
+    if (!token) {
+      return null;
+    }
+    const parsedToken = jwt.decode(token);
+    let epicId: string | null;
+    switch(typeof parsedToken?.sub) {
+      case 'string':
+        epicId = 'unsafe-' + parsedToken.sub;
+        break;
+      case 'function':
+        epicId = 'unsafe-' + parsedToken.sub();
+        break;
+      default:
+        epicId = null;
+    }
+    return epicId;
   }
 
   /**

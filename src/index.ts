@@ -93,14 +93,21 @@ function initServer() {
   adminRouter.post("/change-event", (req, res) =>
     Handler.wrapper(req, res, AdminHandler.updateEvent)
   );
-  app.use(
-   "/vhs-admin",
-    basicAuth({
+  if(process.argv.includes('--disableAdminPassword')) {
+    app.use(
+      "/vhs-admin",
+      adminRouter
+    );
+  } else {
+    app.use(
+      "/vhs-admin",
+      basicAuth({
       users: { user: process.env["VHS-PASSWORD"] ?? "password" },
       challenge: true,
     }),
     adminRouter
   );
+  }
   if (!process.argv.some((arg) => arg === "--disableRealPort")) {
     https
       .createServer(
