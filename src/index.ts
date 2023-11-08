@@ -52,7 +52,7 @@ function initServer() {
     }
   );
   vhsRouter.post("/ReplaceExistingSessionToken", (req, res) => {
-    Handler.wrapper(req, res, Handler.refreshToken);
+    res.sendStatus(500);
   });
   vhsRouter.post("/Discover", (req, res) => {
     Handler.wrapper(req, res, Handler.discover);

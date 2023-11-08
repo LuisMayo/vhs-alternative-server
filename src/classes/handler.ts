@@ -54,7 +54,7 @@ export class Handler {
   ) {
     fn(request, response).catch(e => {
       if (e?.toString() === '401') {
-        response.status(401).send();
+        response.sendStatus(500);
       } else {
         Logger.log('Error in request ' + request.path, String(e));
         response.send(EMPTY_SUCCESFUL_RESPONSE);
@@ -91,24 +91,6 @@ export class Handler {
       },
       log: { logSuccessful: true },
     });
-  }
-
-  static async refreshToken(request: Request<any, LoginResponse, RefreshRequest>, response: Response<LoginResponse>) {
-    const id = Handler.checkOwnTokenAndGetId(request);
-    const token = Handler.generateToken(id);
-    Logger.log("Refreshed token for user", id);
-    Logger.log("Request", JSON.stringify(request.body));
-    
-    const responseObj = {
-      data: {
-        displayName: 'dummy',
-        sessionTicketId: token,
-        playerAccountId: id
-      },
-      log: { logSuccessful: true }
-    };
-    Logger.log("Response", JSON.stringify(responseObj));
-    response.send(responseObj);
   }
 
   static async discover(
