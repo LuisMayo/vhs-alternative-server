@@ -1,6 +1,18 @@
 <!doctype html>
 <html>
-    <head><title>VHS Alternative Server Admin Dashboard</title></head>
+    <head>
+        <title>VHS Alternative Server Admin Dashboard</title>
+        <script>
+            function checkElementChanged(id) {
+                return document.getElementById(id)?.value != null && document.getElementById(id)?.value.trim() != '';
+            }
+            setInterval(() =>  {
+                if(!checkElementChanged('userId') && !checkElementChanged('userId2') && !checkElementChanged('admin')) {
+                    location.pathname = '/vhs-admin/'
+                }
+            }, 10000);
+        </script>
+    </head>
     <body>
         <div>${lastMessage}</div>
         <div>
@@ -16,8 +28,8 @@
             <form action="/vhs-admin/impersonate-user" method="post">
                 <label for="admin">Admin:</label>
                 <input id="admin" name="admin"/>
-                <label for="userId">User:</label>
-                <input id="userId" name="userId"/>
+                <label for="userId2">User:</label>
+                <input id="userId2" name="userId"/>
                 <button type="submit">Submit</button>
             </form>
         </div>
