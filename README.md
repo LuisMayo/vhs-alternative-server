@@ -11,26 +11,22 @@ A Video Horror Society server emulator. Allowing users to enjoy Hellbent's devel
 
 ## How to Install
 _The following steps will allow you to seamlessly set up the server structure for clients or hosts._
-Manual instructions/developer mode in _Development/Usage_
-
-_Hosts Redirection:_
-1. Go to this link and download the latest GUI Coordinator: [Link to script](https://github.com/SkelXton/VHS-Redirector-Scripts/releases/latest)
-2. Open VHS Server Coordinator and use the GUI to select your given server and details or set it up to host a game.
-
-_Executable Patching is TBD_
-
-If you ever decide to remove the game and patches, you can use the uninstall script to clean up our patches.
-
-## Development/Usage
 ### Patching the game
 Currently, we have two known methods of patching the game:
 
-|       Method      | Play With Bots | Multiplayer game |      Supported OSs      | Requires Admin |
-|:-----------------:|----------------|------------------|:-----------------------:|----------------|
-| Hosts Redirection |        ✅       |         ✅        |         Windows         |        ✅       |
-| Executable Patching      |        ✅       | 🟡 (Only in Linux/Proton) | Windows; Linux (Proton) |        ❌       |
+|       Method      | Play With Bots | Multiplayer game |      Supported OSs      | Requires Admin | Installer Link |
+|:-----------------:|----------------|------------------|:-----------------------:|----------------|---------------|
+| Hosts Redirection |        ✅       |         ✅        |         Windows         |        ✅       | [VHS Redirector Scripts](https://github.com/SkelXton/VHS-Redirector-Scripts/releases/latest) |
+| Executable Patching      |        ✅       | 🟡 (Only in Linux/Proton) | Windows; Linux (Proton) |        ❌       | [VHS Server Patcher](https://github.com/LuisMayo/vhs-server-patcher/releases/latest) |
+
+#### What should I use?
+If you use Windows use Hosts Redirection. If Linux Executable Patching. If you want to develop the server it's your call but I'd go for Executable Patching
+
+
+## Development/Usage
 
 ## Manual Installation
+In case the installers don't suit your use-case, you can manually modify your game. Listed here are instructions for both methods
 
 #### Hosts Redirection
 In order to patch the game through hosts redirection you need to edit `C:\Windows\system32\drivers\etc\hosts`.
@@ -53,11 +49,12 @@ For the official server use this
 ```
 68 00 74 00 74 00 70 00 73 00 3A 00 2F 00 2F 00 61 00 70 00 70 00 73 00 2E 00 6C 00 75 00 69 00 73 00 6D 00 61 00 79 00 6F 00 2E 00 63 00 6F 00 6D 00 2F 00 76 00 68 00 73 00 2D 00 25 00 73 00 2F 00 25 00 73 00 2F 00 25 00 73 00 2F 00 3F 00 67 00 75 00 69 00 64 00 3D 00 25 00 73
 ```
+Remember to fill with 0s any leftover string part
 
 ### Running the server (User)
 1. Download a binary from the [Releases section](https://github.com/LuisMayo/vhs-alternative-server/releases) according to your OS/Architecture (check below if there isn't)
 2. If using Hosts redirection/TLS you must place an appropiate certificate and key named `vhsgame.com.crt` adn `vhsgame.com.pem`
-3. Else you have to launch the app with --disableRealPort which will launch on HTTP/TCP/12478
+3. Else you have to launch the app with --disableRealPort which will launch on HTTP/12478
 4. The server will respond to /metagame/THEEND_GAME/Client/<EP> and /vhs-api/Client/<EP> routes
 
 If there are no binaries available for your platform:
