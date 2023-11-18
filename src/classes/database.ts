@@ -6,7 +6,7 @@ import { ServerInfo } from "../types/server-info";
 import crypto from 'crypto';
 import { readFile } from "fs/promises";
 
-const CURRENT_VERSION = 0;
+const CURRENT_VERSION = 1;
 export enum Collections {
   USERS = "users",
   SAVE_GAME = "save-games",
@@ -103,6 +103,7 @@ export class Database {
       default: // If version was pre-0
         await this.DLCCharactersFix();
       case 0: // if version was pre-1 (you get the idea)
+        await this.removeTrophiesFix();
     }
     await this.collection<ServerInfo>(Collections.SERVER_INFO).updateAsync({}, {$set: {version: CURRENT_VERSION}});
   }
@@ -126,5 +127,16 @@ export class Database {
       Logger.log("Error while migrating DLC characters");
       throw new Error();
     }
+  }
+
+  private async removeTrophiesFix() {
+    Logger.log("Running removing trophies migration");
+    const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
+    const allSaves = await saveGames.findAsync({});
+    for (const save of allSaves) {
+      save.data.DDT_AllInventoryItemsBit = save.data.DDT_AllInventoryItemsBit.filter(item => !item.item?.startsWith('ID_TR'));
+    }
+    await saveGames.update({}, allSaves);
+    Logger.log("Migration Done");
   }
 }
