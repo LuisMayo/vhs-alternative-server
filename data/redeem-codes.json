@@ -1,0 +1,315 @@
+[
+    {
+        "code": "ID_TR_CT_Jock_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Jock_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Jock_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Jock_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Jock_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Jock_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Jock_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Jock_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Virgin_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Virgin_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Virgin_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Virgin_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Virgin_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Virgin_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Virgin_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Virgin_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Cheerleader_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Cheerleader_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Cheerleader_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Cheerleader_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Cheerleader_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Cheerleader_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Cheerleader_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Cheerleader_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Outsider_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Outsider_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Outsider_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Outsider_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Outsider_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Outsider_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Outsider_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Outsider_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Punk_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Punk_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Punk_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Punk_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Punk_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Punk_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Punk_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Punk_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Nerd_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Nerd_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Nerd_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Nerd_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Nerd_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Nerd_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Nerd_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Nerd_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Anomaly_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Anomaly_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Anomaly_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Anomaly_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Anomaly_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Anomaly_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Eradicator_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Eradicator_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Eradicator_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Eradicator_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Eradicator_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Eradicator_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_DollMaster_Movie1Complete",
+        "items": [
+            "ID_TR_CT_DollMaster_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_DollMaster_Movie2Complete",
+        "items": [
+            "ID_TR_CT_DollMaster_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_DollMaster_Movie3Complete",
+        "items": [
+            "ID_TR_CT_DollMaster_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Toad_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Toad_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Toad_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Toad_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Toad_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Toad_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Werewolf_Movie1Complete",
+        "items": [
+            "ID_TR_CT_Werewolf_Movie1Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Werewolf_Movie2Complete",
+        "items": [
+            "ID_TR_CT_Werewolf_Movie2Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Werewolf_Movie3Complete",
+        "items": [
+            "ID_TR_CT_Werewolf_Movie3Complete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Anomaly_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Anomaly_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Eradicator_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Eradicator_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_DollMaster_JourneyComplete",
+        "items": [
+            "ID_TR_CT_DollMaster_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Toad_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Toad_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ID_TR_CT_Werewolf_JourneyComplete",
+        "items": [
+            "ID_TR_CT_Werewolf_JourneyComplete"
+        ]
+    },
+    {
+        "code": "ALL_ACHIEVEMENTS",
+        "items": [
+            "ID_TR_CT_Jock_JourneyComplete",
+            "ID_TR_CT_Jock_Movie1Complete",
+            "ID_TR_CT_Jock_Movie2Complete",
+            "ID_TR_CT_Jock_Movie3Complete",
+            "ID_TR_CT_Virgin_JourneyComplete",
+            "ID_TR_CT_Virgin_Movie1Complete",
+            "ID_TR_CT_Virgin_Movie2Complete",
+            "ID_TR_CT_Virgin_Movie3Complete",
+            "ID_TR_CT_Cheerleader_JourneyComplete",
+            "ID_TR_CT_Cheerleader_Movie1Complete",
+            "ID_TR_CT_Cheerleader_Movie2Complete",
+            "ID_TR_CT_Cheerleader_Movie3Complete",
+            "ID_TR_CT_Outsider_JourneyComplete",
+            "ID_TR_CT_Outsider_Movie1Complete",
+            "ID_TR_CT_Outsider_Movie2Complete",
+            "ID_TR_CT_Outsider_Movie3Complete",
+            "ID_TR_CT_Punk_JourneyComplete",
+            "ID_TR_CT_Punk_Movie1Complete",
+            "ID_TR_CT_Punk_Movie2Complete",
+            "ID_TR_CT_Punk_Movie3Complete",
+            "ID_TR_CT_Nerd_JourneyComplete",
+            "ID_TR_CT_Nerd_Movie1Complete",
+            "ID_TR_CT_Nerd_Movie2Complete",
+            "ID_TR_CT_Nerd_Movie3Complete",
+            "ID_TR_CT_Anomaly_Movie1Complete",
+            "ID_TR_CT_Anomaly_Movie2Complete",
+            "ID_TR_CT_Anomaly_Movie3Complete",
+            "ID_TR_CT_Eradicator_Movie1Complete",
+            "ID_TR_CT_Eradicator_Movie2Complete",
+            "ID_TR_CT_Eradicator_Movie3Complete",
+            "ID_TR_CT_DollMaster_Movie1Complete",
+            "ID_TR_CT_DollMaster_Movie2Complete",
+            "ID_TR_CT_DollMaster_Movie3Complete",
+            "ID_TR_CT_Toad_Movie1Complete",
+            "ID_TR_CT_Toad_Movie2Complete",
+            "ID_TR_CT_Toad_Movie3Complete",
+            "ID_TR_CT_Werewolf_Movie1Complete",
+            "ID_TR_CT_Werewolf_Movie2Complete",
+            "ID_TR_CT_Werewolf_Movie3Complete",
+            "ID_TR_CT_Anomaly_JourneyComplete",
+            "ID_TR_CT_Eradicator_JourneyComplete",
+            "ID_TR_CT_DollMaster_JourneyComplete",
+            "ID_TR_CT_Toad_JourneyComplete",
+            "ID_TR_CT_Werewolf_JourneyComplete"
+        ]
+    }
+]

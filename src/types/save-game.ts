@@ -1,10 +1,11 @@
 import { VHSResponse } from "./vhs-the-game-types";
 
-export interface SaveGameResponse extends VHSResponse<SaveData> {
+export interface SaveGameResponse extends VHSResponse<Partial<SaveData>> {
   /**Own field, not returned by original API */
   userId: string;
 }
 
+export type SavedData = VHSResponse<SaveData>;
 interface SaveData {
   /** Information about the player's general progression*/
   DDT_AllPlayerAccountPointsBit?: DDTAllPlayerAccountPointsBit;

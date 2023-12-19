@@ -11,6 +11,8 @@ import {
   LoginRequest,
   LoginResponse,
   MathmakingInfoResponse,
+  RedeemCodeRequest,
+  RedeemCodeResponse,
   RefreshRequest,
   SetCharacterLoadoutRequest,
   SetCharacterLoadoutResponse,
@@ -40,6 +42,7 @@ import { db } from "..";
 import deepmerge from 'deepmerge';
 import jwt_to_pem from 'jwk-to-pem';
 import randomstring from "randomstring";
+import { readFile } from "fs/promises";
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
@@ -265,6 +268,25 @@ export class Handler {
         uploadSuccessful: success,
       },
     });
+  }
+
+  static async redeemCode(
+    request: Request<
+      any,
+      RedeemCodeResponse | string,
+      RedeemCodeRequest
+    >,
+    response: Response<RedeemCodeResponse>
+  ) {
+    const id = Handler.checkOwnTokenAndGetId(request);
+    const saveData = await Handler.getUserSaveGame(id);
+    const availableCodes = JSON.parse(
+      await readFile("./data/redeem-codes.json", { encoding: "utf-8" })
+    );
+    // DO a find to find if the redeemed code is on our JSON, if it is grant the thingies to the saveGame
+    const codeData =
+
+    if (saveData &&)
   }
 
   static async lobby(

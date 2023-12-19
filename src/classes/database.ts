@@ -1,7 +1,8 @@
+import { SaveGameResponse, SavedData, SeasonalEvents } from "../types/save-game";
+
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
 import { Logger } from "./logger";
-import { SaveGameResponse, SeasonalEvents } from "../types/save-game";
 import { ServerInfo } from "../types/server-info";
 import crypto from 'crypto';
 import { readFile } from "fs/promises";
@@ -131,12 +132,14 @@ export class Database {
 
   private async removeTrophiesFix() {
     Logger.log("Running removing trophies migration");
-    const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
-    const allSaves = await saveGames.findAsync({});
+    const saveGames = this.collection<SavedData>(Collections.SAVE_GAME);
+    const allSaves = await saveGames.getAllData();
     for (const save of allSaves) {
       save.data.DDT_AllInventoryItemsBit = save.data.DDT_AllInventoryItemsBit.filter(item => !item.item?.startsWith('ID_TR'));
     }
-    await saveGames.update({}, allSaves);
+    await saveGames.removeAsync({}, {multi: true});
+    await saveGames.insertAsync(allSaves);
+    await this.initBaseSavegame();
     Logger.log("Migration Done");
   }
 }
