@@ -270,7 +270,7 @@ export class Handler {
     });
   }
 
-  static async redeemCode(
+/*  static async redeemCode(
     request: Request<
       any,
       RedeemCodeResponse | string,
@@ -287,7 +287,7 @@ export class Handler {
     const codeData =
 
     if (saveData &&)
-  }
+  }*/
 
   static async lobby(
     request: Request<
