@@ -219,3 +219,12 @@ export type SlotChangesResponseData = {
 };
 
 export type SlotChangesResponse = VHSResponse<SlotChangesResponseData>;
+
+export type RedeemCodeRequest = {
+  sessionTicketId: string,
+  productCode: string,
+  version: 71,
+  idpk: string
+}
+
+export type RedeemCodeResponse = VHSResponse<void>;
