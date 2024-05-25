@@ -105,6 +105,8 @@ export class Database {
         await this.DLCCharactersFix();
       case 0: // if version was pre-1 (you get the idea)
         await this.removeTrophiesFix();
+      case CURRENT_VERSION:
+        break;
     }
     await this.collection<ServerInfo>(Collections.SERVER_INFO).updateAsync({}, {$set: {version: CURRENT_VERSION}});
   }
