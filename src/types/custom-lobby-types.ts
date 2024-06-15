@@ -16,7 +16,25 @@ export interface JoinLobbyRequest {
     idpk?: string;
 }
 
-export type UseCustomLobbyRequest = CreateLobbyRequest | JoinLobbyRequest;
+export interface CloseLobbyRequest {
+    action?: 'closeLobby';
+    lobbyData: {
+        beaconPort: number,
+        closeReason: string,
+        levelType: number,
+        lobbyName: string,
+        numEvils: number,
+        numTeens: number
+    },
+    matchSettings: {
+        selectedMap: string
+    },
+    sessionTicketId?: string;
+    version?: number;
+    idpk?: string;
+}
+
+export type UseCustomLobbyRequest = CreateLobbyRequest | JoinLobbyRequest | CloseLobbyRequest;
 
 export type CreateLobbyResponse = VHSResponse<CreateLobbyData>;
 
@@ -31,4 +49,4 @@ export interface JoinLobbyData {
     connectionString?: string;
     discoverKey?: string;
 }
-export type UseCustomLobbyResponse = CreateLobbyResponse | JoinLobbyResponse;
+export type UseCustomLobbyResponse = CreateLobbyResponse | JoinLobbyResponse | VHSResponse<void>;

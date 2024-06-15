@@ -14,7 +14,7 @@
             "program": "${workspaceFolder}/build/index.js",
             "console": "integratedTerminal",
             // "runtimeArgs": ["--inspect-brk"],
-            "args": ["--disableRealPort", "--allowNonEpicUsers"],
+            "args": ["--disableRealPort", "--bypassEpicValidation", "--disableAdminPassword"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
