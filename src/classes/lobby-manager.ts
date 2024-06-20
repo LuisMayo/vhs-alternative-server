@@ -1,3 +1,5 @@
+import { generate } from "randomstring";
+
 class Lobby {
     public code: string;
     public userIds: string[];
@@ -5,7 +7,7 @@ class Lobby {
     constructor(public epicConnectionString: string, userId: string) {
         let possibleCode: string;
         do {
-            possibleCode = Randomstring.generate(
+            possibleCode = generate(
                 {
                     capitalization: "uppercase",
                     length: 3,
