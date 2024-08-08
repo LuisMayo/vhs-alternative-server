@@ -1,0 +1,2 @@
+# Technical docs
+In this folder I'll be saving some tech docs I've gathered. The docs will be divided by folders. In each folder a `README.md` means it's known knowledge, usually a summary. A `notes.md` means they're some observations recollected. That doesn't mean they're necessarily right. They're just notes I gather while I work
