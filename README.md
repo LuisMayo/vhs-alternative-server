@@ -74,10 +74,11 @@ If there are no binaries available for your platform:
 The game honors the `VHS-PASSWORD` environment variable and will use for the administration dashboard (user: user)
 
 ### Args
-- `--disableRealPort` will make it so the game only launches in HTTP mode and listens on port 12478. (The default behaviour is to listen on HTTPS 443)
+- `--disableRealPort` will make it so the game only launches in HTTP mode and listens on port 12478. (The default behavior is to listen on HTTPS 443)
 - `--allowNonEpicUsers` will make it so even if Epic games' token validation fail the user is logged in anyway
 - `--bypassEpicValidation` will bypass the validity of the EOS token in any case
 - `--disableAdminPassword` will bypass the admin server password
+- `--bypassOwnValidation` will make all Endpoints not to verify if the user is logged in. The server will use anything in the Authorization header as ID
 
 ## Login flow
 VHSGame Login request. A request is authenticated using a token issued by Epic Games with loginRequestToken structure

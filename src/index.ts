@@ -15,6 +15,7 @@ import basicAuth from "express-basic-auth";
 import fs from "fs";
 import https from "https";
 import morgan from "morgan";
+import { LobbyManager } from "./classes/lobby-manager";
 
 export let db: Database;
 
@@ -120,6 +121,8 @@ function initServer() {
       .listen(443, "0.0.0.0", () => {});
   }
   app.listen(12478);
+
+  setInterval(LobbyManager.clearInactiveLobbies, 1 * 60 * 60 * 1000);
 }
 
 initApp();
