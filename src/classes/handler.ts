@@ -337,20 +337,24 @@ export class Handler {
     }
   }
 
+  public static getId(token: string | undefined) {
+    let id = 'Dummy';
+    try {
+      id = jwt.verify(token!, db.token) as string;
+    } catch (e) {
+      Logger.log("INVALID USER TOKEN", token);
+      throw new Error("401");
+    }
+    id = AdminHandler.getImpersonatedId(id);
+    return id;
+  }
+
   private static checkOwnTokenAndGetId(req: Request<unknown>) {
     if (process.argv.includes("--bypassOwnValidation")) {
       return req.header("Authorization") ?? 'dummy';
     }
     const token =  req.header("Authorization")?.split(" ")[1];
-    let id = 'Dummy';
-    try {
-      id = jwt.verify(token!, db.token) as string;
-    } catch (e) {
-      Logger.log("INVALID USER TOKEN", token)
-      throw new Error("401");
-    }
-    id = AdminHandler.getImpersonatedId(id);
-    return id;
+    return Handler.getId(token);
   }
 
   private static async getUserSaveGame(userId: string) {
