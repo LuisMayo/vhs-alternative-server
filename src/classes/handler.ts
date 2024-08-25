@@ -22,6 +22,12 @@ import {
   SlotChangesResponse,
   UploadPlayerSettingsRequest,
   UploadPlayerSettingsResponse,
+  MatchmakingQueueRequest,
+  MatchmakingQueueResponse,
+  CreateGameSessionRequest,
+  CreateGameSessionResponse,
+  MatchmakingConfigRequest,
+  MatchmakingConfigResponse
 } from "../types/vhs-the-game-types";
 import {
   Monsters,
@@ -44,6 +50,7 @@ import jwt_to_pem from 'jwk-to-pem';
 import randomstring from "randomstring";
 import { readFile } from "fs/promises";
 import { LobbyManager } from "./lobby-manager";
+import { MatchmakingManager } from "./matchmaking-manager"; // Import matchmaking manager
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
@@ -118,18 +125,67 @@ export class Handler {
       case DiscoverTypes.INITIAL_LOAD:
         try {
           const [userSaveGame, serverInfo] = await Promise.all([Handler.getUserSaveGame(request.body.accountIdToDiscover ?? id), Handler.getGeneralServerInfo()]);
-          // TODO when we actually implement the bitsToDiscoverFlag PROPERLY we should remove this
           if (request.body.accountIdToDiscover != null) {
             delete userSaveGame.data.playerSettingsData;
           }
           userSaveGame.data.DDT_SpecificLoadoutsBit = userSaveGame.data.DDT_AllLoadoutsBit;
-          // End of the TODO remove in the future block
           return response.send(deepmerge(userSaveGame, serverInfo));
         } catch (e) {
           const str = String(e);
           response.status(500).send(str);
         }
         break;
+    }
+  }
+
+  // New endpoint for matchmaking queue
+  static async matchmake(
+    request: Request<any, MatchmakingQueueResponse | string, MatchmakingQueueRequest>,
+    response: Response<MatchmakingQueueResponse | string>
+  ) {
+    const id = Handler.checkOwnTokenAndGetId(request);
+    try {
+      const result = await MatchmakingManager.addToQueue(id);
+      response.send({
+        log: { logSuccessful: true },
+        data: result,
+      });
+    } catch (error) {
+      response.status(500).send("Error handling matchmaking request");
+    }
+  }
+
+  // New endpoint for creating a game session
+  static async createGameSession(
+    request: Request<any, CreateGameSessionResponse | string, CreateGameSessionRequest>,
+    response: Response<CreateGameSessionResponse | string>
+  ) {
+    const id = Handler.checkOwnTokenAndGetId(request);
+    try {
+      const result = await MatchmakingManager.createGameSession(id);
+      response.send({
+        log: { logSuccessful: true },
+        data: result,
+      });
+    } catch (error) {
+      response.status(500).send("Error creating game session");
+    }
+  }
+
+  // New endpoint for matchmaking configuration
+  static async updateMatchmakingConfig(
+    request: Request<any, MatchmakingConfigResponse | string, MatchmakingConfigRequest>,
+    response: Response<MatchmakingConfigResponse | string>
+  ) {
+    const id = Handler.checkOwnTokenAndGetId(request);
+    try {
+      await MatchmakingManager.updateConfig(request.body);
+      response.send({
+        log: { logSuccessful: true },
+        data: { success: true },
+      });
+    } catch (error) {
+      response.status(500).send("Error updating matchmaking configuration");
     }
   }
 
@@ -184,7 +240,6 @@ export class Handler {
     return response.send({
       log: { logSuccessful: true },
       data: {
-        // TODO return the truth instead of this
         changedSlotNames: Object.keys(request.body.slotChanges).map((item) => {
           return { [item]: true };
         }),
@@ -201,9 +256,8 @@ export class Handler {
     >,
     response: Response<SetWeaponLoadoutsForCharacterResponse | string>
   ) {
-    const id = Handler.checkOwnTokenAndGetId(request,);
+    const id = Handler.checkOwnTokenAndGetId(request);
     const saveData = await Handler.getUserSaveGame(id);
-    ///@ts-ignore incomplete typings
     const loadout:
       | {
           [x: string]: {
@@ -438,7 +492,6 @@ export class Handler {
     return {data: {DDT_SeasonalEventBit: {activeSeasonalEventTypes: [event]}}}
   }
 
-  
   private static generateToken(id: string) {
     return jwt.sign(id, db.token);
   }

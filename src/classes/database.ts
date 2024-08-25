@@ -1,5 +1,4 @@
 import { SaveGameResponse, SavedData, SeasonalEvents } from "../types/save-game";
-
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
 import { Logger } from "./logger";
@@ -8,13 +7,18 @@ import crypto from 'crypto';
 import { readFile } from "fs/promises";
 
 const CURRENT_VERSION = 1;
+
 export enum Collections {
   USERS = "users",
   SAVE_GAME = "save-games",
-  SERVER_INFO = "server-info" // Meta info about the server itself
+  SERVER_INFO = "server-info", // Meta info about the server itself
+  MATCHMAKING_QUEUE = "matchmaking-queue", // New collection for matchmaking queue
+  GAME_SESSIONS = "game-sessions", // New collection for active game sessions
+  MATCHMAKING_CONFIG = "matchmaking-config" // New collection for matchmaking settings
 }
 
 export type WithOptionalId<T> = T & { _id?: string };
+
 export class Database {
   db!: Record<Collections, Datastore>;
   token!: string;
@@ -22,7 +26,7 @@ export class Database {
   constructor() { }
 
   async init() {
-    Logger.log("Initialiting NeDB database connection");
+    Logger.log("Initializing NeDB database connection");
     let db: Partial<typeof this.db> = {};
     try {
       const promises: Promise<unknown>[] = [];
@@ -35,9 +39,7 @@ export class Database {
       Logger.log("NeDB loaded");
     } catch (error) {
       Logger.log(String(error));
-      Logger.log(
-        "Persistent NeDB has failed. Server will work but progress will be lost at restart"
-      );
+      Logger.log("Persistent NeDB has failed. Server will work but progress will be lost at restart");
       db = {};
       for (const collection of this.getAllDataStores()) {
         db[collection] = new Datastore();
@@ -58,6 +60,9 @@ export class Database {
   private async postInitHook() {
     await this.initBaseSavegame();
     await this.initSettings();
+    await this.initMatchmakingQueue(); // Initialize matchmaking queue
+    await this.initGameSessions(); // Initialize game sessions
+    await this.initMatchmakingConfig(); // Initialize matchmaking configuration
   }
 
   private async initBaseSavegame() {
@@ -98,8 +103,34 @@ export class Database {
     await this.checkVersionAndMigrations(settings.version);
   }
 
+  private async initMatchmakingQueue() {
+    const collection = this.collection<MatchmakingQueue>(Collections.MATCHMAKING_QUEUE);
+    // Initialize the matchmaking queue if necessary
+    const queue = await collection.findOneAsync({});
+    if (!queue) {
+      await collection.insertAsync({ players: [] }); // Empty initial queue
+    }
+  }
+
+  private async initGameSessions() {
+    const collection = this.collection<GameSession>(Collections.GAME_SESSIONS);
+    // Initialize the game sessions collection if necessary
+    const sessions = await collection.findOneAsync({});
+    if (!sessions) {
+      await collection.insertAsync({ sessions: [] }); // Empty initial game sessions
+    }
+  }
+
+  private async initMatchmakingConfig() {
+    const collection = this.collection<MatchmakingConfig>(Collections.MATCHMAKING_CONFIG);
+    // Initialize matchmaking configuration if necessary
+    const config = await collection.findOneAsync({});
+    if (!config) {
+      await collection.insertAsync({ settings: {} }); // Default config
+    }
+  }
+
   private async checkVersionAndMigrations(version: number) {
-    // Switch without breaks because migrations should be secuencial and cummulative
     switch (version) {
       default: // If version was pre-0
         await this.DLCCharactersFix();
@@ -144,4 +175,19 @@ export class Database {
     await this.initBaseSavegame();
     Logger.log("Migration Done");
   }
+}
+
+// Define the new types for matchmaking
+interface MatchmakingQueue {
+  players: string[]; // Array of player IDs waiting for a match
+}
+
+interface GameSession {
+  sessionId: string;
+  players: string[]; // Array of player IDs in the session
+  state: string; // e.g., 'waiting', 'active', 'completed'
+}
+
+interface MatchmakingConfig {
+  settings: Record<string, any>; // Store configuration settings for matchmaking
 }
