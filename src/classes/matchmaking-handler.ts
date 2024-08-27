@@ -8,6 +8,7 @@ class MatchmakingSession {
   public id: number;
   public players: { id: string; role: Role; checkin?: boolean }[] = [];
   public lobbyCode?: string;
+  timestamp: any;
 
   constructor() {
     this.id = MatchmakingSession.nextId++;
