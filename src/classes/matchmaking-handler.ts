@@ -6,52 +6,54 @@ enum Role {
 class MatchmakingSession {
   private static nextId = 0;
   public id: number;
-
+  public players: { id: string; role: Role; checkin?: boolean }[] = [];
+  public lobbyCode?: string;
+  timestamp: any;
 
   constructor() {
     this.id = MatchmakingSession.nextId++;
     if (MatchmakingSession.nextId >= Number.MAX_SAFE_INTEGER) {
-        MatchmakingSession.nextId = 0;
+      MatchmakingSession.nextId = 0;
     }
   }
-  players: { id: string; role: Role; checkin?: boolean }[] = [];
-  lobbyCode?: string;
 
-  spotsFree(role: Role) {
+  public spotsFree(role: Role): number {
     return this.spotsPerRole(role) - this.spotsUsed(role);
   }
 
-  spotsUsed(role: Role) {
+  public spotsUsed(role: Role): number {
     return this.players.filter((player) => player.role === role).length;
   }
 
-  roleNeeded(role: Role) {
-    const numberNeeded = this.spotsPerRole(role);
-    return this.spotsUsed(role) < numberNeeded;
+  public roleNeeded(role: Role): boolean {
+    return this.spotsUsed(role) < this.spotsPerRole(role);
   }
 
-  playerIsInSession(id: string) {
+  public playerIsInSession(id: string): boolean {
     return this.players.some((player) => player.id === id);
   }
 
-  removePlayerFromSession(id: string) {
+  public removePlayerFromSession(id: string): void {
     const idx = this.players.findIndex((player) => player.id === id);
-    this.players.splice(idx, 1);
+    if (idx !== -1) {
+      this.players.splice(idx, 1);
+    }
   }
 
-  private spotsPerRole(role: Role) {
+  private spotsPerRole(role: Role): number {
     return role === Role.EVIL ? 1 : 4;
   }
 }
 
-// TODO close the session
+// TODO: Implement session closure mechanism
 export class MatchmakingManager {
   private static sessions: MatchmakingSession[] = [];
 
-  public static joinSessionForRole(id: string, role: Role) {
+  public static joinSessionForRole(id: string, role: Role): MatchmakingSession {
     const openSession = MatchmakingManager.sessions.find((session) =>
       session.roleNeeded(role)
     );
+
     if (openSession) {
       openSession.players.push({ id, role });
       return openSession;
@@ -63,28 +65,32 @@ export class MatchmakingManager {
     }
   }
 
-  public static notifyRoomCode(id: string, code: string) {
+  public static notifyRoomCode(id: string, code: string): void {
     const session = MatchmakingManager.sessions.find((session) =>
       session.playerIsInSession(id)
     );
+
     if (!session) {
-      throw new Error("session not found");
+      throw new Error("Session not found");
     } else {
       session.lobbyCode = code;
     }
   }
 
-  public static stopMatchmaking(id: string) {
+  public static stopMatchmaking(id: string): void {
     const session = MatchmakingManager.sessions.find((session) =>
       session.playerIsInSession(id)
     );
+
     if (session) {
       session.removePlayerFromSession(id);
-      this.mergeSessions(session);
+      MatchmakingManager.mergeSessions(session);
+    } else {
+      throw new Error("Session not found");
     }
   }
 
-  private static mergeSessions(downsizedSession: MatchmakingSession) {
+  private static mergeSessions(downsizedSession: MatchmakingSession): void {
     const candidateForMerge = MatchmakingManager.sessions.find(
       (session) =>
         session.spotsFree(Role.EVIL) >= downsizedSession.spotsUsed(Role.EVIL) &&
@@ -94,7 +100,18 @@ export class MatchmakingManager {
     if (candidateForMerge) {
       candidateForMerge.players.push(...downsizedSession.players);
       const idx = MatchmakingManager.sessions.findIndex(session => session.id === downsizedSession.id);
-      MatchmakingManager.sessions.splice(idx, 1);
+      if (idx !== -1) {
+        MatchmakingManager.sessions.splice(idx, 1);
+      }
     }
+  }
+
+  public static closeInactiveSessions(): void {
+    const now = Date.now();
+    // Define your inactivity threshold (e.g., 1 hour)
+    const inactivityThreshold = 60 * 60 * 1000;
+    MatchmakingManager.sessions = MatchmakingManager.sessions.filter(session =>
+      now - session.timestamp.getTime() < inactivityThreshold
+    );
   }
 }

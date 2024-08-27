@@ -4,6 +4,7 @@ class Lobby {
   public code: string;
   public userIds: string[];
   public timestamp: Date;
+
   constructor(public epicConnectionString: string, userId: string) {
     let possibleCode: string;
     let length = 3;
@@ -32,6 +33,7 @@ class Lobby {
 
 export class LobbyManager {
   private static currentLobbies: Lobby[] = [];
+
   public static createLobby(userId: string, epicConnectionString: string) {
     const lobby = new Lobby(epicConnectionString, userId);
     LobbyManager.currentLobbies.push(lobby);
@@ -40,10 +42,11 @@ export class LobbyManager {
 
   public static joinLobby(userId: string, code: string) {
     const lobby = LobbyManager.getLobbyByCode(code);
-    if (lobby) {
-      lobby.userIds.push(userId);
+    if (!lobby) {
+      throw new Error("Lobby not found");
     }
-    return lobby?.epicConnectionString;
+    lobby.userIds.push(userId);
+    return lobby.epicConnectionString;
   }
 
   public static getLobbyByCode(roomCode: string) {
@@ -62,14 +65,27 @@ export class LobbyManager {
     const currentMs = Date.now();
     // Clear lobbies older than 2 hours
     LobbyManager.currentLobbies = LobbyManager.currentLobbies.filter(
-      (lobby) => currentMs - lobby.timestamp.getTime() > 2 * 60 * 60 * 1000
+      (lobby) => currentMs - lobby.timestamp.getTime() <= 2 * 60 * 60 * 1000
     );
   }
 
   public static closeLobby(userId: string) {
-    LobbyManager.currentLobbies.splice(
-      LobbyManager.getLobbyIndexByUser(userId),
-      1
-    );
+    const index = LobbyManager.getLobbyIndexByUser(userId);
+    if (index === -1) {
+      throw new Error("Lobby not found for the user");
+    }
+    LobbyManager.currentLobbies.splice(index, 1);
+  }
+
+  // Periodically clean up inactive lobbies
+  private static startCleanupTask() {
+    setInterval(() => {
+      LobbyManager.clearInactiveLobbies();
+    }, 60 * 60 * 1000); // Cleanup every hour
+  }
+
+  // Initialize the cleanup task when the module is first loaded
+  static {
+    LobbyManager.startCleanupTask();
   }
 }

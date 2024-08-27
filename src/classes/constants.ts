@@ -2,6 +2,17 @@ export enum DBConstants {
   databaseName = "vhs",
   userIdField = "userId",
   baseSaveGameId = "base",
+  matchmakingQueue = "matchmakingQueue",
+  gameSessions = "gameSessions",
+  matchmakingConfig = "matchmakingConfig"
+}
+
+export enum MatchmakingState {
+  QUEUE = "queue",
+  MATCH_FOUND = "match_found",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled"
 }
 
 export enum EDiscoveryDataType {
