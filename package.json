@@ -38,6 +38,7 @@
     "@types/morgan": "^1.9.4",
     "@types/randomstring": "^1.1.8",
     "pkg": "^5.8.1",
-    "rimraf": "^5.0.1"
+    "rimraf": "^5.0.1",
+    "type-fest": "^4.26.0"
   }
 }

@@ -11,9 +11,6 @@ import {
   LoginRequest,
   LoginResponse,
   MathmakingInfoResponse,
-  RedeemCodeRequest,
-  RedeemCodeResponse,
-  RefreshRequest,
   SetCharacterLoadoutRequest,
   SetCharacterLoadoutResponse,
   SetWeaponLoadoutsForCharacterRequest,
@@ -31,15 +28,15 @@ import { AdminHandler } from "./admin-handler";
 import { Collections } from "./database";
 import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
+import { LobbyManager } from "./lobby-manager";
 import { Logger } from "./logger";
+import { PartialDeep } from 'type-fest';
 import { ServerInfo } from "../types/server-info";
 import { User } from "../types/user";
 import { db } from "..";
 import deepmerge from "deepmerge";
 import jwt_to_pem from "jwk-to-pem";
-import randomstring from "randomstring";
 import { readFile } from "fs/promises";
-import { LobbyManager } from "./lobby-manager";
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
@@ -359,8 +356,8 @@ export class Handler {
     return id;
   }
 
-  private static async getUserSaveGame(userId: string) {
-    const collection = db.collection<SaveGameResponse>(Collections.SAVE_GAME);
+  private static async getUserSaveGame(userId: string): Promise<SaveGameResponse> {
+    const collection = db.collection<PartialDeep<SaveGameResponse>>(Collections.SAVE_GAME);
     let userSaveGame = await collection.findOneAsync({
       [DBConstants.userIdField]: userId,
     });
@@ -369,25 +366,62 @@ export class Handler {
         await readFile("./data/base.json", { encoding: "utf-8" })
       );
     }
-    if (!userSaveGame) {
+    if (!userSaveGame && Handler.baseSaveGameId) {
       userSaveGame = {
         data: {
-          DDT_AccountStatsBit: Handler.baseSaveGameId?.data.DDT_AccountStatsBit,
+          DDT_AccountStatsBit: Handler.baseSaveGameId.data.DDT_AccountStatsBit,
           DDT_AllLoadoutsBit: {
             characterLoadouts: {
               CT_Anomaly: {
-                uiSlots: Handler.baseSaveGameId?.data.DDT_AllLoadoutsBit?.characterLoadouts.CT_Anomaly.uiSlots
-              }
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Anomaly.uiSlots
+              },
+              CT_Cheerleader: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Cheerleader.uiSlots
+              },
+              CT_DollMaster: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_DollMaster.uiSlots
+              },
+              CT_Eradicator: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Eradicator.uiSlots
+              },
+              CT_Jock: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Jock.uiSlots
+              },
+              CT_Nerd: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Nerd.uiSlots
+              },
+              CT_Outsider: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Outsider.uiSlots
+              },
+              CT_Punk: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Punk.uiSlots
+              },
+              CT_Toad: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Toad.uiSlots
+              },
+              CT_Virgin: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Virgin.uiSlots
+              },
+              CT_Werewolf: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Werewolf.uiSlots
+              },
             }
-          }
+          },
+          DDT_AllPlayerSlotsBit: Handler.baseSaveGameId.data.DDT_AllPlayerSlotsBit,
+          DDT_AllWeaponsBit: {
+            weaponLoadoutsByCharacterType: Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.weaponLoadoutsByCharacterType
+          },
+          DDT_SpecificLoadoutsBit: Handler.baseSaveGameId.data.DDT_SpecificLoadoutsBit,
+          playerSettingsData: Handler.baseSaveGameId.data.playerSettingsData
         }
       };
+      delete userSaveGame._id;
+      userSaveGame[DBConstants.userIdField] = userId;
+      collection.insertAsync(userSaveGame);
+    } else {
       throw new Error("Cannot create saveGame");
     }
-    delete userSaveGame._id;
-    userSaveGame[DBConstants.userIdField] = userId;
-    collection.insertAsync(userSaveGame);
-    return userSaveGame;
+    return deepmerge(Handler.baseSaveGameId, userSaveGame);
   }
 
   private static async getAuthenticatedEpicUserId(
