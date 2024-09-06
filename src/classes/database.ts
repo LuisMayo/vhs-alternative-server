@@ -103,6 +103,7 @@ export class Database {
       case 0: // if version was pre-1 (you get the idea)
         await this.removeTrophiesFix();
       case 1:
+        this.reduceCommonDatabase();    
         break;
       case CURRENT_VERSION:
         break;
