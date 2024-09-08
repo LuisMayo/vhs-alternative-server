@@ -13,7 +13,6 @@
             ],
             "program": "${workspaceFolder}/build/index.js",
             "console": "integratedTerminal",
-            "runtimeArgs": ["--max-old-space-size=4096"],
             "args": ["--disableRealPort", "--bypassEpicValidation", "--disableAdminPassword", "--bypassOwnValidation"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
