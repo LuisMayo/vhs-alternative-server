@@ -170,9 +170,6 @@ export class Database {
   private async reduceCommonDatabase() {
     Logger.log("Running common properties database removal");
     const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
-    const base: SaveGameResponse = JSON.parse(
-      await readFile("./data/base.json", { encoding: "utf-8" })
-    );
     const { numAffected } = await saveGames.updateAsync(
       {},
       {
@@ -216,5 +213,6 @@ export class Database {
       Logger.log("Error while migrating DLC characters");
       throw new Error();
     }
+    saveGames.compactDatafileAsync().then(() => {});
   }
 }
