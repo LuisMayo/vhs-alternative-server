@@ -418,7 +418,7 @@ export class Handler {
       delete userSaveGame._id;
       userSaveGame[DBConstants.userIdField] = userId;
       collection.insertAsync(userSaveGame);
-    } else {
+    } else if (!Handler.baseSaveGameId) {
       throw new Error("Cannot create saveGame");
     }
     return deepmerge(Handler.baseSaveGameId, userSaveGame);

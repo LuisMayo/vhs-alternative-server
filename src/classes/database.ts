@@ -46,7 +46,9 @@ export class Database {
       );
       db = {};
       for (const collection of this.getAllDataStores()) {
-        db[collection] = new Datastore();
+        const ds = new Datastore();
+        ds.setAutocompactionInterval(2 * 60 * 60 * 1000);
+        db[collection] = ds;
       }
     }
     this.db = db as typeof this.db;
@@ -64,6 +66,7 @@ export class Database {
   private async postInitHook() {
     await this.initBaseSavegame();
     await this.initSettings();
+
   }
 
   private async initBaseSavegame() {
