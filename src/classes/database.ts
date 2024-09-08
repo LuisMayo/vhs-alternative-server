@@ -106,6 +106,7 @@ export class Database {
       case 0: // if version was pre-1 (you get the idea)
         await this.removeTrophiesFix();
       case 1:
+        this.reduceCommonDatabase();    
         break;
       case CURRENT_VERSION:
         break;
@@ -168,7 +169,6 @@ export class Database {
 
   private async reduceCommonDatabase() {
     Logger.log("Running common properties database removal");
-    Logger.log("Running DLC Characters migration");
     const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
     const base: SaveGameResponse = JSON.parse(
       await readFile("./data/base.json", { encoding: "utf-8" })
