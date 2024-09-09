@@ -3,7 +3,6 @@ import {
   SavedData,
   SeasonalEvents,
 } from "../types/save-game";
-
 import { DBConstants } from "./constants";
 import Datastore from "@seald-io/nedb";
 import { Logger } from "./logger";
@@ -19,39 +18,64 @@ export enum Collections {
 }
 
 export type WithOptionalId<T> = T & { _id?: string };
+
+// Utility Functions (New)
+async function handleDatabaseError<T>(operation: () => Promise<T>, retry = 1): Promise<T | null> {
+  try {
+    return await operation();
+  } catch (error) {
+    Logger.log("Database operation failed: " + String(error));
+    if (retry > 0) {
+      Logger.log("Retrying database operation...");
+      return await handleDatabaseError(operation, retry - 1);
+    }
+    Logger.log("Failed after retries");
+    return null;
+  }
+}
+
+async function updateCollection<T>(
+  collection: Datastore<T>,
+  query: Partial<T>,
+  update: Partial<T>,
+  multi = true
+): Promise<number> {
+  const { numAffected } = await collection.updateAsync(query, update, { multi });
+  if (numAffected === 0) {
+    Logger.log(`No records updated for query ${JSON.stringify(query)}`);
+  }
+  return numAffected;
+}
+
+async function removeFields<T>(
+  collection: Datastore<T>,
+  fields: string[]
+): Promise<number> {
+  const unsetFields = fields.reduce((acc, field) => {
+    acc[field] = true;
+    return acc;
+  }, {} as Record<string, boolean>);
+
+  return await updateCollection(collection, {}, { $unset: unsetFields } as Partial<T>);
+}
+
 export class Database {
   db!: Record<Collections, Datastore>;
   token!: string;
 
-  constructor() {}
-
   async init() {
-    Logger.log("Initialiting NeDB database connection");
+    Logger.log("Initializing NeDB database connection");
     let db: Partial<typeof this.db> = {};
-    try {
-      const promises: Promise<unknown>[] = [];
-      for (const collection of this.getAllDataStores()) {
-        const datastore = new Datastore({
-          filename: "./db/" + collection + ".db",
-        });
-        db[collection] = datastore;
-        promises.push(datastore.loadDatabaseAsync());
-      }
-      await Promise.all(promises);
-      Logger.log("NeDB loaded");
-    } catch (error) {
-      Logger.log(String(error));
-      Logger.log(
-        "Persistent NeDB has failed. Server will work but progress will be lost at restart"
-      );
-      db = {};
-      for (const collection of this.getAllDataStores()) {
-        const ds = new Datastore();
-        ds.setAutocompactionInterval(2 * 60 * 60 * 1000);
-        db[collection] = ds;
-      }
-    }
+
+    const initOperations = this.getAllDataStores().map(async (collection) => {
+      const datastore = new Datastore({ filename: `./db/${collection}.db` });
+      db[collection] = datastore;
+      await datastore.loadDatabaseAsync();
+    });
+
+    await Promise.all(initOperations);
     this.db = db as typeof this.db;
+    Logger.log("NeDB loaded");
     return this.postInitHook();
   }
 
@@ -59,14 +83,13 @@ export class Database {
     return Object.values(Collections);
   }
 
-  collection<T>(name: Collections) {
+  collection<T>(name: Collections): Datastore<WithOptionalId<T>> {
     return this.db[name] as Datastore<WithOptionalId<T>>;
   }
 
   private async postInitHook() {
     await this.initBaseSavegame();
     await this.initSettings();
-
   }
 
   private async initBaseSavegame() {
@@ -78,82 +101,74 @@ export class Database {
   private async initSettings() {
     const collection = this.collection<ServerInfo>(Collections.SERVER_INFO);
     let settings = await collection.findOneAsync({});
-    if (settings == null) {
+    
+    if (!settings) {
       Logger.log("Generating new JWT secret");
       settings = {
         JWT_SECRET: crypto.randomBytes(64).toString("hex"),
         version: CURRENT_VERSION,
         currentEvent: SeasonalEvents.SET_NoSeasonalEvent,
       };
-      collection.insertAsync(settings).catch(Logger.log);
+      await handleDatabaseError(() => collection.insertAsync(settings));
     }
     this.token = settings.JWT_SECRET;
 
     if (!settings.currentEvent) {
-      await collection.updateAsync(
-        {},
-        { $set: { currentEvent: SeasonalEvents.SET_NoSeasonalEvent } }
-      );
+      await updateCollection(collection, {}, { currentEvent: SeasonalEvents.SET_NoSeasonalEvent });
     }
+
     await this.checkVersionAndMigrations(settings.version);
   }
 
   private async checkVersionAndMigrations(version: number) {
-    // Switch without breaks because migrations should be secuencial and cummulative
-    switch (version) {
-      default: // If version was pre-0
-        await this.DLCCharactersFix();
-      case 0: // if version was pre-1 (you get the idea)
-        await this.removeTrophiesFix();
-      case 1:
-        this.reduceCommonDatabase();    
-        break;
-      case CURRENT_VERSION:
-        break;
+    Logger.log(`Running migrations for version ${version}`);
+    
+    const migrationTasks = [
+      { version: 0, task: () => this.DLCCharactersFix() },
+      { version: 1, task: () => this.removeTrophiesFix() }
+    ];
+
+    for (const { version: v, task } of migrationTasks) {
+      if (version <= v) await task();
     }
-    await this.collection<ServerInfo>(Collections.SERVER_INFO).updateAsync(
+
+    await updateCollection(
+      this.collection<ServerInfo>(Collections.SERVER_INFO),
       {},
-      { $set: { version: CURRENT_VERSION } }
+      { version: CURRENT_VERSION }
     );
   }
 
+  // Migration Fixes (Using Utility Functions)
   private async DLCCharactersFix() {
     Logger.log("Running DLC Characters migration");
     const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
     const base: SaveGameResponse = JSON.parse(
       await readFile("./data/base.json", { encoding: "utf-8" })
     );
-    const { numAffected } = await saveGames.updateAsync(
-      {},
-      {
-        $set: {
-          "data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Nerd":
-            base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Nerd,
-          "data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Anomaly":
-            base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!
-              .CT_Anomaly,
-          "data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Eradicator":
-            base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!
-              .CT_Eradicator,
-          "base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Nerd":
-            base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Nerd,
-          "base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Anomaly":
-            base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Anomaly,
-          "base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Eradicator":
-            base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Eradicator,
-        },
-      },
-      { multi: true }
-    );
-    if (numAffected === 0) {
-      Logger.log("Error while migrating DLC characters");
-      throw new Error();
-    }
+
+    const updateFields = {
+      "data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Nerd":
+        base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Nerd,
+      "data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Anomaly":
+        base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Anomaly,
+      "data.DDT_AllWeaponsBit.weaponLoadoutsByCharacterType.CT_Eradicator":
+        base.data.DDT_AllWeaponsBit!.weaponLoadoutsByCharacterType!.CT_Eradicator,
+      "base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Nerd":
+        base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Nerd,
+      "base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Anomaly":
+        base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Anomaly,
+      "base.data.DDT_JourneyDataBit.journeysByJourneyKey.CT_Eradicator":
+        base.data.DDT_JourneyDataBit!.journeysByJourneyKey!.CT_Eradicator,
+    };
+
+    await updateCollection(saveGames, {}, { $set: updateFields });
   }
 
   private async removeTrophiesFix() {
-    Logger.log("Running removing trophies migration");
+    Logger.log("Running remove trophies migration");
     const saveGames = this.collection<SavedData>(Collections.SAVE_GAME);
+
     const allSaves = await saveGames.getAllData();
     for (const save of allSaves) {
       save.data.DDT_AllInventoryItemsBit =
@@ -161,58 +176,51 @@ export class Database {
           (item) => !item.item?.startsWith("ID_TR")
         );
     }
+
     await saveGames.removeAsync({}, { multi: true });
     await saveGames.insertAsync(allSaves);
     await this.initBaseSavegame();
-    Logger.log("Migration Done");
   }
 
   private async reduceCommonDatabase() {
-    Logger.log("Running common properties database removal");
+    Logger.log("Running common properties removal");
     const saveGames = this.collection<SaveGameResponse>(Collections.SAVE_GAME);
-    const { numAffected } = await saveGames.updateAsync(
-      {},
-      {
-        $unset: {
-          "data.DDT_AllPlayerAccountPointsBit": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Cheerleader.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_DollMaster.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Jock.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Outsider.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Punk.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Toad.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Virgin.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Werewolf.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Eradicator.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Nerd.points": true,
-          "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Anomaly.points": true,
-          "data.DDT_AllLoadoutsBit.teenAffinities": true,
-          "data.DDT_AllLoadoutsBit.charXpLevelCosts": true,
-          "data.DDT_AllWeaponsBit.pointsByWeaponType": true,
-          "data.DDT_AllWeaponsBit.teenWeaponUnlockLevels": true,
-          "data.DDT_AllWeaponsBit.weaponXpToNextLevel": true,
-          "data.DDT_AllWeaponsBit.stigmaXpToNextLevel": true,
-          "data.DDT_AllWeaponsBit.weaponManifestNumber": true,
-          "data.DDT_AllInventoryItemsBit": true,
-          "data.DDT_AllUnclaimedChestsBit": true,
-          "data.DDT_AllSceneEnactmentStatesBit": true,
-          "data.DDT_JourneyDataBit": true,
-          "data.DDT_GuideSystemBit": true,
-          "data.DDT_AllStoreItemsBit": true,
-          "data.DDT_AllFriendListsBit": true,
-          "data.DDT_SeasonalEventBit": true,
-          "data.DDT_ServerNotificationBit": true,
-          "data.DDT_CommunityGoalsBit": true,
-          "data.serverTime": true,
-          "log": true
-        },
-      },
-      { multi: true }
-    );
-    if (numAffected === 0) {
-      Logger.log("Error while migrating DLC characters");
-      throw new Error();
-    }
-    saveGames.compactDatafileAsync().then(() => {});
+
+    const fieldsToRemove = [
+      "data.DDT_AllPlayerAccountPointsBit": true,
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Cheerleader.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_DollMaster.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Jock.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Outsider.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Punk.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Toad.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Virgin.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Werewolf.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Eradicator.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Nerd.points",
+      "data.DDT_AllLoadoutsBit.characterLoadouts.CT_Anomaly.points",
+      "data.DDT_AllLoadoutsBit.teenAffinities",
+      "data.DDT_AllLoadoutsBit.charXpLevelCosts",
+      "data.DDT_AllWeaponsBit.pointsByWeaponType",
+      "data.DDT_AllWeaponsBit.teenWeaponUnlockLevels",
+      "data.DDT_AllWeaponsBit.weaponXpToNextLevel",
+      "data.DDT_AllWeaponsBit.stigmaXpToNextLevel",
+      "data.DDT_AllWeaponsBit.weaponManifestNumber",
+      "data.DDT_AllInventoryItemsBit",
+      "data.DDT_AllUnclaimedChestsBit",
+      "data.DDT_AllSceneEnactmentStatesBit",
+      "data.DDT_JourneyDataBit",
+      "data.DDT_GuideSystemBit",
+      "data.DDT_AllStoreItemsBit",
+      "data.DDT_AllFriendListsBit",
+      "data.DDT_SeasonalEventBit",
+      "data.DDT_ServerNotificationBit",
+      "data.DDT_CommunityGoalsBit",
+      "data.serverTime",
+      "log"
+    ];
+
+    await removeFields(saveGames, fieldsToRemove);
+    await saveGames.compactDatafileAsync();
   }
 }
