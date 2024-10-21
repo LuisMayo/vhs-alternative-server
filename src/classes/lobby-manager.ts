@@ -62,7 +62,7 @@ export class LobbyManager {
     const currentMs = Date.now();
     // Clear lobbies older than 2 hours
     LobbyManager.currentLobbies = LobbyManager.currentLobbies.filter(
-      (lobby) => currentMs - lobby.timestamp.getTime() > 2 * 60 * 60 * 1000
+      (lobby) => currentMs - lobby.timestamp.getTime() <= 2 * 60 * 60 * 1000
     );
   }
 
