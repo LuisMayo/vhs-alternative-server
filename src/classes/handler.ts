@@ -11,9 +11,6 @@ import {
   LoginRequest,
   LoginResponse,
   MathmakingInfoResponse,
-  RedeemCodeRequest,
-  RedeemCodeResponse,
-  RefreshRequest,
   SetCharacterLoadoutRequest,
   SetCharacterLoadoutResponse,
   SetWeaponLoadoutsForCharacterRequest,
@@ -23,31 +20,28 @@ import {
   UploadPlayerSettingsRequest,
   UploadPlayerSettingsResponse,
 } from "../types/vhs-the-game-types";
-import {
-  Monsters,
-  SaveGameResponse,
-  Teens,
-} from "../types/save-game";
+import { Monsters, SaveGameResponse, Teens } from "../types/save-game";
 import { Request, Response } from "express";
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { AdminHandler } from "./admin-handler";
 import { Collections } from "./database";
 import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
+import { LobbyManager } from "./lobby-manager";
 import { Logger } from "./logger";
+import { PartialDeep } from 'type-fest';
 import { ServerInfo } from "../types/server-info";
 import { User } from "../types/user";
 import { db } from "..";
-import deepmerge from 'deepmerge';
-import jwt_to_pem from 'jwk-to-pem';
-import randomstring from "randomstring";
+import deepmerge from "deepmerge";
+import jwt_to_pem from "jwk-to-pem";
 import { readFile } from "fs/promises";
-import { LobbyManager } from "./lobby-manager";
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
 export class Handler {
+  private static baseSaveGameId?: SaveGameResponse;
   static epicKeys: any[] = [];
 
   static async wrapper(
@@ -55,11 +49,11 @@ export class Handler {
     response: Response,
     fn: (request: Request, response: Response) => Promise<unknown>
   ) {
-    fn(request, response).catch(e => {
-      if (e?.toString() === '401') {
+    fn(request, response).catch((e) => {
+      if (e?.toString() === "401") {
         response.sendStatus(500);
       } else {
-        Logger.log('Error in request ' + request.path, String(e));
+        Logger.log("Error in request " + request.path, String(e));
         response.send(EMPTY_SUCCESFUL_RESPONSE);
       }
     });
@@ -70,11 +64,13 @@ export class Handler {
     response: Response<LoginResponse | string>
   ) {
     const collection = db.collection<User>(Collections.USERS);
-    const epicId = process.argv.includes('--bypassEpicValidation') ? Handler.getUnAuthenticatedEpicId(request) : (await Handler.getAuthenticatedEpicUserId(request));
+    const epicId = process.argv.includes("--bypassEpicValidation")
+      ? Handler.getUnAuthenticatedEpicId(request)
+      : await Handler.getAuthenticatedEpicUserId(request);
     if (!epicId) {
       return response.sendStatus(401);
     }
-  
+
     let existingUser = await collection.findOneAsync<Document<User>>({
       epicId,
     });
@@ -117,12 +113,16 @@ export class Handler {
         console.error("Unknown discover type", request.body.bitsToDiscover);
       case DiscoverTypes.INITIAL_LOAD:
         try {
-          const [userSaveGame, serverInfo] = await Promise.all([Handler.getUserSaveGame(request.body.accountIdToDiscover ?? id), Handler.getGeneralServerInfo()]);
+          const [userSaveGame, serverInfo] = await Promise.all([
+            Handler.getUserSaveGame(request.body.accountIdToDiscover ?? id),
+            Handler.getGeneralServerInfo(),
+          ]);
           // TODO when we actually implement the bitsToDiscoverFlag PROPERLY we should remove this
           if (request.body.accountIdToDiscover != null) {
             delete userSaveGame.data.playerSettingsData;
           }
-          userSaveGame.data.DDT_SpecificLoadoutsBit = userSaveGame.data.DDT_AllLoadoutsBit;
+          userSaveGame.data.DDT_SpecificLoadoutsBit =
+            userSaveGame.data.DDT_AllLoadoutsBit;
           // End of the TODO remove in the future block
           return response.send(deepmerge(userSaveGame, serverInfo));
         } catch (e) {
@@ -201,7 +201,7 @@ export class Handler {
     >,
     response: Response<SetWeaponLoadoutsForCharacterResponse | string>
   ) {
-    const id = Handler.checkOwnTokenAndGetId(request,);
+    const id = Handler.checkOwnTokenAndGetId(request);
     const saveData = await Handler.getUserSaveGame(id);
     ///@ts-ignore incomplete typings
     const loadout:
@@ -270,7 +270,7 @@ export class Handler {
     });
   }
 
-/*  static async redeemCode(
+  /*  static async redeemCode(
     request: Request<
       any,
       RedeemCodeResponse | string,
@@ -300,7 +300,10 @@ export class Handler {
     const id = Handler.checkOwnTokenAndGetId(request);
     switch (request.body.action) {
       case "createLobby":
-        const lobby = LobbyManager.createLobby(id, request.body.connectionString!);
+        const lobby = LobbyManager.createLobby(
+          id,
+          request.body.connectionString!
+        );
         (response as Response<CreateLobbyResponse>).send({
           data: { lobbyCode: lobby.code },
           log: { logSuccessful: true },
@@ -351,40 +354,92 @@ export class Handler {
 
   private static checkOwnTokenAndGetId(req: Request<unknown>) {
     if (process.argv.includes("--bypassOwnValidation")) {
-      return req.header("Authorization") ?? 'dummy';
+      return req.header("Authorization") ?? "dummy";
     }
     const token =  req.header("Authorization")?.split(" ")[1];
     return Handler.getId(token);
   }
 
-  private static async getUserSaveGame(userId: string) {
-    const collection = db.collection<SaveGameResponse>(Collections.SAVE_GAME);
-    let userSaveGame =
-      await collection.findOneAsync({
-        [DBConstants.userIdField]: userId,
-      });
-    if (!userSaveGame) {
-      userSaveGame = await collection.findOneAsync({
-        [DBConstants.userIdField]: DBConstants.baseSaveGameId,
-      });
-      if (!userSaveGame) {
-        throw new Error("Cannot create saveGame");
-      }
+  private static async getUserSaveGame(userId: string): Promise<SaveGameResponse> {
+    const collection = db.collection<PartialDeep<SaveGameResponse>>(Collections.SAVE_GAME);
+    let userSaveGame = await collection.findOneAsync({
+      [DBConstants.userIdField]: userId,
+    });
+    if (!Handler.baseSaveGameId) {
+      Handler.baseSaveGameId = JSON.parse(
+        await readFile("./data/base.json", { encoding: "utf-8" })
+      );
+    }
+    if (!userSaveGame && Handler.baseSaveGameId) {
+      userSaveGame = {
+        data: {
+          DDT_AccountStatsBit: Handler.baseSaveGameId.data.DDT_AccountStatsBit,
+          DDT_AllLoadoutsBit: {
+            characterLoadouts: {
+              CT_Anomaly: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Anomaly.uiSlots
+              },
+              CT_Cheerleader: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Cheerleader.uiSlots
+              },
+              CT_DollMaster: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_DollMaster.uiSlots
+              },
+              CT_Eradicator: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Eradicator.uiSlots
+              },
+              CT_Jock: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Jock.uiSlots
+              },
+              CT_Nerd: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Nerd.uiSlots
+              },
+              CT_Outsider: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Outsider.uiSlots
+              },
+              CT_Punk: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Punk.uiSlots
+              },
+              CT_Toad: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Toad.uiSlots
+              },
+              CT_Virgin: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Virgin.uiSlots
+              },
+              CT_Werewolf: {
+                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Werewolf.uiSlots
+              },
+            }
+          },
+          DDT_AllPlayerSlotsBit: Handler.baseSaveGameId.data.DDT_AllPlayerSlotsBit,
+          DDT_AllWeaponsBit: {
+            weaponLoadoutsByCharacterType: Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.weaponLoadoutsByCharacterType
+          },
+          DDT_SpecificLoadoutsBit: Handler.baseSaveGameId.data.DDT_SpecificLoadoutsBit,
+          playerSettingsData: Handler.baseSaveGameId.data.playerSettingsData
+        }
+      };
       delete userSaveGame._id;
       userSaveGame[DBConstants.userIdField] = userId;
       collection.insertAsync(userSaveGame);
+    } else if (!Handler.baseSaveGameId) {
+      throw new Error("Cannot create saveGame");
     }
-    return userSaveGame;
+    return deepmerge(Handler.baseSaveGameId, userSaveGame);
   }
 
-  private static async getAuthenticatedEpicUserId(request: Request<LoginRequest>) {
+  private static async getAuthenticatedEpicUserId(
+    request: Request<LoginRequest>
+  ) {
     const token = request.header("Authorization")?.split(" ")[1];
     if (!token) {
       return null;
     }
     try {
-      if (!Handler.epicKeys || Handler.epicKeys.length === 0){
-        const epicResponse = await (await fetch('https://api.epicgames.dev/auth/v1/oauth/jwks')).json();
+      if (!Handler.epicKeys || Handler.epicKeys.length === 0) {
+        const epicResponse = await (
+          await fetch("https://api.epicgames.dev/auth/v1/oauth/jwks")
+        ).json();
         Handler.epicKeys = epicResponse.keys.map((key: any) => jwt_to_pem(key));
       }
     } catch (e) {
@@ -394,16 +449,17 @@ export class Handler {
     for (let i = 0; i < Handler.epicKeys.length && !parsedToken; i++) {
       try {
         parsedToken = jwt.verify(token, Handler.epicKeys[i], {}) as JwtPayload;
-      } catch (e) {
-      }
+      } catch (e) {}
     }
     if (!parsedToken) {
-      return process.argv.includes('--allowNonEpicUsers') ? Handler.getUnAuthenticatedEpicId(request) : null;
+      return process.argv.includes("--allowNonEpicUsers")
+        ? Handler.getUnAuthenticatedEpicId(request)
+        : null;
     }
     const epicId = parsedToken.sub;
     const currentTime = Date.now() / 1000;
     if (!epicId || !parsedToken.exp || parsedToken.exp < currentTime) {
-      Logger.log('Ilegal token');
+      Logger.log("Ilegal token");
       return null;
     }
     return epicId;
@@ -416,12 +472,12 @@ export class Handler {
     }
     const parsedToken = jwt.decode(token);
     let epicId: string | null;
-    switch(typeof parsedToken?.sub) {
-      case 'string':
-        epicId = 'unsafe-' + parsedToken.sub;
+    switch (typeof parsedToken?.sub) {
+      case "string":
+        epicId = "unsafe-" + parsedToken.sub;
         break;
-      case 'function':
-        epicId = 'unsafe-' + parsedToken.sub();
+      case "function":
+        epicId = "unsafe-" + parsedToken.sub();
         break;
       default:
         epicId = null;
@@ -432,13 +488,16 @@ export class Handler {
   /**
    * Get info that's general for the whole server, not of an specific user
    *  */
-  private static async getGeneralServerInfo(): Promise<Partial<SaveGameResponse>> {
+  private static async getGeneralServerInfo(): Promise<
+    Partial<SaveGameResponse>
+  > {
     const collection = db.collection<ServerInfo>(Collections.SERVER_INFO);
     const event = (await collection.findOneAsync({})).currentEvent;
-    return {data: {DDT_SeasonalEventBit: {activeSeasonalEventTypes: [event]}}}
+    return {
+      data: { DDT_SeasonalEventBit: { activeSeasonalEventTypes: [event] } },
+    };
   }
 
-  
   private static generateToken(id: string) {
     return jwt.sign(id, db.token);
   }
