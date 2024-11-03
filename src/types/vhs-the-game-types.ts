@@ -31,9 +31,9 @@ export interface LoginRequest {
 }
 
 export interface RefreshRequest {
-    sessionTicketId: string,
-    version: 71,
-    idpk: string
+  sessionTicketId: string;
+  version: 71;
+  idpk: string;
 }
 
 /**Token structure for the Login Request
@@ -110,6 +110,36 @@ export interface DiscoverRequest {
   /** @example MR_EU_Central1 */
   matchmakingRegion: string;
 }
+
+export interface RequestMatch {
+  readonly matchmakingTicketId: string;
+  readonly playerInfos: PlayerInfo[];
+  readonly cloudScriptVersion: number;
+  readonly partyMemberAccountIds: any[];
+  readonly latencyDatas: LatencyDatas;
+  readonly charType: string;
+  readonly matchmakingRegion: string;
+}
+
+export interface LatencyDatas {
+  readonly "us-west-2": number;
+  readonly "us-east-1": number;
+  readonly "eu-central-1": number;
+}
+
+export interface PlayerInfo {
+  readonly playerId: string;
+  readonly matchmakingPlayerType: number;
+  readonly matchmakingGroupName: string;
+}
+
+export interface ResponseMatchInternal {
+  readonly Status: string;
+  readonly MatchmakingTicketId: string;
+  readonly EstimatedWaitTime: number;
+}
+
+export type ResponseMatch = VHSResponse<ResponseMatchInternal>;
 
 export enum DiscoverTypes {
   INITIAL_LOAD = 1472767,
@@ -221,10 +251,10 @@ export type SlotChangesResponseData = {
 export type SlotChangesResponse = VHSResponse<SlotChangesResponseData>;
 
 export type RedeemCodeRequest = {
-  sessionTicketId: string,
-  productCode: string,
-  version: 71,
-  idpk: string
-}
+  sessionTicketId: string;
+  productCode: string;
+  version: 71;
+  idpk: string;
+};
 
 export type RedeemCodeResponse = VHSResponse<void>;

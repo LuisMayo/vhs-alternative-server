@@ -1,4 +1,4 @@
-enum Role {
+export enum Role {
   EVIL,
   TEEN,
 }
@@ -7,14 +7,13 @@ class MatchmakingSession {
   private static nextId = 0;
   public id: number;
 
-
   constructor() {
     this.id = MatchmakingSession.nextId++;
     if (MatchmakingSession.nextId >= Number.MAX_SAFE_INTEGER) {
-        MatchmakingSession.nextId = 0;
+      MatchmakingSession.nextId = 0;
     }
   }
-  players: { id: string; role: Role; checkin?: boolean }[] = [];
+  players: { id: string; role: Role; checkin?: boolean; name: string }[] = [];
   lobbyCode?: string;
 
   spotsFree(role: Role) {
@@ -40,7 +39,8 @@ class MatchmakingSession {
   }
 
   private spotsPerRole(role: Role) {
-    return role === Role.EVIL ? 1 : 4;
+    // TODO, change surv spots to 4
+    return role === Role.EVIL ? 1 : 1;
   }
 }
 
@@ -93,7 +93,9 @@ export class MatchmakingManager {
 
     if (candidateForMerge) {
       candidateForMerge.players.push(...downsizedSession.players);
-      const idx = MatchmakingManager.sessions.findIndex(session => session.id === downsizedSession.id);
+      const idx = MatchmakingManager.sessions.findIndex(
+        (session) => session.id === downsizedSession.id
+      );
       MatchmakingManager.sessions.splice(idx, 1);
     }
   }

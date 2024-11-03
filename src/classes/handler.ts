@@ -11,6 +11,8 @@ import {
   LoginRequest,
   LoginResponse,
   MathmakingInfoResponse,
+  RequestMatch,
+  ResponseMatch,
   SetCharacterLoadoutRequest,
   SetCharacterLoadoutResponse,
   SetWeaponLoadoutsForCharacterRequest,
@@ -30,13 +32,14 @@ import { DBConstants } from "./constants";
 import { Document } from "@seald-io/nedb";
 import { LobbyManager } from "./lobby-manager";
 import { Logger } from "./logger";
-import { PartialDeep } from 'type-fest';
+import { PartialDeep } from "type-fest";
 import { ServerInfo } from "../types/server-info";
 import { User } from "../types/user";
 import { db } from "..";
 import deepmerge from "deepmerge";
 import jwt_to_pem from "jwk-to-pem";
 import { readFile } from "fs/promises";
+import { MatchmakingManager, Role } from "./matchmaking-handler";
 
 type DiscoverResponse = SaveGameResponse | MathmakingInfoResponse;
 
@@ -340,8 +343,34 @@ export class Handler {
     }
   }
 
+  static async requestGuaranteedMatch(
+    req: Request<any, ResponseMatch, RequestMatch>,
+    response: Response<ResponseMatch | string>
+  ) {
+    const id = Handler.checkOwnTokenAndGetId(req);
+    const isMonster = [
+      "CT_Toad",
+      "CT_Werewolf",
+      "CT_DollMaster",
+      "CT_Eradicator",
+      "CT_Anomaly",
+    ].includes(req.body.charType);
+    MatchmakingManager.joinSessionForRole(
+      id,
+      isMonster ? Role.EVIL : Role.TEEN
+    );
+    response.send({
+      log: { logSuccessful: true },
+      data: {
+        Status: "OK",
+        EstimatedWaitTime: 0,
+        MatchmakingTicketId: "dummy",
+      },
+    });
+  }
+
   public static getId(token: string | undefined) {
-    let id = 'Dummy';
+    let id = "Dummy";
     try {
       id = jwt.verify(token!, db.token) as string;
     } catch (e) {
@@ -356,12 +385,16 @@ export class Handler {
     if (process.argv.includes("--bypassOwnValidation")) {
       return req.header("Authorization") ?? "dummy";
     }
-    const token =  req.header("Authorization")?.split(" ")[1];
+    const token = req.header("Authorization")?.split(" ")[1];
     return Handler.getId(token);
   }
 
-  private static async getUserSaveGame(userId: string): Promise<SaveGameResponse> {
-    const collection = db.collection<PartialDeep<SaveGameResponse>>(Collections.SAVE_GAME);
+  private static async getUserSaveGame(
+    userId: string
+  ): Promise<SaveGameResponse> {
+    const collection = db.collection<PartialDeep<SaveGameResponse>>(
+      Collections.SAVE_GAME
+    );
     let userSaveGame = await collection.findOneAsync({
       [DBConstants.userIdField]: userId,
     });
@@ -377,47 +410,73 @@ export class Handler {
           DDT_AllLoadoutsBit: {
             characterLoadouts: {
               CT_Anomaly: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Anomaly.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Anomaly.uiSlots,
               },
               CT_Cheerleader: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Cheerleader.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Cheerleader.uiSlots,
               },
               CT_DollMaster: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_DollMaster.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_DollMaster.uiSlots,
               },
               CT_Eradicator: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Eradicator.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Eradicator.uiSlots,
               },
               CT_Jock: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Jock.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Jock.uiSlots,
               },
               CT_Nerd: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Nerd.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Nerd.uiSlots,
               },
               CT_Outsider: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Outsider.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Outsider.uiSlots,
               },
               CT_Punk: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Punk.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Punk.uiSlots,
               },
               CT_Toad: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Toad.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Toad.uiSlots,
               },
               CT_Virgin: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Virgin.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Virgin.uiSlots,
               },
               CT_Werewolf: {
-                uiSlots: Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!.characterLoadouts.CT_Werewolf.uiSlots
+                uiSlots:
+                  Handler.baseSaveGameId.data.DDT_AllLoadoutsBit!
+                    .characterLoadouts.CT_Werewolf.uiSlots,
               },
-            }
+            },
           },
-          DDT_AllPlayerSlotsBit: Handler.baseSaveGameId.data.DDT_AllPlayerSlotsBit,
+          DDT_AllPlayerSlotsBit:
+            Handler.baseSaveGameId.data.DDT_AllPlayerSlotsBit,
           DDT_AllWeaponsBit: {
-            weaponLoadoutsByCharacterType: Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.weaponLoadoutsByCharacterType
+            weaponLoadoutsByCharacterType:
+              Handler.baseSaveGameId.data.DDT_AllWeaponsBit
+                ?.weaponLoadoutsByCharacterType,
           },
-          DDT_SpecificLoadoutsBit: Handler.baseSaveGameId.data.DDT_SpecificLoadoutsBit,
-          playerSettingsData: Handler.baseSaveGameId.data.playerSettingsData
-        }
+          DDT_SpecificLoadoutsBit:
+            Handler.baseSaveGameId.data.DDT_SpecificLoadoutsBit,
+          playerSettingsData: Handler.baseSaveGameId.data.playerSettingsData,
+        },
       };
       delete userSaveGame._id;
       userSaveGame[DBConstants.userIdField] = userId;
