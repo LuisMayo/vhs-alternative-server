@@ -1,9 +1,10 @@
-import { Collection, MongoClient } from "mongodb";
+import { Collection, MongoClient, ObjectId } from "mongodb";
 import Datastore from "@seald-io/nedb";
 import { Logger } from "./logger";
 import { DBConstants } from "./constants";
 import crypto from "crypto";
-import { SeasonalEvents } from "../types/save-game";
+import { PartialDeep } from "type-fest";
+import { SaveGameResponse, SeasonalEvents } from "../types/save-game";
 
 export const CURRENT_VERSION = 2;
 
@@ -71,15 +72,75 @@ export class DatabaseShimLayer {
   async insert<T extends Record<string, any>>(
     collection: Collections,
     obj: T
-  ): Promise<unknown> {
+  ): Promise<string> {
     // Arguments are compatible
     if (this.db.type === "nedb") {
-      return this.db.db[collection].insertAsync<T>(obj);
+      return (await this.db.db[collection].insertAsync<T>(obj))._id;
     } else {
-      return this.db.db[collection].insertOne(obj);
+      return (
+        await this.db.db[collection].insertOne(obj)
+      ).insertedId.toString();
     }
   }
-  
+
+  async remove(collection: Collections, query: Object): Promise<number> {
+    // Arguments are compatible
+    if (this.db.type === "nedb") {
+      return this.db.db[collection].removeAsync(query, { multi: false });
+    } else {
+      return (await this.db.db[collection].deleteOne(query)).deletedCount;
+    }
+  }
+
+  async getSavegame(id: string): Promise<{
+    userSaveGame: WithOptionalId<PartialDeep<SaveGameResponse>> | null;
+    needsMerge: boolean;
+  }> {
+    if (this.db.type === "nedb") {
+      const userSaveGame = await this.db.db[Collections.SAVE_GAME].findOneAsync<
+        WithOptionalId<SaveGameResponse>
+      >({
+        [DBConstants.userIdField]: id,
+      });
+      return { userSaveGame: userSaveGame, needsMerge: true };
+    } else {
+      const pipeline = this.db.db[Collections.SAVE_GAME].aggregate<
+        WithOptionalId<SaveGameResponse>
+      >([
+        {
+          $match: {
+            $or: [
+              {
+                _id: new ObjectId(id),
+              },
+              {
+                base: true,
+              },
+            ],
+          },
+        },
+        {
+          $group: {
+            _id: new ObjectId(id),
+            mergedDocument: {
+              $mergeObjects: "$$ROOT",
+            },
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: "$mergedDocument",
+          },
+        },
+        {
+          $project: {
+            base: 0,
+          },
+        },
+      ]);
+      return { userSaveGame: await pipeline.next(), needsMerge: false };
+    }
+  }
 
   async init(): Promise<number> {
     if (process.env.mongodbUri) {
