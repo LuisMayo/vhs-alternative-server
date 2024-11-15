@@ -5,6 +5,8 @@ import { DBConstants } from "./constants";
 import crypto from "crypto";
 import { PartialDeep } from "type-fest";
 import { SaveGameResponse, SeasonalEvents } from "../types/save-game";
+import { readFile } from "fs/promises";
+
 
 export const CURRENT_VERSION = 2;
 
@@ -125,7 +127,13 @@ export class DatabaseShimLayer {
             mergedDocument: {
               $mergeObjects: "$$ROOT",
             },
+            foundTarget: {  $eq: ["$_id", id] } 
           },
+        },
+        {
+          $match: {
+            foundTarget: true,
+          }
         },
         {
           $replaceRoot: {
@@ -153,6 +161,7 @@ export class DatabaseShimLayer {
           const mongoCollection = database.collection(collection);
           db[collection] = mongoCollection;
         }
+        this.db = { type: "mongodb", db: db as Record<Collections, Collection> };
         Logger.log("MongoDB connection Loaded");
       } catch (error) {
         Logger.log(String(error));
@@ -209,6 +218,14 @@ export class DatabaseShimLayer {
       await this.db.db[Collections.SAVE_GAME].createIndex(
         DBConstants.userIdField
       );
+      const base = await this.db.db[Collections.SAVE_GAME].findOne({base: true});
+      if (!base) {
+        const newBase = JSON.parse(
+          await readFile("./data/base.json", { encoding: "utf-8" })
+        );
+        newBase.base = true;
+        await this.db.db[Collections.SAVE_GAME].insertOne(newBase);
+      }
     }
   }
 
@@ -235,7 +252,7 @@ export class DatabaseShimLayer {
     return settings.version;
   }
 
-  private getAllDataStores() {
+  public getAllDataStores() {
     return Object.values(Collections);
   }
 }

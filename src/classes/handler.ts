@@ -370,7 +370,11 @@ export class Handler {
   private static async getUserSaveGame(
     userId: string
   ): Promise<SaveGameResponse> {
-    let { userSaveGame, needsMerge } = await Database.db.getSavegame(userId);
+    // try {
+      let { userSaveGame, needsMerge } = await Database.db.getSavegame(userId);
+    // } catch (e) {
+    //   console.log(e);
+    // }
     if (!Handler.baseSaveGameId) {
       Handler.baseSaveGameId = JSON.parse(
         await readFile("./data/base.json", { encoding: "utf-8" })
