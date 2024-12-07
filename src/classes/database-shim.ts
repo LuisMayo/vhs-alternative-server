@@ -7,7 +7,6 @@ import { PartialDeep } from "type-fest";
 import { SaveGameResponse, SeasonalEvents } from "../types/save-game";
 import { readFile } from "fs/promises";
 
-
 export const CURRENT_VERSION = 2;
 
 export enum Collections {
@@ -110,35 +109,26 @@ export class DatabaseShimLayer {
         WithOptionalId<SaveGameResponse>
       >([
         {
-          $match: {
-            $or: [
-              {
-                _id: new ObjectId(id),
-              },
-              {
-                base: true,
-              },
-            ],
+          $match: { [DBConstants.userIdField]: id }, // Replace with your target ID
+        },
+        {
+          $lookup: {
+            from: Collections.SAVE_GAME, // Same collection
+            let: { baseFlag: true },
+            pipeline: [{ $match: { $expr: { $eq: ["$base", "$$baseFlag"] } } }],
+            as: "baseDoc",
           },
         },
         {
-          $group: {
-            _id: new ObjectId(id),
-            mergedDocument: {
-              $mergeObjects: "$$ROOT",
-            },
-            foundTarget: {  $eq: ["$_id", id] } 
+          $unwind: "$baseDoc", // No need for preserveNullAndEmptyArrays
+        },
+        {
+          $addFields: {
+            merged: { $mergeObjects: ["$baseDoc", "$$ROOT"] },
           },
         },
         {
-          $match: {
-            foundTarget: true,
-          }
-        },
-        {
-          $replaceRoot: {
-            newRoot: "$mergedDocument",
-          },
+          $replaceRoot: { newRoot: "$merged" },
         },
         {
           $project: {
@@ -161,7 +151,10 @@ export class DatabaseShimLayer {
           const mongoCollection = database.collection(collection);
           db[collection] = mongoCollection;
         }
-        this.db = { type: "mongodb", db: db as Record<Collections, Collection> };
+        this.db = {
+          type: "mongodb",
+          db: db as Record<Collections, Collection>,
+        };
         Logger.log("MongoDB connection Loaded");
       } catch (error) {
         Logger.log(String(error));
@@ -218,7 +211,9 @@ export class DatabaseShimLayer {
       await this.db.db[Collections.SAVE_GAME].createIndex(
         DBConstants.userIdField
       );
-      const base = await this.db.db[Collections.SAVE_GAME].findOne({base: true});
+      const base = await this.db.db[Collections.SAVE_GAME].findOne({
+        base: true,
+      });
       if (!base) {
         const newBase = JSON.parse(
           await readFile("./data/base.json", { encoding: "utf-8" })

@@ -1,0 +1,33 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EDiscoveryDataType = exports.DBConstants = void 0;
+var DBConstants;
+(function (DBConstants) {
+    DBConstants["databaseName"] = "vhs";
+    DBConstants["userIdField"] = "userId";
+    DBConstants["baseSaveGameId"] = "base";
+})(DBConstants || (exports.DBConstants = DBConstants = {}));
+var EDiscoveryDataType;
+(function (EDiscoveryDataType) {
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllInventoryItemsBit"] = 0] = "DDT_AllInventoryItemsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllLoadoutsBit"] = 1] = "DDT_AllLoadoutsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllSceneEnactmentStatesBit"] = 2] = "DDT_AllSceneEnactmentStatesBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllPlayerAccountPointsBit"] = 3] = "DDT_AllPlayerAccountPointsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllPlayerSlotsBit"] = 4] = "DDT_AllPlayerSlotsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllFriendListsBit"] = 5] = "DDT_AllFriendListsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllUnclaimedChestsBit"] = 6] = "DDT_AllUnclaimedChestsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllStoreItemsBit"] = 7] = "DDT_AllStoreItemsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_SpecificLoadoutsBit"] = 8] = "DDT_SpecificLoadoutsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_QuestSystemBit"] = 9] = "DDT_QuestSystemBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_SeasonPassBit"] = 10] = "DDT_SeasonPassBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AllWeaponsBit"] = 11] = "DDT_AllWeaponsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_JourneyDataBit"] = 12] = "DDT_JourneyDataBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_AccountStatsBit"] = 13] = "DDT_AccountStatsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_GuideSystemBit"] = 14] = "DDT_GuideSystemBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_EntitlementsBit"] = 15] = "DDT_EntitlementsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_PatchNotesBit"] = 16] = "DDT_PatchNotesBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_SeasonalEventBit"] = 17] = "DDT_SeasonalEventBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_ServerNotificationBit"] = 18] = "DDT_ServerNotificationBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_DynamicBountyRewardsBit"] = 19] = "DDT_DynamicBountyRewardsBit";
+    EDiscoveryDataType[EDiscoveryDataType["DDT_CommunityGoalsBit"] = 20] = "DDT_CommunityGoalsBit";
+})(EDiscoveryDataType || (exports.EDiscoveryDataType = EDiscoveryDataType = {}));
