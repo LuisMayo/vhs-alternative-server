@@ -4,7 +4,7 @@ import Datastore from "@seald-io/nedb";
 import { DBConstants } from "../classes/constants";
 
 async function main() {
-  const client = new MongoClient("mongodb://localhost:27017/");
+  const client = new MongoClient(process.env.mongodbUri!);
   const database = client.db("vhs-end-server");
   for (const collection of ["users", "server-info"]) {
     const mongoCollection = database.collection(collection);
