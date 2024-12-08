@@ -53,6 +53,7 @@ export class DatabaseShimLayer {
     if (this.db.type === "nedb") {
       return this.db.db[collection].updateAsync<T>(query, obj);
     } else {
+      delete obj._id;
       return this.db.db[collection].updateMany(query, obj);
     }
   }
@@ -66,6 +67,7 @@ export class DatabaseShimLayer {
     if (this.db.type === "nedb") {
       return this.db.db[collection].updateAsync<T>(query, obj);
     } else {
+      delete obj._id;
       return this.db.db[collection].replaceOne(query, obj);
     }
   }
@@ -97,47 +99,10 @@ export class DatabaseShimLayer {
     userSaveGame: WithOptionalId<PartialDeep<SaveGameResponse>> | null;
     needsMerge: boolean;
   }> {
-    if (this.db.type === "nedb") {
-      const userSaveGame = await this.db.db[Collections.SAVE_GAME].findOneAsync<
-        WithOptionalId<SaveGameResponse>
-      >({
-        [DBConstants.userIdField]: id,
-      });
-      return { userSaveGame: userSaveGame, needsMerge: true };
-    } else {
-      const pipeline = this.db.db[Collections.SAVE_GAME].aggregate<
-        WithOptionalId<SaveGameResponse>
-      >([
-        {
-          $match: { [DBConstants.userIdField]: id }, // Replace with your target ID
-        },
-        {
-          $lookup: {
-            from: Collections.SAVE_GAME, // Same collection
-            let: { baseFlag: true },
-            pipeline: [{ $match: { $expr: { $eq: ["$base", "$$baseFlag"] } } }],
-            as: "baseDoc",
-          },
-        },
-        {
-          $unwind: "$baseDoc", // No need for preserveNullAndEmptyArrays
-        },
-        {
-          $addFields: {
-            merged: { $mergeObjects: ["$baseDoc", "$$ROOT"] },
-          },
-        },
-        {
-          $replaceRoot: { newRoot: "$merged" },
-        },
-        {
-          $project: {
-            base: 0,
-          },
-        },
-      ]);
-      return { userSaveGame: await pipeline.next(), needsMerge: false };
-    }
+    const doc = await this.findOne(Collections.SAVE_GAME, {
+      [DBConstants.userIdField]: id,
+    });
+    return { needsMerge: true, userSaveGame: doc};
   }
 
   async init(): Promise<number> {
