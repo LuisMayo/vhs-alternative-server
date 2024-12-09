@@ -13,6 +13,7 @@
             ],
             "program": "${workspaceFolder}/build/index.js",
             "console": "integratedTerminal",
+            "env": {"mongodbUri": "mongodb://localhost:27017/"},
             "args": ["--disableRealPort", "--bypassEpicValidation", "--disableAdminPassword", "--bypassOwnValidation"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"

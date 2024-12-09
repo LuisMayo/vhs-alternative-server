@@ -17,8 +17,6 @@ import https from "https";
 import morgan from "morgan";
 import { LobbyManager } from "./classes/lobby-manager";
 
-export let db: Database;
-
 process.on("unhandledRejection", (reason: string, p: Promise<unknown>) => {
   Logger.log("Unhandled Rejection at: " + p, "reason: " + reason);
 });
@@ -27,9 +25,8 @@ function initApp() {
   // to initialize initial connection with the database, register all entities
   // and "synchronize" database schema, call "initialize()" method of a newly created database
   // once in your application bootstrap
-  db = new Database();
-  db.init()
-    .then((initDb) => {
+  Database.init()
+    .then(() => {
       initServer();
     })
     .catch((error) => Logger.log(error));
