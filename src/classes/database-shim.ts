@@ -95,14 +95,13 @@ export class DatabaseShimLayer {
     }
   }
 
-  async getSavegame(id: string): Promise<{
-    userSaveGame: WithOptionalId<PartialDeep<SaveGameResponse>> | null;
-    needsMerge: boolean;
-  }> {
+  async getSavegame(
+    id: string
+  ): Promise<WithOptionalId<PartialDeep<SaveGameResponse>> | null> {
     const doc = await this.findOne(Collections.SAVE_GAME, {
       [DBConstants.userIdField]: id,
     });
-    return { needsMerge: true, userSaveGame: doc};
+    return doc;
   }
 
   async init(): Promise<number> {

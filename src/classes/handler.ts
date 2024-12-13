@@ -32,7 +32,6 @@ import { LobbyManager } from "./lobby-manager";
 import { Logger } from "./logger";
 import { ServerInfo } from "../types/server-info";
 import { User } from "../types/user";
-import deepmerge from "deepmerge";
 import jwt_to_pem from "jwk-to-pem";
 import { readFile } from "fs/promises";
 import { Collections } from "./database-shim";
@@ -128,7 +127,9 @@ export class Handler {
           userSaveGame.data.DDT_SpecificLoadoutsBit =
             userSaveGame.data.DDT_AllLoadoutsBit;
           // End of the TODO remove in the future block
-          return response.send(deepmerge(userSaveGame, serverInfo));
+          const finalResponse = userSaveGame;
+          finalResponse.data.DDT_SeasonalEventBit = serverInfo.data?.DDT_SeasonalEventBit;
+          return response.send(finalResponse);
         } catch (e) {
           const str = String(e);
           response.status(500).send(str);
@@ -371,7 +372,7 @@ export class Handler {
     userId: string
   ): Promise<SaveGameResponse> {
     // try {
-      let { userSaveGame, needsMerge } = await Database.db.getSavegame(userId);
+    let userSaveGame = await Database.db.getSavegame(userId);
     // } catch (e) {
     //   console.log(e);
     // }
@@ -381,7 +382,6 @@ export class Handler {
       );
     }
     if (!userSaveGame && Handler.baseSaveGameId) {
-      needsMerge = true;
       userSaveGame = {
         data: {
           DDT_AccountStatsBit: Handler.baseSaveGameId.data.DDT_AccountStatsBit,
@@ -461,9 +461,146 @@ export class Handler {
     } else if (!Handler.baseSaveGameId) {
       throw new Error("Cannot create saveGame");
     }
-    return needsMerge
-      ? deepmerge(Handler.baseSaveGameId, userSaveGame!)
-      : (userSaveGame as SaveGameResponse);
+    return {
+      userId,
+      log: { logSuccessful: true },
+      data: {
+        DDT_AccountStatsBit: userSaveGame!.data!.DDT_AccountStatsBit!,
+        DDT_AllFriendListsBit:
+          Handler.baseSaveGameId.data.DDT_AllFriendListsBit,
+        DDT_AllInventoryItemsBit:
+          Handler.baseSaveGameId.data.DDT_AllInventoryItemsBit,
+        DDT_AllLoadoutsBit: {
+          characterLoadouts: {
+            CT_Anomaly: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Anomaly?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Anomaly.points,
+            },
+            CT_Cheerleader: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Cheerleader?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Cheerleader.points,
+            },
+            CT_DollMaster: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_DollMaster?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_DollMaster.points,
+            },
+            CT_Eradicator: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Eradicator?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Eradicator.points,
+            },
+            CT_Jock: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Jock?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Jock.points,
+            },
+            CT_Nerd: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Nerd?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Nerd.points,
+            },
+            CT_Outsider: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Outsider?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Outsider.points,
+            },
+            CT_Punk: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Punk?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Punk.points,
+            },
+            CT_Toad: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Toad?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Toad.points,
+            },
+            CT_Virgin: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Virgin?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Virgin.points,
+            },
+            CT_Werewolf: {
+              uiSlots:
+                userSaveGame?.data?.DDT_AllLoadoutsBit?.characterLoadouts
+                  ?.CT_Werewolf?.uiSlots,
+              points:
+                Handler.baseSaveGameId.data.DDT_AllLoadoutsBit
+                  ?.characterLoadouts.CT_Werewolf.points,
+            },
+          },
+          charXpLevelCosts:
+            Handler.baseSaveGameId.data.DDT_AllLoadoutsBit?.charXpLevelCosts,
+          teenAffinities:
+            Handler.baseSaveGameId.data.DDT_AllLoadoutsBit?.charXpLevelCosts,
+        },
+        DDT_AllPlayerAccountPointsBit:
+          Handler.baseSaveGameId.data.DDT_AllPlayerAccountPointsBit,
+        DDT_AllPlayerSlotsBit: userSaveGame?.data?.DDT_AllPlayerSlotsBit,
+        DDT_AllSceneEnactmentStatesBit:
+          Handler.baseSaveGameId.data.DDT_AllSceneEnactmentStatesBit,
+        DDT_AllStoreItemsBit: Handler.baseSaveGameId.data.DDT_AllStoreItemsBit,
+        DDT_AllUnclaimedChestsBit:
+          Handler.baseSaveGameId.data.DDT_AllUnclaimedChestsBit,
+        DDT_AllWeaponsBit: {
+          pointsByWeaponType:
+            Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.pointsByWeaponType,
+          stigmaXpToNextLevel:
+            Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.stigmaXpToNextLevel,
+          teenWeaponUnlockLevels:
+            Handler.baseSaveGameId.data.DDT_AllWeaponsBit
+              ?.teenWeaponUnlockLevels,
+          weaponLoadoutsByCharacterType:
+            userSaveGame?.data?.DDT_AllWeaponsBit
+              ?.weaponLoadoutsByCharacterType,
+          weaponManifestNumber:
+            Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.weaponManifestNumber,
+          weaponXpToNextLevel:
+            Handler.baseSaveGameId.data.DDT_AllWeaponsBit?.weaponXpToNextLevel,
+        },
+        DDT_CommunityGoalsBit:
+          Handler.baseSaveGameId.data.DDT_CommunityGoalsBit,
+        DDT_GuideSystemBit: Handler.baseSaveGameId.data.DDT_GuideSystemBit,
+        DDT_JourneyDataBit: Handler.baseSaveGameId.data.DDT_JourneyDataBit,
+        DDT_ServerNotificationBit:
+          Handler.baseSaveGameId.data.DDT_ServerNotificationBit,
+        DDT_SpecificLoadoutsBit: userSaveGame?.data?.DDT_SpecificLoadoutsBit,
+        playerSettingsData: userSaveGame?.data?.playerSettingsData,
+        serverTime: Date.now(),
+      },
+    } as SaveGameResponse;
   }
 
   private static async getAuthenticatedEpicUserId(
@@ -529,8 +666,10 @@ export class Handler {
   private static async getGeneralServerInfo(): Promise<
     Partial<SaveGameResponse>
   > {
-    const event = (await Database.db.findOne<ServerInfo>(Collections.SERVER_INFO, {}))!
-      .currentEvent;
+    const event = (await Database.db.findOne<ServerInfo>(
+      Collections.SERVER_INFO,
+      {}
+    ))!.currentEvent;
     return {
       data: { DDT_SeasonalEventBit: { activeSeasonalEventTypes: [event] } },
     };
