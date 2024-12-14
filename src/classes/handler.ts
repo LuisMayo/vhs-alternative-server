@@ -79,7 +79,7 @@ export class Handler {
     let name = "Dummy";
     if (existingUser) {
       Logger.log('User did not exist');
-      id = existingUser._id;
+      id = existingUser._id.toString();
     } else {
       Logger.log('User did exist');
       id = await Database.db.insert(Collections.USERS, {
