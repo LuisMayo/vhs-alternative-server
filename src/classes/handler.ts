@@ -61,13 +61,14 @@ export class Handler {
     request: Request<LoginRequest>,
     response: Response<LoginResponse | string>
   ) {
+    console.log("Auth header", request.headers.authorization)
     const epicId = process.argv.includes("--bypassEpicValidation")
       ? Handler.getUnAuthenticatedEpicId(request)
       : await Handler.getAuthenticatedEpicUserId(request);
     if (!epicId) {
       return response.sendStatus(401);
     }
-
+    Logger.log('epicId', epicId);
     let existingUser = await Database.db.findOne<Document<User>>(
       Collections.USERS,
       {
@@ -77,13 +78,16 @@ export class Handler {
     let id: string;
     let name = "Dummy";
     if (existingUser) {
+      Logger.log('User did not exist');
       id = existingUser._id;
     } else {
+      Logger.log('User did exist');
       id = await Database.db.insert(Collections.USERS, {
         displayName: name,
         epicId,
       });
     }
+    Logger.log('Own id', id)
     const sign = Handler.generateToken(id);
     response.send({
       data: {
@@ -461,7 +465,7 @@ export class Handler {
     } else if (!Handler.baseSaveGameId) {
       throw new Error("Cannot create saveGame");
     }
-    return {
+    const finalSaveGame = {
       userId,
       log: { logSuccessful: true },
       data: {
@@ -601,6 +605,8 @@ export class Handler {
         serverTime: Date.now(),
       },
     } as SaveGameResponse;
+    finalSaveGame.data.DDT_SpecificLoadoutsBit = finalSaveGame.data.DDT_AllLoadoutsBit;
+    return finalSaveGame;
   }
 
   private static async getAuthenticatedEpicUserId(
