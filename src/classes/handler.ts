@@ -568,7 +568,7 @@ export class Handler {
           charXpLevelCosts:
             Handler.baseSaveGameId.data.DDT_AllLoadoutsBit?.charXpLevelCosts,
           teenAffinities:
-            Handler.baseSaveGameId.data.DDT_AllLoadoutsBit?.charXpLevelCosts,
+            Handler.baseSaveGameId.data.DDT_AllLoadoutsBit?.teenAffinities,
         },
         DDT_AllPlayerAccountPointsBit:
           Handler.baseSaveGameId.data.DDT_AllPlayerAccountPointsBit,
