@@ -602,7 +602,7 @@ export class Handler {
           Handler.baseSaveGameId.data.DDT_ServerNotificationBit,
         DDT_SpecificLoadoutsBit: userSaveGame?.data?.DDT_SpecificLoadoutsBit,
         playerSettingsData: userSaveGame?.data?.playerSettingsData,
-        serverTime: Date.now(),
+        serverTime: +Date.now().toString().substring(0,10),
       },
     } as SaveGameResponse;
     finalSaveGame.data.DDT_SpecificLoadoutsBit = finalSaveGame.data.DDT_AllLoadoutsBit;
