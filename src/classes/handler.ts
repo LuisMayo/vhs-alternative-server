@@ -365,7 +365,7 @@ export class Handler {
     try {
       id = jwt.verify(token!, Database.db.token) as string;
     } catch (e) {
-      Logger.log("INVALID USER TOKEN", token);
+      Logger.log("INVALID USER TOKEN");
       throw new Error("401");
     }
     id = AdminHandler.getImpersonatedId(id);

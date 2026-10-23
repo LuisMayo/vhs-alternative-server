@@ -25,6 +25,13 @@ If you use Windows use Hosts Redirection. If Linux Executable Patching. If you w
 
 ## Development/Usage
 
+### Tests
+
+Run `npm ci`, then `npm test` with Node.js 18 or later. The server-session logging
+tests use generated credentials and an in-memory database stub; they do not
+contact Epic or require a game installation. Test output is compiled separately
+from the server's normal `build` directory.
+
 ## Manual Installation
 In case the installers don't suit your use-case, you can manually modify your game. Listed here are instructions for both methods
 
